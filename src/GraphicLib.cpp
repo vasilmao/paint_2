@@ -36,7 +36,7 @@ Texture::Texture(Renderer* renderer, const char* filename) {
         printf("img not opened\n");
     }
     assert(surf);
-    size = {surf->w, surf->h};
+    size = {static_cast<float>(surf->w), static_cast<float>(surf->h)};
     sdl_texture = SDL_CreateTextureFromSurface(
         renderer->getNativeRenderer(),
         surf

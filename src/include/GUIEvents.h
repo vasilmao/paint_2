@@ -4,6 +4,7 @@
 #include "Vector.h"
 #include "Tools.h"
 #include "GraphicLib.h"
+#include "Instruments.h"
 
 
 class GUIEvent {
@@ -78,5 +79,15 @@ public:
     GUIClose() : GUIEvent(GUIEventTypes::CLOSE) {}
 };
 
+
+class GUIInstrumentChanged : public GUIEvent {
+private:
+    AbstractInstrument* new_instrument;
+public:
+    GUIInstrumentChanged(AbstractInstrument* new_instr) : GUIEvent(GUIEventTypes::INSTRUMENT_CHANGED), new_instrument(new_instr) {}
+    AbstractInstrument* getInstrument() {
+        return new_instrument;
+    }
+};
 
 #endif

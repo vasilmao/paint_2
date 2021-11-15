@@ -8,6 +8,7 @@
 #include "Tools.h"
 #include "List.h"
 #include "Window.h"
+#include "Instruments.h"
 
 class App {
 private:
@@ -22,6 +23,8 @@ private:
     void parseEvent(const SystemEvent& event);
 
     MainWindow* main_window;
+
+    AbstractInstrument* instrument;
 
 public:
     App();

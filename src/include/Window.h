@@ -23,9 +23,9 @@ protected:
     // };
     Vector2 absolute_pos;
     Vector2 size;
-    Skin* skin;
     EventHandler* handler;
     AbstractWindow* parent;
+    Skin* skin;
     bool on_delete = false;
 
 public:
@@ -59,14 +59,6 @@ public:
     MainWindow(Renderer* renderer, const Vector2& size);
 };
 
-// class MainWindowTitleBar : public AbstractWindow { // has some buttons, no functionality
-// public:
-//     MainWindowTitleBar(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
-//     // virtual void bubbleEvent(GUIEvent* event);
-//     // virtual bool captureEvent(GUIEvent* event);
-//     // virtual bool onEvent(GUIEvent* event);
-// };
-
 class Button : public AbstractWindow {
 public:
     Button(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
@@ -87,7 +79,8 @@ public:
 
 class Canvas : public AbstractWindow {
 public:
-    Canvas(Renderer* renderer, const Vector2& pos, const Vector2& size); // event handler and skin/texture will be created in constructor
+    Canvas(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin); // event handler and skin/texture will be created in constructor
+    // void setInstrument(AbstractInstrument* instrument);
 };
 
 #endif

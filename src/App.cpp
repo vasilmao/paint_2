@@ -12,8 +12,16 @@ App::App() {
     height = HEIGHT;
     renderer = new Renderer(width, height, bg_color);
     // printf("render created\n");
-    main_window = new MainWindow(renderer, {width, height});
-    // printf("constructed\n");
+    instrument = new Brush();
+    main_window = new MainWindow(renderer, {static_cast<float>(width), static_cast<float>(height)});
+    CanvasWindow* canvas_w = new CanvasWindow(renderer, {40, 40}, {500, 300});
+    // canvas_w->setInstrument(instrument);
+    main_window->attachWindow(canvas_w);
+    printf("uh oh society\n");
+    GUIInstrumentChanged event(instrument);
+    printf("sending\n");
+    canvas_w->onEvent(&event);
+    printf("constructed\n");
 }
 
 void App::run() {
@@ -36,13 +44,14 @@ void App::run() {
             if (!running) {
                 break;
             }
-            printf("yaa\n");
+            // printf("yaa\n");
             sys_event = getSystemEvent();
         }
         if (main_window->isToDelete()) {
-            delete main_window;
+            // delete main_window;
             running = false;
         }
+        main_window->clean();
         if (!running) {
             break;
         }
@@ -50,7 +59,7 @@ void App::run() {
         main_window->render(renderer);
         // printf("present\n");
         renderer->render();
-        SDL_Delay(500);
+        // SDL_Delay(500);
     }
     
 }

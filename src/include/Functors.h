@@ -59,8 +59,8 @@ public:
 
 class CreateCanvasWindowFunctor : public Functor<const Vector2&, const Vector2&> {
 private:
-    Renderer* renderer;
     AbstractWindow* parent;
+    Renderer* renderer;
 public:
     CreateCanvasWindowFunctor(AbstractWindow* parent, Renderer* renderer);
     virtual bool operator()(const Vector2& pos, const Vector2& size);

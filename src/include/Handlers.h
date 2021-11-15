@@ -22,8 +22,8 @@ public:
 
 class ButtonHandler : public EventHandler {
 private:
-    bool is_pressed;
-    bool is_hovered;
+    bool is_pressed = false;
+    bool is_hovered = false;
     Functor<>* click_event_responce;
     bool mbResponce(GUIMouseClickEvent* mouse_click);
     bool mhResponce(GUIMouseMove* mouse_move);
@@ -48,7 +48,7 @@ public:
 
 class CanvasHandler : public EventHandler {
 private:
-    bool is_pressed = true;
+    bool is_pressed = false;
     bool mbResponce(GUIMouseClickEvent* mouse_click);
     bool mmResponce(GUIMouseMove* mouse_move);
     AbstractInstrument* current_instrument;
@@ -56,6 +56,6 @@ private:
     Functor<Renderer*, Texture*, const Vector2&>* canvas_drawer;
 public:
     virtual ~CanvasHandler();
-    CanvasHandler(AbstractWindow* window, Renderer* renderer, AbstractInstrument* instrument, Functor<Renderer*, Texture*, const Vector2&>* canvas_drawer);
+    CanvasHandler(AbstractWindow* window, Renderer* renderer, Functor<Renderer*, Texture*, const Vector2&>* canvas_drawer);
     virtual bool onEvent(GUIEvent* event);
 };
