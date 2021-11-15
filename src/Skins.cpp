@@ -6,6 +6,7 @@ Skin::Skin(Texture* texture, const Vector2& size) : texture(texture), real_size(
 
 }
 
+
 Skin::~Skin() {
     delete texture;
 }
@@ -21,6 +22,10 @@ bool Skin::hitTest(const Vector2& pos) {
            pos.getX() < real_size.getX() &&
            0 <= pos.getY() &&
            pos.getY() < real_size.getY();
+}
+
+Texture* Skin::getTexture() {
+    return texture;
 }
 
 void RepeatingSkin::draw(Renderer* renderer, const Vector2& pos) {

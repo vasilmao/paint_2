@@ -74,4 +74,20 @@ public:
     virtual bool operator()(const Vector2& dv);
 };
 
+class CanvasDrawerFunctor : public Functor<Renderer*, Texture*, const Vector2&> {
+private:
+    AbstractInstrument* current_instrument;
+public:
+    CanvasDrawerFunctor() {
+        current_instrument = nullptr;
+    }
+    CanvasDrawerFunctor(AbstractInstrument* instr) {
+        current_instrument = instr;
+    }
+    void setInstrument(AbstractInstrument* new_instr) {
+        current_instrument = new_instr;
+    }
+    virtual bool operator()(Renderer* renderer, Texture* texture, const Vector2& pos);
+};
+
 #endif

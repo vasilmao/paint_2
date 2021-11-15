@@ -14,6 +14,7 @@ public:
         MOUSE_BUTTON,
         MOUSE_MOVE,
         CLOSE,
+        INSTRUMENT_CHANGED,
         EVENTS_CNT
     };
 protected:

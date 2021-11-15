@@ -19,8 +19,8 @@ CreateCanvasWindowFunctor::CreateCanvasWindowFunctor(AbstractWindow* parent, Ren
 }
 
 bool CreateCanvasWindowFunctor::operator()(const Vector2& pos, const Vector2& size) {
-    // CanvasWindow* c_w = new CanvasWindow(renderer, pos, size);
-    // parent->attachWindow(c_w);
+    CanvasWindow* c_w = new CanvasWindow(renderer, pos, size);
+    parent->attachWindow(c_w);
     return true;
 }
 
@@ -30,5 +30,10 @@ WindowMoverFunctor::WindowMoverFunctor(AbstractWindow* to_move_window) : window_
 
 bool WindowMoverFunctor::operator()(const Vector2& dv) {
     window_to_move->move(dv);
+    return true;
+}
+
+bool CanvasDrawerFunctor::operator()(Renderer* renderer, Texture* texture, const Vector2& pos) {
+    current_instrument->apply(renderer, texture, pos);
     return true;
 }

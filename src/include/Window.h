@@ -6,6 +6,7 @@
 #include "List.h"
 #include "GUIEvents.h"
 #include "Skins.h"
+#include "Instruments.h"
 
 class EventHandler;
 // class Functor;
@@ -52,20 +53,21 @@ public:
 };
 
 class MainWindow : public AbstractWindow { // has titlebar, and global close button, not much functionality, just creates them, pos is always 0, 0
+private:
+    AbstractInstrument* instrument;
 public:
     MainWindow(Renderer* renderer, const Vector2& size);
 };
 
-class MainWindowTitleBar : public AbstractWindow { // has some buttons, no functionality
-public:
-    MainWindowTitleBar(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
-    // virtual void bubbleEvent(GUIEvent* event);
-    // virtual bool captureEvent(GUIEvent* event);
-    // virtual bool onEvent(GUIEvent* event);
-};
+// class MainWindowTitleBar : public AbstractWindow { // has some buttons, no functionality
+// public:
+//     MainWindowTitleBar(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
+//     // virtual void bubbleEvent(GUIEvent* event);
+//     // virtual bool captureEvent(GUIEvent* event);
+//     // virtual bool onEvent(GUIEvent* event);
+// };
 
 class Button : public AbstractWindow {
-private:
 public:
     Button(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
     void setHover();
@@ -79,11 +81,13 @@ public:
 };
 
 class TitleBar : public AbstractWindow {
+public:
     TitleBar(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
 };
 
 class Canvas : public AbstractWindow {
-    Canvas(Renderer* renderer, const Vector2& pos, const Vector2& size);
+public:
+    Canvas(Renderer* renderer, const Vector2& pos, const Vector2& size); // event handler and skin/texture will be created in constructor
 };
 
 #endif

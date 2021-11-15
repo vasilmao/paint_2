@@ -108,7 +108,7 @@ MainWindow::MainWindow(Renderer* renderer, const Vector2& size) : AbstractWindow
     Skin* titlebar_skin = new Skin(titlebar_texture, titlebar_size);
     EventHandler* titlebar_handler = new EventHandler(nullptr);
 
-    MainWindowTitleBar* titlebar = new MainWindowTitleBar(Vector2(0, 0), titlebar_size, titlebar_handler, nullptr, titlebar_skin);
+    TitleBar* titlebar = new TitleBar(Vector2(0, 0), titlebar_size, titlebar_handler, nullptr, titlebar_skin);
     titlebar_handler->setWindow(titlebar);
     attachWindow(titlebar);
     printf("ya\n");
@@ -142,10 +142,8 @@ MainWindow::MainWindow(Renderer* renderer, const Vector2& size) : AbstractWindow
 }
 
 
-MainWindowTitleBar::MainWindowTitleBar(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin) : 
+TitleBar::TitleBar(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin) : 
     AbstractWindow(abs_pos, size, handler, parent, skin) {
-    title = (char*)calloc(sizeof(MAIN_WINDOW_TITLE_NAME), sizeof(char));
-    strcpy(title, MAIN_WINDOW_TITLE_NAME);
     printf("main window titlebar %p\n", this);
 }
 
@@ -170,3 +168,6 @@ void Button::setUsual() {
     dynamic_cast<ButtonSkin*>(skin)->setUsual();
 }
 
+//----------CANVAS WINDOW----------
+
+CanvasWindow::CanvasWindow(Renderer* renderer, const Vector2& pos, const Vector2& size) {}

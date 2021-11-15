@@ -10,6 +10,7 @@ public:
     virtual void draw(Renderer* renderer, const Vector2& pos);
     virtual bool hitTest(const Vector2& pos);
     virtual ~Skin();
+    Texture* getTexture();
 };
 
 class RepeatingSkin : public Skin {

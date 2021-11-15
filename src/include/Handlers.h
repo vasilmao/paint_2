@@ -2,6 +2,7 @@
 #include "GUIEvents.h"
 #include "Window.h"
 #include "Functors.h"
+#include "Instruments.h"
 
 class EventHandler {
 protected:
@@ -24,6 +25,8 @@ private:
     bool is_pressed;
     bool is_hovered;
     Functor<>* click_event_responce;
+    bool mbResponce(GUIMouseClickEvent* mouse_click);
+    bool mhResponce(GUIMouseMove* mouse_move);
 public:
     ButtonHandler(AbstractWindow* window, Functor<>* click_functor);
     virtual bool onEvent(GUIEvent* event);
@@ -35,8 +38,24 @@ class TitlebarHandler : public EventHandler {
 private:
     bool is_holding = false;
     Functor<const Vector2&>* window_mover;
+    bool mbResponce(GUIMouseClickEvent* mouse_click);
+    // bool mhResponce(GUIMouseMove* mouse_move);
 public:
     TitlebarHandler(AbstractWindow* window, Functor<const Vector2&>* move_functor);
     virtual bool onEvent(GUIEvent* event);
     virtual ~TitlebarHandler();
+};
+
+class CanvasHandler : public EventHandler {
+private:
+    bool is_pressed = true;
+    bool mbResponce(GUIMouseClickEvent* mouse_click);
+    bool mmResponce(GUIMouseMove* mouse_move);
+    AbstractInstrument* current_instrument;
+    Renderer* renderer;
+    Functor<Renderer*, Texture*, const Vector2&>* canvas_drawer;
+public:
+    virtual ~CanvasHandler();
+    CanvasHandler(AbstractWindow* window, Renderer* renderer, AbstractInstrument* instrument, Functor<Renderer*, Texture*, const Vector2&>* canvas_drawer);
+    virtual bool onEvent(GUIEvent* event);
 };
