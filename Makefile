@@ -15,8 +15,8 @@ Deps = $(wildcard $(SrcDir)/include/*.h)
 Objs = $(addprefix $(IntDir)/, $(CppSrc:.cpp=.o))
 
 # ------------------------------------Options-----------------------------------
-LXXFLAGS = $(shell pkg-config --libs sdl2) -lSDL2_ttf -g
-CXXFLAGS = -I $(IncludeDir) -std=c++2a -O2 -Wall -g
+LXXFLAGS = $(shell pkg-config --libs sdl2) -lSDL2_ttf #-fsanitize=address
+CXXFLAGS = -I $(IncludeDir) -std=c++2a -O2 -Wall -g #-fsanitize=address
 
 
 # ----------------------------------Make rules----------------------------------

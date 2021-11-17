@@ -13,9 +13,11 @@ public:
     Texture* getTexture();
 };
 
-class RepeatingSkin : public Skin {
-    virtual void draw(Renderer* renderer, const Vector2& pos);
-};
+// class RepeatingSkin : public Skin {
+// public:
+//     RepeatingSkin(Texture* texture, const Vector2& size);
+//     virtual void draw(Renderer* renderer, const Vector2& pos);
+// };
 
 class ButtonSkin : public Skin {
 private:

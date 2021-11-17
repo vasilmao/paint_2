@@ -17,10 +17,6 @@ class AbstractWindow {
 protected:
     char* title = nullptr;
     List<AbstractWindow*>* children;
-    // struct {
-    //     bool is_changed:1;
-    //     bool to_delete:1;
-    // };
     Vector2 absolute_pos;
     Vector2 size;
     EventHandler* handler;
@@ -30,13 +26,9 @@ protected:
 
 public:
 
-    AbstractWindow(){}; // defined
-    AbstractWindow(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin); // defined
+    AbstractWindow(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
     virtual ~AbstractWindow();
-    // virtual void bubbleEvent(GUIEvent* event);  // decides, bubble it or not
-    // virtual bool captureEvent(GUIEvent* event) = 0; // decides, to do responce, to spread, to pass
-    virtual bool onEvent(GUIEvent* event);      // event responce
-    // virtual void updateTexture(Renderer* renderer);
+    virtual bool onEvent(GUIEvent* event);
     virtual void render(Renderer* renderer);
     void markToDelete();
     bool isToDelete();

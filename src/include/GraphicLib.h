@@ -60,6 +60,7 @@ private:
     Vector2 size;
 public:
     Texture();
+    ~Texture();
     Texture(Renderer* renderer, const Vector2& size);
     Texture(Renderer* renderer, const Vector2& size, Color color);
     Texture(Renderer* renderer, const char* filename);
@@ -76,6 +77,7 @@ private:
     int size;
 public:
     Font();
+    ~Font();
     Font(int size);
     Font(const char* filename, int size);
     int getSize() const;
@@ -113,7 +115,7 @@ public:
     void drawText(const Vector2& pos, const Vector2& size, const char* text, Color color);
     void setTarget(Texture* texture);
     void copyTexture(Texture* texture, const Vector2& pos);
-    void copyTextureRect(Texture* texture, const Vector2& pos, const Rect2f& rect);
+    void copyTexture(Texture* texture, const Vector2& pos, const Vector2& dst_size);
     SDL_Renderer* getNativeRenderer();
 };
 

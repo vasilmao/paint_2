@@ -99,11 +99,15 @@ const Vector2& AbstractWindow::getPos() const {
 //----------MAIN WINDOW----------
 
 MainWindow::MainWindow(Renderer* renderer, const Vector2& size) : AbstractWindow({0, 0}, size, new EventHandler(this), nullptr, nullptr) {
+    // BRUH, divide into some functions
     printf("main window %p\n", this);
     // title is "main window";
     // title = (char*)calloc(sizeof(MAIN_WINDOW_NAME), sizeof(char));
     // strcpy(title, MAIN_WINDOW_NAME);
-    skin = new Skin(new Texture(renderer, size, {0, 0, 0, 255}), size);
+
+    skin = new Skin(new Texture(renderer, "skins/wallpaper.bmp"), size);
+    // skin = new Skin(new Texture(renderer, size, {0, 0, 0, 255}), size);
+
     // printf("yeah, main window skin is %p\n");
     // printf("lets just try to draw it\n");
     // skin->draw(renderer, absolute_pos);
@@ -183,10 +187,11 @@ void Button::setUsual() {
 //----------CANVAS WINDOW----------
 
 CanvasWindow::CanvasWindow(Renderer* renderer, const Vector2& pos, const Vector2& size) : AbstractWindow(pos, size, new EventHandler(this), nullptr, nullptr) {
+    // BRUH, divide into some functions
     absolute_pos = pos;
     this->size = size; 
     // create titlebar, close button, canvas
-    skin = new Skin(new Texture(renderer, size, {20, 20, 20, 255}), size);
+    skin = new Skin(new Texture(renderer, size + Vector2(2, 2), {20, 20, 20, 255}), size + Vector2(2, 2));
     Texture* close_button_texture = new Texture(renderer, "skins/close.bmp");
     Texture* close_button_texture_pressed = new Texture(renderer, "skins/close2.bmp");
     Vector2 button_size = close_button_texture->getSize();
@@ -232,6 +237,9 @@ CanvasWindow::CanvasWindow(Renderer* renderer, const Vector2& pos, const Vector2
     Canvas* canvas = new Canvas(canvas_pos, canvas_size, canvas_handler, this, canvas_skin);
     canvas_handler->setWindow(canvas);
     attachWindow(canvas);
+
+    absolute_pos -= Vector2(1, 1);
+    this->size += Vector2(2, 2);
 }
 
 Canvas::Canvas(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin) :

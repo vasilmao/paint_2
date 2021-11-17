@@ -15,12 +15,15 @@ App::App() {
     instrument = new Brush();
     main_window = new MainWindow(renderer, {static_cast<float>(width), static_cast<float>(height)});
     CanvasWindow* canvas_w = new CanvasWindow(renderer, {40, 40}, {500, 300});
+    CanvasWindow* canvas_w1 = new CanvasWindow(renderer, {400, 400}, {500, 300});
     // canvas_w->setInstrument(instrument);
     main_window->attachWindow(canvas_w);
+    main_window->attachWindow(canvas_w1);
     printf("uh oh society\n");
     GUIInstrumentChanged event(instrument);
     printf("sending\n");
     canvas_w->onEvent(&event);
+    canvas_w1->onEvent(&event);
     printf("constructed\n");
 }
 
@@ -68,4 +71,8 @@ void App::stop() {
     running = false;
 }
 
-App::~App() {}
+App::~App() {
+    delete main_window;
+    delete instrument;
+    delete renderer;
+}

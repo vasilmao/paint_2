@@ -42,6 +42,11 @@ Texture::Texture(Renderer* renderer, const char* filename) {
         surf
     );
     assert(sdl_texture);
+    SDL_FreeSurface(surf);
+}
+
+Texture::~Texture() {
+    SDL_DestroyTexture(sdl_texture);
 }
 
 const Vector2& Texture::getSize() const {
@@ -58,6 +63,12 @@ SDL_Texture* Texture::getNativeTexture() {
 Font::Font() {
     sdl_font = NULL;
     size = 0;
+}
+
+Font::~Font() {
+    if (sdl_font != NULL) {
+        TTF_CloseFont(sdl_font);
+    }
 }
 
 Font::Font(int size) : size(size) {
@@ -113,7 +124,7 @@ void Renderer::drawFilledCircle(const Vector2& center, const float r, Color colo
     SDL_SetRenderDrawColor(renderer, open_color(color));
     float r2 = r * r;
     Vector2 center_point(center);
-    Vector2 circle_quadr_diagonal(r, -r);
+    Vector2 circle_quadr_diagonal(r, r);
     center_point -= circle_quadr_diagonal;
     Vector2 pixel_left_up_point = center_point;
 
@@ -192,11 +203,20 @@ void Renderer::copyTexture(Texture* texture, const Vector2& pos) {
     // SDL_Delay(500);
 }
 
-void Renderer::copyTextureRect(Texture* texture, const Vector2& pos, const Rect2f& rect) {
-    SDL_FRect dst_rect = {pos.getX(), pos.getY(), rect.width, rect.height};
-    SDL_Rect src_rect = {static_cast<int>(rect.x), static_cast<int>(rect.y), static_cast<int>(rect.width), static_cast<int>(rect.height)};
-    SDL_RenderCopyF(renderer, texture->getNativeTexture(), &src_rect, &dst_rect);
+void Renderer::copyTexture(Texture* texture, const Vector2& pos, const Vector2& dst_size) {
+    // SDL_FRect dst_rect = {pos.getX(), pos.getY(), texture->getSize().getX(), texture->getSize().getY()};
+    SDL_FRect dst_rect = {pos.getX(), pos.getY(), dst_size.getX(), dst_size.getY()};
+    // printf("copying texture, (%f, %f), size (%f, %f)\n", dst_rect.x, dst_rect.y, dst_rect.w, dst_rect.h);
+    SDL_RenderCopyF(renderer, texture->getNativeTexture(), NULL, &dst_rect);
+    // render();
+    // SDL_Delay(500);
 }
+
+// void Renderer::copyTextureRect(Texture* texture, const Vector2& pos, const Rect2f& rect) {
+//     SDL_FRect dst_rect = {pos.getX(), pos.getY(), rect.width, rect.height};
+//     SDL_Rect src_rect = {static_cast<int>(rect.x), static_cast<int>(rect.y), static_cast<int>(rect.width), static_cast<int>(rect.height)};
+//     SDL_RenderCopyF(renderer, texture->getNativeTexture(), &src_rect, &dst_rect);
+// }
 
 // SystemEvent Renderer::getEvent() const {
 //     SDL_Event event;
