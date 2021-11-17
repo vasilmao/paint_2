@@ -98,59 +98,46 @@ const Vector2& AbstractWindow::getPos() const {
 
 //----------MAIN WINDOW----------
 
-MainWindow::MainWindow(Renderer* renderer, const Vector2& size) : AbstractWindow({0, 0}, size, new EventHandler(this), nullptr, nullptr) {
-    // BRUH, divide into some functions
-    printf("main window %p\n", this);
-    // title is "main window";
-    // title = (char*)calloc(sizeof(MAIN_WINDOW_NAME), sizeof(char));
-    // strcpy(title, MAIN_WINDOW_NAME);
-
-    skin = new Skin(new Texture(renderer, "skins/wallpaper.bmp"), size);
-    // skin = new Skin(new Texture(renderer, size, {0, 0, 0, 255}), size);
-
-    // printf("yeah, main window skin is %p\n");
-    // printf("lets just try to draw it\n");
-    // skin->draw(renderer, absolute_pos);
-    // we need to spawn childs
-    // they are: main window title, file button, help button, close button
-    absolute_pos = {0, 0};
-    Texture* close_button_texture = new Texture(renderer, "skins/close.bmp");
-    Vector2 button_size = close_button_texture->getSize();
-    Vector2 titlebar_size(size.getX(), button_size.getY());
-    printf("button   size: {%f, %f}\n", button_size.getX(), button_size.getY());
-    printf("titlebar size: {%f, %f}\n", titlebar_size.getX(), titlebar_size.getY());
-    // title
-    Texture* titlebar_texture = new Texture(renderer, titlebar_size, titlebar_color);
-    Skin* titlebar_skin = new Skin(titlebar_texture, titlebar_size);
-    EventHandler* titlebar_handler = new EventHandler(nullptr);
-
-    TitleBar* titlebar = new TitleBar(Vector2(0, 0), titlebar_size, titlebar_handler, nullptr, titlebar_skin);
+void MainWindow::createTitlebar(Renderer* renderer, const Vector2& tb_pos, const Vector2& tb_size) {
+    Texture* titlebar_texture = new Texture(renderer, tb_size, titlebar_color);
+    Skin* titlebar_skin = new Skin(titlebar_texture, tb_size);
+    WindowMoverFunctor* move_f = new WindowMoverFunctor(this);
+    EventHandler* titlebar_handler = new TitlebarHandler(nullptr, move_f);
+    TitleBar* titlebar = new TitleBar(tb_pos, tb_size, titlebar_handler, nullptr, titlebar_skin);
+    printf("canvas titlebar: %p\n", titlebar);
     titlebar_handler->setWindow(titlebar);
     attachWindow(titlebar);
-    printf("ya\n");
-    printf("titlebar attached!\n");
-    // close button
+    createCloseButton(renderer, {tb_pos.getX() + tb_size.getX() - close_button_size.getX(), tb_pos.getY()}, close_button_size, titlebar);
+}
+
+void MainWindow::createCloseButton(Renderer* renderer, const Vector2& btn_pos, const Vector2& btn_size, AbstractWindow* titlebar) {
+    Texture* close_button_texture = new Texture(renderer, "skins/close.bmp");
     Texture* close_button_texture_pressed = new Texture(renderer, "skins/close2.bmp");
     ButtonSkin* close_button_skin = new ButtonSkin(
         close_button_texture,
         nullptr,
         close_button_texture_pressed
     );
-    // Vector2 button_size = close_button_texture->getSize();
-    Vector2 button_pos(size.getX() - button_size.getX(), 0);
     ButtonHandler* close_button_handler = new ButtonHandler(nullptr, new CloseButtonFunctor(this));
-    // ButtonHandler* close_button_handler = new ButtonHandler(nullptr, new PrintFunctor());
     Button* close_button = new Button(
-        button_pos,
-        button_size,
+        btn_pos,
+        btn_size,
         close_button_handler,
         this,
         close_button_skin
     );
+    printf("canvas button: %p\n", close_button);
     close_button_handler->setWindow(close_button);
     titlebar->attachWindow(close_button);
+}
 
-
+MainWindow::MainWindow(Renderer* renderer, const Vector2& size) : AbstractWindow({0, 0}, size, new EventHandler(this), nullptr, nullptr) {
+    // BRUH, divide into some functions
+    printf("main window %p\n", this);
+    skin = new Skin(new Texture(renderer, "skins/wallpaper.bmp"), size);
+    absolute_pos = {0, 0};
+    Vector2 titlebar_size(size.getX(), close_button_size.getY());
+    createTitlebar(renderer, absolute_pos, titlebar_size);
 
     // printf("close_button attached!\n");
     // Texture* close_button_texture = new Texture(renderer, "skins/close.bmp");
@@ -192,34 +179,40 @@ CanvasWindow::CanvasWindow(Renderer* renderer, const Vector2& pos, const Vector2
     this->size = size; 
     // create titlebar, close button, canvas
     skin = new Skin(new Texture(renderer, size + Vector2(2, 2), {20, 20, 20, 255}), size + Vector2(2, 2));
-    Texture* close_button_texture = new Texture(renderer, "skins/close.bmp");
-    Texture* close_button_texture_pressed = new Texture(renderer, "skins/close2.bmp");
-    Vector2 button_size = close_button_texture->getSize();
-    Vector2 titlebar_size(size.getX(), button_size.getY());
+    Vector2 titlebar_size(size.getX(), close_button_size.getY());
+    createTitlebar(renderer, absolute_pos, titlebar_size);
+    Vector2 canvas_pos(absolute_pos.getX(), absolute_pos.getY() + titlebar_size.getY());
+    Vector2 canvas_size(size.getX(), size.getY() - titlebar_size.getY());
+    createCanvas(renderer, canvas_pos, canvas_size);
 
-    Texture* titlebar_texture = new Texture(renderer, titlebar_size, titlebar_color);
-    Skin* titlebar_skin = new Skin(titlebar_texture, titlebar_size);
+    absolute_pos -= Vector2(1, 1);
+    this->size += Vector2(2, 2);
+}
+
+void CanvasWindow::createTitlebar(Renderer* renderer, const Vector2& tb_pos, const Vector2& tb_size) {
+    Texture* titlebar_texture = new Texture(renderer, tb_size, titlebar_color);
+    Skin* titlebar_skin = new Skin(titlebar_texture, tb_size);
     WindowMoverFunctor* move_f = new WindowMoverFunctor(this);
     EventHandler* titlebar_handler = new TitlebarHandler(nullptr, move_f);
-
-    TitleBar* titlebar = new TitleBar(absolute_pos, titlebar_size, titlebar_handler, nullptr, titlebar_skin);
+    TitleBar* titlebar = new TitleBar(tb_pos, tb_size, titlebar_handler, nullptr, titlebar_skin);
     printf("canvas titlebar: %p\n", titlebar);
     titlebar_handler->setWindow(titlebar);
     attachWindow(titlebar);
+    createCloseButton(renderer, {tb_pos.getX() + tb_size.getX() - close_button_size.getX(), tb_pos.getY()}, close_button_size, titlebar);
+}
 
-
+void CanvasWindow::createCloseButton(Renderer* renderer, const Vector2& btn_pos, const Vector2& btn_size, AbstractWindow* titlebar) {
+    Texture* close_button_texture = new Texture(renderer, "skins/close.bmp");
+    Texture* close_button_texture_pressed = new Texture(renderer, "skins/close2.bmp");
     ButtonSkin* close_button_skin = new ButtonSkin(
         close_button_texture,
         nullptr,
         close_button_texture_pressed
     );
-    // Vector2 button_size = close_button_texture->getSize();
-    Vector2 button_pos(absolute_pos.getX() + size.getX() - button_size.getX(), absolute_pos.getY());
     ButtonHandler* close_button_handler = new ButtonHandler(nullptr, new CloseButtonFunctor(this));
-    // ButtonHandler* close_button_handler = new ButtonHandler(nullptr, new PrintFunctor());
     Button* close_button = new Button(
-        button_pos,
-        button_size,
+        btn_pos,
+        btn_size,
         close_button_handler,
         this,
         close_button_skin
@@ -227,9 +220,9 @@ CanvasWindow::CanvasWindow(Renderer* renderer, const Vector2& pos, const Vector2
     printf("canvas button: %p\n", close_button);
     close_button_handler->setWindow(close_button);
     titlebar->attachWindow(close_button);
+}
 
-    Vector2 canvas_pos(absolute_pos.getX(), absolute_pos.getY() + titlebar_size.getY());
-    Vector2 canvas_size(size.getX(), size.getY() - titlebar_size.getY());
+void CanvasWindow::createCanvas(Renderer* renderer, const Vector2& canvas_pos, const Vector2& canvas_size) {
     Skin* canvas_skin = new Skin(new Texture(renderer, canvas_size, {125, 125, 125, 255}), canvas_size);
     CanvasDrawerFunctor* canvas_drawer = new CanvasDrawerFunctor();
     CanvasHandler* canvas_handler = new CanvasHandler(nullptr, renderer, canvas_drawer);
@@ -237,9 +230,6 @@ CanvasWindow::CanvasWindow(Renderer* renderer, const Vector2& pos, const Vector2
     Canvas* canvas = new Canvas(canvas_pos, canvas_size, canvas_handler, this, canvas_skin);
     canvas_handler->setWindow(canvas);
     attachWindow(canvas);
-
-    absolute_pos -= Vector2(1, 1);
-    this->size += Vector2(2, 2);
 }
 
 Canvas::Canvas(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin) :

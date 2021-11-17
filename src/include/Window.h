@@ -46,7 +46,10 @@ public:
 
 class MainWindow : public AbstractWindow { // has titlebar, and global close button, not much functionality, just creates them, pos is always 0, 0
 private:
-    AbstractInstrument* instrument;
+    const Vector2 close_button_size = {32, 32};
+    void createTitlebar(Renderer* renderer, const Vector2& tb_pos, const Vector2& tb_size);
+    void createCloseButton(Renderer* renderer, const Vector2& btn_pos, const Vector2& btn_size, AbstractWindow* titlebar);
+    // AbstractInstrument* instrument;
 public:
     MainWindow(Renderer* renderer, const Vector2& size);
 };
@@ -60,6 +63,11 @@ public:
 };
 
 class CanvasWindow : public AbstractWindow {
+private:
+    const Vector2 close_button_size = {32, 32};
+    void createTitlebar(Renderer* renderer, const Vector2& tb_pos, const Vector2& tb_size);
+    void createCloseButton(Renderer* renderer, const Vector2& btn_pos, const Vector2& btn_size, AbstractWindow* titlebar);
+    void createCanvas(Renderer* renderer, const Vector2& pos, const Vector2& size); 
 public:
     CanvasWindow(Renderer* renderer, const Vector2& pos, const Vector2& size);
 };
