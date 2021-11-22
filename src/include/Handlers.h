@@ -34,16 +34,16 @@ public:
     // void setHoverResponce(ButtonHoverFunctor* hover_start, ButtonHoverFunctor* hover_end);
 };
 
-class TitlebarHandler : public EventHandler {
+class MovingHandler : public EventHandler {
 private:
     bool is_holding = false;
     Functor<const Vector2&>* window_mover;
     bool mbResponce(GUIMouseClickEvent* mouse_click);
     // bool mhResponce(GUIMouseMove* mouse_move);
 public:
-    TitlebarHandler(AbstractWindow* window, Functor<const Vector2&>* move_functor);
+    MovingHandler(AbstractWindow* window, Functor<const Vector2&>* move_functor);
     virtual bool onEvent(GUIEvent* event);
-    virtual ~TitlebarHandler();
+    virtual ~MovingHandler();
 };
 
 class CanvasHandler : public EventHandler {
@@ -51,9 +51,9 @@ private:
     bool is_pressed = false;
     bool mbResponce(GUIMouseClickEvent* mouse_click);
     bool mmResponce(GUIMouseMove* mouse_move);
-    AbstractInstrument* current_instrument;
     Renderer* renderer;
     Functor<Renderer*, Texture*, const Vector2&>* canvas_drawer;
+    AbstractInstrument* current_instrument;
 public:
     virtual ~CanvasHandler();
     CanvasHandler(AbstractWindow* window, Renderer* renderer, Functor<Renderer*, Texture*, const Vector2&>* canvas_drawer);

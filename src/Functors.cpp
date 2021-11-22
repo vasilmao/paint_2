@@ -14,11 +14,11 @@ bool PrintFunctor::operator()() {
     return true;
 }
 
-CreateCanvasWindowFunctor::CreateCanvasWindowFunctor(AbstractWindow* parent, Renderer* renderer) : parent(parent), renderer(renderer) {
-
+CreateCanvasWindowFunctor::CreateCanvasWindowFunctor(AbstractWindow* parent, Renderer* renderer, const Vector2& pos, const Vector2& size) :
+    parent(parent), renderer(renderer), pos(pos), size(size) {
 }
 
-bool CreateCanvasWindowFunctor::operator()(const Vector2& pos, const Vector2& size) {
+bool CreateCanvasWindowFunctor::operator()() {
     CanvasWindow* c_w = new CanvasWindow(renderer, pos, size);
     parent->attachWindow(c_w);
     return true;
@@ -34,6 +34,17 @@ bool WindowMoverFunctor::operator()(const Vector2& dv) {
 }
 
 bool CanvasDrawerFunctor::operator()(Renderer* renderer, Texture* texture, const Vector2& pos) {
-    current_instrument->apply(renderer, texture, pos);
+    // printf("")
+    InstrumentPanel::getInstance()->getCurrentInstrument()->apply(renderer, texture, pos);
+    // current_instrument->apply(renderer, texture, pos);
+    return true;
+}
+
+InstrumentPickerFunctor::InstrumentPickerFunctor(AbstractInstrument* its_instrument) : current_instrument(its_instrument) {}
+
+bool InstrumentPickerFunctor::operator()() {
+    printf("%p\n", InstrumentPanel::getInstance());
+    printf("%p\n", current_instrument);
+    (InstrumentPanel::getInstance())->setInstrument(current_instrument);
     return true;
 }

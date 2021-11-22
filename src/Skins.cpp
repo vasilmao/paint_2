@@ -28,6 +28,10 @@ Texture* Skin::getTexture() {
     return texture;
 }
 
+void Skin::resize(const Vector2& new_size) {
+    real_size = new_size;
+}
+
 // RepeatingSkin::RepeatingSkin(Texture* texture, const Vector2& size) : Skin(texture, size) {}
 
 // void RepeatingSkin::draw(Renderer* renderer, const Vector2& pos) {
@@ -48,6 +52,7 @@ Texture* Skin::getTexture() {
 
 ButtonSkin::ButtonSkin(Texture* texture, Texture* h_t, Texture* p_t) : usual_texture(texture), hovered_texture(h_t), pressed_texture(p_t) {
     current_texture = usual_texture;
+    // printf("usual vs pressed: %p, %p\n", usual_texture, pressed_texture);
     real_size = current_texture->getSize();
 }
 
@@ -67,10 +72,24 @@ void ButtonSkin::setPressed() {
     }
 }
 
+// int cnt = 0;
+
 void ButtonSkin::draw(Renderer* renderer, const Vector2& pos) {
     // printf("button skin %p, pos is (%f, %f), drawing\n", this, pos.getX(), pos.getY());
     // printf("real size is (%f, %f)\n", real_size.getX(), real_size.getY());
+    // printf("button: drawing texture %p\n", current_texture);
+    renderer->setTarget(NULL);
     renderer->copyTexture(current_texture, pos, real_size);
+    // cnt++;
+    // if (cnt == 5) {
+    //     renderer->setTarget(pressed_texture);
+    //     // renderer->drawFilledRect({0, 0}, {10, 10}, {255,255,255,255});
+    //     renderer->setTarget(NULL);
+    //     renderer->copyTexture(pressed_texture, {0, 0}, real_size);
+    //     renderer->render();
+    //     SDL_Delay(3000);
+    //     exit(0);
+    // }
 }
 
 ButtonSkin::~ButtonSkin() {

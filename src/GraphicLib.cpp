@@ -11,7 +11,7 @@ Texture::Texture(Renderer* renderer, const Vector2& size) : size(size) {
                                     size.getX(),
                                     size.getY()
                                     );
-    // SDL_SetTextureBlendMode(sdl_texture, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureBlendMode(sdl_texture, SDL_BLENDMODE_BLEND);
 }
 
 Texture::Texture(Renderer* renderer, const Vector2& size, Color color) : size(size) {
@@ -21,13 +21,13 @@ Texture::Texture(Renderer* renderer, const Vector2& size, Color color) : size(si
                                     size.getX(),
                                     size.getY()
                                     );
-    // SDL_SetTextureBlendMode(sdl_texture, SDL_BLENDMODE_BLEND);
     renderer->setTarget(this);
     SDL_SetRenderDrawColor(renderer->getNativeRenderer(), open_color(color));
     SDL_RenderClear(renderer->getNativeRenderer());
     SDL_FRect rect = {0, 0, size.getX(), size.getY()};
     SDL_RenderDrawRectF(renderer->getNativeRenderer(), &rect);
     SDL_RenderFillRectF(renderer->getNativeRenderer(), &rect);
+    SDL_SetTextureBlendMode(sdl_texture, SDL_BLENDMODE_BLEND);
 }
 
 Texture::Texture(Renderer* renderer, const char* filename) {
@@ -37,12 +37,23 @@ Texture::Texture(Renderer* renderer, const char* filename) {
     }
     assert(surf);
     size = {static_cast<float>(surf->w), static_cast<float>(surf->h)};
-    sdl_texture = SDL_CreateTextureFromSurface(
+    SDL_Texture* bmp_texture = SDL_CreateTextureFromSurface(
         renderer->getNativeRenderer(),
         surf
-    );
+    ); 
+    sdl_texture = SDL_CreateTexture(renderer->getNativeRenderer(),
+                                    SDL_PIXELFORMAT_RGBA8888,
+                                    SDL_TEXTUREACCESS_TARGET,
+                                    size.getX(),
+                                    size.getY()
+                                    );
     assert(sdl_texture);
+    SDL_SetRenderTarget(renderer->getNativeRenderer(), sdl_texture);
+    SDL_RenderCopy(renderer->getNativeRenderer(), bmp_texture, NULL, NULL);
+    SDL_DestroyTexture(bmp_texture);
     SDL_FreeSurface(surf);
+    SDL_SetTextureBlendMode(sdl_texture, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderTarget(renderer->getNativeRenderer(), NULL);
 }
 
 Texture::~Texture() {
@@ -58,8 +69,6 @@ SDL_Texture* Texture::getNativeTexture() {
 }
 
 
-
-
 Font::Font() {
     sdl_font = NULL;
     size = 0;
@@ -72,7 +81,10 @@ Font::~Font() {
 }
 
 Font::Font(int size) : size(size) {
+    printf("%d\n", size);
     sdl_font = TTF_OpenFont("font.ttf", size);
+    printf("font: %p\n", sdl_font);
+    assert(sdl_font);
 }
 
 Font::Font(const char* filename, int size) : size(size) {
@@ -83,6 +95,9 @@ int Font::getSize() const {
     return size;
 }
 
+TTF_Font* Font::getNativeFont() {
+    return sdl_font;
+}
 
 
 Renderer::Renderer(int width, int height, Color bg_color) : width(width), height(height), bg_color(bg_color) {
@@ -103,20 +118,23 @@ Renderer::Renderer(int width, int height, Color bg_color) : width(width), height
     // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
     SDL_SetRenderDrawColor(renderer, open_color(bg_color));
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_RenderClear(renderer);
+
 
     TTF_Init();
     // font = TTF_OpenFont("Anonymous.ttf", 10);
     // assert(font);
-
+    default_font = new Font(30);
 }
 
 Renderer::~Renderer() {
     // TTF_CloseFont(font);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    delete default_font;
     TTF_Quit();
-    SDL_Quit();
+    // SDL_Quit();
     printf("renderer destroyed!\n");
 }
 
@@ -143,25 +161,30 @@ void Renderer::drawFilledCircle(const Vector2& center, const float r, Color colo
     }
 }
 
-void Renderer::drawRect(const Vector2& p1, const Vector2& p2, Color color) const {
-    SDL_FRect rect = {p1.getX(), p1.getY(), p2.getX() - p1.getX(), p2.getY() - p1.getY()};
+void Renderer::drawRect(const Vector2& p1, const Vector2& size, Color color) {
+    SDL_FRect rect = {p1.getX(), p1.getY(), size.getX(), size.getY()};
     SDL_SetRenderDrawColor(renderer, open_color(color));
     SDL_RenderDrawRectF(renderer, &rect);
 }
 
-void Renderer::drawFilledRect(const Vector2& p1, const Vector2& p2, Color color) const {
+void Renderer::drawFilledRect(const Vector2& p1, const Vector2& size, Color color) {
     SDL_SetRenderDrawColor(renderer, open_color(color));
-    for (int x = p1.getX(); x <= p2.getX(); ++x) {
-        SDL_RenderDrawLineF(renderer, x, p1.getY(), x, p2.getY());
+    // printf("FILLED RECT!! %f, %f, %f, %f\n(%d, %d, %d, %d)\n", p1.getX(), p1.getY(), size.getX(), size.getY(), (int)color.r, (int)color.g, (int)color.b, (int)color.a);
+    // printf("right on %p, %p\n", current_texture, current_texture->getNativeTexture());
+    // printf("%p\n", SDL_GetRenderTarget(renderer));
+    for (int x = p1.getX(); x <= (p1 + size).getX(); ++x) {
+        SDL_RenderDrawLineF(renderer, x, p1.getY(), x, (p1 + size).getY());
     }
+    Texture* ct = current_texture;
+    // exit(0);
 }
 
-void Renderer::drawSegment(const Vector2& p1, const Vector2& p2, Color color) const {
+void Renderer::drawSegment(const Vector2& p1, const Vector2& p2, Color color) {
     SDL_SetRenderDrawColor(renderer, open_color(color));
     SDL_RenderDrawLineF(renderer, p1.getX(), p1.getY(), p2.getX(), p2.getY());
 }
 
-void Renderer::drawLine(const Vector2& p1, const Vector2& p2, Color color) const {
+void Renderer::drawLine(const Vector2& p1, const Vector2& p2, Color color) {
     SDL_SetRenderDrawColor(renderer, open_color(color));
     SDL_RenderDrawLineF(renderer, p1.getX(), p1.getY(), p2.getX(), p2.getY());
 }
@@ -184,6 +207,7 @@ void Renderer::render() {
 }
 
 void Renderer::setTarget(Texture* texture) {
+    current_texture = texture;
     if (texture == NULL) {
         SDL_SetRenderTarget(renderer, NULL);
         return;
@@ -197,52 +221,18 @@ SDL_Renderer* Renderer::getNativeRenderer() {
 
 void Renderer::copyTexture(Texture* texture, const Vector2& pos) {
     SDL_FRect dst_rect = {pos.getX(), pos.getY(), texture->getSize().getX(), texture->getSize().getY()};
-    // printf("copying texture, (%f, %f), size (%f, %f)\n", dst_rect.x, dst_rect.y, dst_rect.w, dst_rect.h);
     SDL_RenderCopyF(renderer, texture->getNativeTexture(), NULL, &dst_rect);
-    // render();
-    // SDL_Delay(500);
 }
 
 void Renderer::copyTexture(Texture* texture, const Vector2& pos, const Vector2& dst_size) {
-    // SDL_FRect dst_rect = {pos.getX(), pos.getY(), texture->getSize().getX(), texture->getSize().getY()};
     SDL_FRect dst_rect = {pos.getX(), pos.getY(), dst_size.getX(), dst_size.getY()};
-    // printf("copying texture, (%f, %f), size (%f, %f)\n", dst_rect.x, dst_rect.y, dst_rect.w, dst_rect.h);
     SDL_RenderCopyF(renderer, texture->getNativeTexture(), NULL, &dst_rect);
-    // render();
-    // SDL_Delay(500);
 }
 
 // void Renderer::copyTextureRect(Texture* texture, const Vector2& pos, const Rect2f& rect) {
 //     SDL_FRect dst_rect = {pos.getX(), pos.getY(), rect.width, rect.height};
 //     SDL_Rect src_rect = {static_cast<int>(rect.x), static_cast<int>(rect.y), static_cast<int>(rect.width), static_cast<int>(rect.height)};
 //     SDL_RenderCopyF(renderer, texture->getNativeTexture(), &src_rect, &dst_rect);
-// }
-
-// SystemEvent Renderer::getEvent() const {
-//     SDL_Event event;
-//     int res = SDL_PollEvent(&event);
-//     SystemEvent result_event; // oh...
-//     if (res == 0) {
-//         result_event.event_type = NO_EVENT;
-//         return result_event;
-//     }
-//     switch (event.type)
-//     {
-//         case SDL_QUIT:
-//             result_event.event_type = QUIT_EVENT;
-//             break;
-
-//         case SDL_MOUSEBUTTONDOWN:
-//             result_event.event_type = MOUSE_BUTTON_DOWN;
-//             result_event.mouse_pos = {coord_system->translatePixel(Vector2(event.button.x, event.button.y))};
-//             break;
-        
-        
-//         default:
-//             result_event.event_type = OTHER_EVENTS;
-//             break;
-//     }
-//     return result_event;
 // }
 
 // void Renderer::drawText(const Vector2& pos, const Vector2& size, const char* text, Color color) {
@@ -259,6 +249,80 @@ void Renderer::copyTexture(Texture* texture, const Vector2& pos, const Vector2& 
 //     SDL_DestroyTexture(texture);
 //     SDL_FreeSurface(text_surface);
 // }
+
+void Renderer::drawText(const Vector2& pos, const Vector2& size, const char* text, Color color) {
+    // Font font(25);
+    // printf("%p\n", default_font->getNativeFont());
+    SDL_Surface* text_surface = TTF_RenderText_Solid(default_font->getNativeFont(), text, {open_color(color)});
+    SDL_Texture* text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
+    SDL_SetTextureBlendMode(text_texture, SDL_BLENDMODE_BLEND);
+    // printf("%f %f %f %f\n", p1.getX(), p1.getY(), p2.getX(), p2.getY());
+    SDL_FRect rect = {pos.getX(), pos.getY(), size.getX(), size.getY()};
+    // SDL_SetRenderTarget(renderer, NULL);
+    SDL_RenderCopyF(renderer, text_texture, NULL, &rect);
+    SDL_RenderPresent(renderer);
+    // SDL_Delay(2000);
+    // exit(0);
+    SDL_DestroyTexture(text_texture);
+    SDL_FreeSurface(text_surface);
+}
+
+void Renderer::drawText(const Vector2& pos, const char* text, Color color) {
+    // Font font(25);
+    // printf("%p\n", default_font->getNativeFont());
+    SDL_Surface* text_surface = TTF_RenderText_Solid(default_font->getNativeFont(), text, {open_color(color)});
+    SDL_Texture* text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
+    SDL_SetTextureBlendMode(text_texture, SDL_BLENDMODE_BLEND);
+    // printf("%f %f %f %f\n", p1.getX(), p1.getY(), p2.getX(), p2.getY());
+    // printf("BRUH! %s: %d, %d\n", text, text_surface->w, text_surface->h);
+    SDL_FRect rect = {pos.getX(), pos.getY(), text_surface->w, text_surface->h};
+    // SDL_SetRenderTarget(renderer, NULL);
+    SDL_RenderCopyF(renderer, text_texture, NULL, &rect);
+    SDL_RenderPresent(renderer);
+    // SDL_Delay(2000);
+    // exit(0);
+    SDL_DestroyTexture(text_texture);
+    SDL_FreeSurface(text_surface);
+}
+
+void Renderer::drawTextCentered(const Vector2& pos, const Vector2& size, const char* text, Color color) {
+    // Font font(25);
+    // printf("%p\n", default_font->getNativeFont());
+    SDL_Surface* text_surface = TTF_RenderText_Solid(default_font->getNativeFont(), text, {open_color(color)});
+    SDL_Texture* text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
+    SDL_SetTextureBlendMode(text_texture, SDL_BLENDMODE_BLEND);
+    // printf("%f %f %f %f\n", p1.getX(), p1.getY(), p2.getX(), p2.getY());
+    float coefficient = (1.0f * text_surface->w) / text_surface->h;
+
+    float text_size_x = size.getX() / 1.15;
+    float text_size_y = size.getY() / 1.15;
+
+    // printf("coefficient: %f\n", coefficient);
+
+    if (text_size_y * coefficient < text_size_x) {
+        if (text_size_y < 20) {
+            text_size_y = Min(20.0f, size.getY());
+        }
+        text_size_x = text_size_y * coefficient;
+    } else {
+        text_size_y = text_size_x / coefficient;
+    }
+
+    // printf("text height: %f\n", text_size_y);
+
+    SDL_FRect rect = {
+        pos.getX() + (size.getX() - text_size_x) / 2 ,
+        pos.getY() + (size.getY() - text_size_y) / 2,
+        text_size_x,
+        text_size_y};
+    // SDL_SetRenderTarget(renderer, NULL);
+    SDL_RenderCopyF(renderer, text_texture, NULL, &rect);
+    SDL_RenderPresent(renderer);
+    // SDL_Delay(2000);
+    // exit(0);
+    SDL_DestroyTexture(text_texture);
+    SDL_FreeSurface(text_surface);
+}
 
 
 SystemEvent getSystemEvent() {

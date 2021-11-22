@@ -55,6 +55,7 @@ bool ButtonHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
         if (!is_pressed && mouse_click->isButtonDown()) {
             is_pressed = true;
             button->setPressed();
+            printf("setted pressed\n");
             return true;
         } else if (is_pressed && !(mouse_click->isButtonDown())) {
             is_pressed = false;
@@ -116,11 +117,11 @@ ButtonHandler::~ButtonHandler() {
     delete click_event_responce;
 }
 
-TitlebarHandler::TitlebarHandler(AbstractWindow* window, Functor<const Vector2&>* move_functor) : EventHandler(window), window_mover(move_functor) {
+MovingHandler::MovingHandler(AbstractWindow* window, Functor<const Vector2&>* move_functor) : EventHandler(window), window_mover(move_functor) {
 
 }
 
-bool TitlebarHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
+bool MovingHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
     // printf("titlebar got mouseclick\n");
     if (my_window->hitTest(mouse_click->getPos())) {
         if (!is_holding && mouse_click->isButtonDown()) {
@@ -136,7 +137,7 @@ bool TitlebarHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
     return false;
 }
 
-bool TitlebarHandler::onEvent(GUIEvent* event) {
+bool MovingHandler::onEvent(GUIEvent* event) {
     // printf("titlebar got event!\n");
     switch (event->getType())
     {
@@ -163,7 +164,7 @@ bool TitlebarHandler::onEvent(GUIEvent* event) {
     }
 }
 
-TitlebarHandler::~TitlebarHandler() {
+MovingHandler::~MovingHandler() {
     delete window_mover;
 }
 
@@ -220,18 +221,18 @@ bool CanvasHandler::onEvent(GUIEvent* event) {
             return spreadEvent(event);
         }
 
-        case static_cast<int>(GUIEvent::GUIEventTypes::INSTRUMENT_CHANGED): {
-            // printf("das a new instrument!\n");
-            GUIInstrumentChanged* instr_event = dynamic_cast<GUIInstrumentChanged*>(event);
-            // Canvas* canvas = dynamic_cast<Canvas*>(my_window);
-            current_instrument = instr_event->getInstrument();
-            CanvasDrawerFunctor* canv_drawer = dynamic_cast<CanvasDrawerFunctor*>(canvas_drawer);
-            // printf("ugh setting...\n");
-            // printf("%p\n", canv_drawer);
-            canv_drawer->setInstrument(current_instrument);
-            // printf("ya, new instrument!\n");
-            return true;
-        }
+        // case static_cast<int>(GUIEvent::GUIEventTypes::INSTRUMENT_CHANGED): {
+        //     // printf("das a new instrument!\n");
+        //     GUIInstrumentChanged* instr_event = dynamic_cast<GUIInstrumentChanged*>(event);
+        //     // Canvas* canvas = dynamic_cast<Canvas*>(my_window);
+        //     current_instrument = instr_event->getInstrument();
+        //     CanvasDrawerFunctor* canv_drawer = dynamic_cast<CanvasDrawerFunctor*>(canvas_drawer);
+        //     // printf("ugh setting...\n");
+        //     // printf("%p\n", canv_drawer);
+        //     // canv_drawer->setInstrument(current_instrument);
+        //     // printf("ya, new instrument!\n");
+        //     return true;
+        // }
     
         default:
             return spreadEvent(event);

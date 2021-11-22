@@ -57,13 +57,15 @@ public:
     virtual bool operator()();
 };
 
-class CreateCanvasWindowFunctor : public Functor<const Vector2&, const Vector2&> {
+class CreateCanvasWindowFunctor : public Functor<> {
 private:
     AbstractWindow* parent;
     Renderer* renderer;
+    Vector2 pos;
+    Vector2 size;
 public:
-    CreateCanvasWindowFunctor(AbstractWindow* parent, Renderer* renderer);
-    virtual bool operator()(const Vector2& pos, const Vector2& size);
+    CreateCanvasWindowFunctor(AbstractWindow* parent, Renderer* renderer, const Vector2& pos, const Vector2& size);
+    virtual bool operator()();
 };
 
 class WindowMoverFunctor : public Functor<const Vector2&> {
@@ -76,18 +78,26 @@ public:
 
 class CanvasDrawerFunctor : public Functor<Renderer*, Texture*, const Vector2&> {
 private:
-    AbstractInstrument* current_instrument;
+    // AbstractInstrument* current_instrument;
 public:
     CanvasDrawerFunctor() {
-        current_instrument = nullptr;
+        // current_instrument = nullptr;
     }
-    CanvasDrawerFunctor(AbstractInstrument* instr) {
-        current_instrument = instr;
-    }
-    void setInstrument(AbstractInstrument* new_instr) {
-        current_instrument = new_instr;
-    }
+    // CanvasDrawerFunctor(AbstractInstrument* instr) {
+    //     current_instrument = instr;
+    // }
+    // void setInstrument(AbstractInstrument* new_instr) {
+    //     current_instrument = new_instr;
+    // }
     virtual bool operator()(Renderer* renderer, Texture* texture, const Vector2& pos);
+};
+
+class InstrumentPickerFunctor : public Functor<> {
+private:
+    AbstractInstrument* current_instrument;
+public:
+    InstrumentPickerFunctor(AbstractInstrument* its_instrument);
+    virtual bool operator()();
 };
 
 #endif

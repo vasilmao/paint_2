@@ -10,6 +10,7 @@ public:
     virtual void draw(Renderer* renderer, const Vector2& pos);
     virtual bool hitTest(const Vector2& pos);
     virtual ~Skin();
+    void resize(const Vector2& new_size);
     Texture* getTexture();
 };
 

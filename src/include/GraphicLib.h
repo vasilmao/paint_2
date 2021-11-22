@@ -69,6 +69,8 @@ public:
     bool hitTest(const Vector2& pos) const;
 };
 
+Texture* createSign(char* text, const Vector2& size);
+
 //--------------------------------------------------------------------------------------------------------------------------------
 
 class Font {
@@ -81,6 +83,7 @@ public:
     Font(int size);
     Font(const char* filename, int size);
     int getSize() const;
+    TTF_Font* getNativeFont();
 };
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -98,6 +101,9 @@ private:
 
     Color bg_color;
 
+    Font* default_font;
+
+    Texture* current_texture = nullptr;
 
 public:
 
@@ -106,13 +112,15 @@ public:
     ~Renderer();
     Renderer(int width, int height, Color bg_color);
     void drawFilledCircle(const Vector2& center, const float r, Color color) const;
-    void drawRect(const Vector2& p1, const Vector2& p2, Color color) const;
-    void drawFilledRect(const Vector2& p1, const Vector2& p2, Color color) const;
-    void drawSegment(const Vector2& p1, const Vector2& p2, Color color) const;
-    void drawLine(const Vector2& p1, const Vector2& p2, Color color) const;
+    void drawRect(const Vector2& p1, const Vector2& size, Color color);
+    void drawFilledRect(const Vector2& p1, const Vector2& size, Color color);
+    void drawSegment(const Vector2& p1, const Vector2& p2, Color color);
+    void drawLine(const Vector2& p1, const Vector2& p2, Color color);
     void drawThickLine(const Vector2& p1, const Vector2& p2, Color color) const;
     void render();
     void drawText(const Vector2& pos, const Vector2& size, const char* text, Color color);
+    void drawTextCentered(const Vector2& pos, const Vector2& size, const char* text, Color color);
+    void drawText(const Vector2& pos, const char* text, Color color);
     void setTarget(Texture* texture);
     void copyTexture(Texture* texture, const Vector2& pos);
     void copyTexture(Texture* texture, const Vector2& pos, const Vector2& dst_size);
