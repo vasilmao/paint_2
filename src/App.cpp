@@ -42,7 +42,21 @@ App::App() {
         brush_texture_pressed
     );
     Brush* brush_instr = new Brush();
+    Eraser* eraser_instr = new Eraser();
+
+    Texture* eraser_texture = new Texture(renderer, "skins/Eraser.bmp");
+    Texture* eraser_texture_pressed = new Texture(renderer, "skins/Eraser.bmp");
+    renderer->setTarget(eraser_texture_pressed);
+    renderer->drawRect({0, 0}, eraser_texture_pressed->getSize(), {255, 0, 0, 255});
+
+    ButtonSkin* eraser_btn_skin = new ButtonSkin(
+        eraser_texture,
+        nullptr,
+        eraser_texture_pressed
+    );
+
     InstrumentPanel::getInstance()->addInstrument(brush_instr, brush_btn_skin);
+    InstrumentPanel::getInstance()->addInstrument(eraser_instr, eraser_btn_skin);
     InstrumentPanel::getInstance()->setInstrument(brush_instr);
     main_window->attachWindow(InstrumentPanel::getInstance());
 

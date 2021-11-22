@@ -309,7 +309,7 @@ void InstrumentPanel::create(Renderer* renderer, AbstractWindow* parent) {
 }
 
 void InstrumentPanel::addInstrument(AbstractInstrument* instr, ButtonSkin* skin) {
-    EventHandler* btn_handler = new ButtonHandler(nullptr, new InstrumentPickerFunctor(instr));
+    EventHandler* btn_handler = new ListElementHandler(nullptr, new InstrumentPickerFunctor(instr));
     int instr_cnt = panel->children->getSize();
     Vector2 btn_pos(0, 0);
     btn_pos.setY(panel->absolute_pos.getY() + instr_cnt / 2 * (icons_size + px_offset) + px_offset);

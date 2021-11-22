@@ -117,6 +117,59 @@ ButtonHandler::~ButtonHandler() {
     delete click_event_responce;
 }
 
+ListElementHandler::ListElementHandler(AbstractWindow* window, Functor<>* click_functor) : EventHandler(window), click_event_responce(click_functor) {
+    
+}
+
+bool ListElementHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
+    Button* button = dynamic_cast<Button*>(my_window);
+    if (my_window->hitTest(mouse_click->getPos())) {
+        printf("btn hittest\n");
+        if (!is_pressed && mouse_click->isButtonDown()) {
+            is_pressed = true;
+            printf("setted pressed\n");
+            return true;
+        } else if (is_pressed && !(mouse_click->isButtonDown())) {
+            GUIListElementChanged list_event;
+            button->getParent()->onEvent(&list_event);
+            is_pressed = false;
+            is_chosen = true;
+            button->setPressed();
+            // button->setUsual();
+            return (*click_event_responce)();
+        }
+    } else if (is_pressed && !(mouse_click->isButtonDown())) {
+        is_pressed = false;
+        button->setUsual();
+        return true;
+    }
+    return false;
+}
+
+bool ListElementHandler::onEvent(GUIEvent* event) {
+    switch (event->getType())
+    {
+        case static_cast<int>(GUIEvent::GUIEventTypes::MOUSE_BUTTON): {
+            GUIMouseClickEvent* mouse_click = dynamic_cast<GUIMouseClickEvent*> (event);
+            return mbResponce(mouse_click);
+        }
+
+        case static_cast<int>(GUIEvent::GUIEventTypes::LIST_ELEMENT_CHANGED) : {
+            is_pressed = false;
+            is_chosen = false;
+            dynamic_cast<Button*>(my_window)->setUsual();
+            return true;
+        }
+        default: {
+            return spreadEvent(event);
+        }
+    }
+}
+
+ListElementHandler::~ListElementHandler() {
+    delete click_event_responce;
+}
+
 MovingHandler::MovingHandler(AbstractWindow* window, Functor<const Vector2&>* move_functor) : EventHandler(window), window_mover(move_functor) {
 
 }

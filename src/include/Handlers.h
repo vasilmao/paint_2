@@ -1,4 +1,7 @@
 //----------Event Handlers----------
+#ifndef INCLUDE_HASNDLERS
+#define INCLUDE_HASNDLERS
+
 #include "GUIEvents.h"
 #include "Window.h"
 #include "Functors.h"
@@ -59,3 +62,18 @@ public:
     CanvasHandler(AbstractWindow* window, Renderer* renderer, Functor<Renderer*, Texture*, const Vector2&>* canvas_drawer);
     virtual bool onEvent(GUIEvent* event);
 };
+
+class ListElementHandler : public EventHandler {
+private:
+    bool is_pressed = false;
+    bool is_chosen = false;
+    Functor<>* click_event_responce;
+    bool mbResponce(GUIMouseClickEvent* mouse_click);
+    bool mhResponce(GUIMouseMove* mouse_move);
+public:
+    ListElementHandler(AbstractWindow* window, Functor<>* click_functor);
+    virtual bool onEvent(GUIEvent* event);
+    virtual ~ListElementHandler();
+};
+
+#endif

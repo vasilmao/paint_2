@@ -26,6 +26,7 @@ public:
         renderer->setTarget(texture);
         renderer->drawFilledCircle(pos, r, color);
         renderer->setTarget(NULL);
+        printf("applied!\n");
     }
     virtual ~Brush(){};
 };
@@ -33,7 +34,7 @@ public:
 class Eraser : public Brush {
 public:
     Eraser(){
-        color = {0, 0, 0, 255};
+        color = {255, 255, 255, 255};
     }
     void setR(float new_r) {
         r = new_r;

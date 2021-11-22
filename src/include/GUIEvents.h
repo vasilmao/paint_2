@@ -16,6 +16,7 @@ public:
         MOUSE_MOVE,
         CLOSE,
         INSTRUMENT_CHANGED,
+        LIST_ELEMENT_CHANGED,
         EVENTS_CNT
     };
 protected:
@@ -88,6 +89,11 @@ public:
     AbstractInstrument* getInstrument() {
         return new_instrument;
     }
+};
+
+class GUIListElementChanged : public GUIEvent {
+public:
+    GUIListElementChanged() : GUIEvent(GUIEventTypes::LIST_ELEMENT_CHANGED) {}
 };
 
 #endif
