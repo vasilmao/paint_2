@@ -111,7 +111,7 @@ public:
 
     ~Renderer();
     Renderer(int width, int height, Color bg_color);
-    void drawFilledCircle(const Vector2& center, const float r, Color color) const;
+    void drawFilledCircle(const Vector2& center, const float r, Color color);
     void drawRect(const Vector2& p1, const Vector2& size, Color color);
     void drawFilledRect(const Vector2& p1, const Vector2& size, Color color);
     void drawSegment(const Vector2& p1, const Vector2& p2, Color color);

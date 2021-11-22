@@ -9,6 +9,7 @@
 #include "List.h"
 #include "Window.h"
 #include "Instruments.h"
+#include "Handlers.h"
 
 class App {
 private:

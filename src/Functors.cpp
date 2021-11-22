@@ -1,5 +1,11 @@
 #include "Functors.h"
 
+EmptyFunctor::EmptyFunctor() {}
+
+bool EmptyFunctor::operator()() {
+    return false;
+}
+
 CloseButtonFunctor::CloseButtonFunctor(AbstractWindow* to_close_window) : to_close_window(to_close_window) {
     
 }
@@ -43,8 +49,8 @@ bool CanvasDrawerFunctor::operator()(Renderer* renderer, Texture* texture, const
 InstrumentPickerFunctor::InstrumentPickerFunctor(AbstractInstrument* its_instrument) : current_instrument(its_instrument) {}
 
 bool InstrumentPickerFunctor::operator()() {
-    printf("%p\n", InstrumentPanel::getInstance());
-    printf("%p\n", current_instrument);
+    // printf("%p\n", InstrumentPanel::getInstance());
+    // printf("%p\n", current_instrument);
     (InstrumentPanel::getInstance())->setInstrument(current_instrument);
     return true;
 }

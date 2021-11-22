@@ -101,3 +101,17 @@ ButtonSkin::~ButtonSkin() {
         delete hovered_texture;
     }
 }
+
+LeakyCircleSkin::LeakyCircleSkin(Texture* u_t, Texture* h_t, Texture* p_t, float big_r, float small_r) :
+    ButtonSkin(u_t, h_t, p_t), big_r(big_r), small_r(small_r) {
+    
+}
+
+bool LeakyCircleSkin::hitTest(const Vector2& pos) {
+    Vector2 center = real_size * 0.5;
+    float dx = pos.getX() - center.getX();
+    float dy = pos.getY() - center.getY();
+    bool inner_circle = (dx * dx + dy * dy <= small_r * small_r);
+    bool outer_circle = (dx * dx + dy * dy <= big_r * big_r);
+    return outer_circle && (!inner_circle);
+}

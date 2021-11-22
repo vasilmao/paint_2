@@ -1,3 +1,6 @@
+#ifndef INCLUDE_SKINS
+#define INCLUDE_SKINS
+
 #include "GraphicLib.h"
 
 class Skin {
@@ -21,7 +24,7 @@ public:
 // };
 
 class ButtonSkin : public Skin {
-private:
+protected:
     Texture* usual_texture;
     Texture* hovered_texture;
     Texture* pressed_texture;
@@ -40,3 +43,14 @@ public:
 // class ColoredRectSkin : public Skin {
 //     ColoredRectSkin(const Vector2& size, Color color);
 // }
+
+class LeakyCircleSkin : public ButtonSkin {
+private:
+    float big_r = 0;
+    float small_r = 0;
+public:
+    LeakyCircleSkin(Texture* u_t, Texture* h_t, Texture* p_t, float big_r, float small_r);
+    virtual bool hitTest(const Vector2& pos);
+};
+
+#endif

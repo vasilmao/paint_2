@@ -11,32 +11,16 @@ public:
     virtual ~Functor() {}
 };
 
-class CloseFunctor : public Functor<> {
+class EmptyFunctor : public Functor<> {
+public:
+    EmptyFunctor();
     virtual bool operator()();
 };
 
-// class FunctorEventSpreader : public Functor<> {
-// public:
-//     virtual bool operator()(GUIEvent* event) {
-//         bool responce = false;
-//         for (List<AbstractWindow*>::Iterator it = caller_window->getChildren()->begin(); it.isValid(); ++it) {
-//             responce |= it.getData()->onEvent(event);
-//         }
-//         return responce;
-//     }
-// };
-
-// class FunctorEventPasser : public Functor<> {
-// public:
-//     virtual bool operator()(GUIEvent* event) {
-//         for (List<AbstractWindow*>::Iterator it = caller_window->getChildren()->begin(); it.isValid(); ++it) {
-//             if (it.getData()->onEvent(event)) {
-//                 return true;
-//             }
-//         }
-//         return false;
-//     }
-// };
+class CloseFunctor : public Functor<> {
+public:
+    virtual bool operator()();
+};
 
 class CloseButtonFunctor : public Functor<> {
 private:
@@ -46,11 +30,6 @@ public:
     CloseButtonFunctor(AbstractWindow* to_close_window);
     virtual bool operator()();
 };
-
-// class ButtonHoverFunctor : public Functor<const Vector2&> {
-// public:
-//     virtual bool operator()(const Vector2& mouse_pos);
-// };
 
 class PrintFunctor : public Functor<> {
 public:

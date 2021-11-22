@@ -50,16 +50,21 @@ ButtonHandler::ButtonHandler(AbstractWindow* window, Functor<>* click_functor) :
 
 bool ButtonHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
     Button* button = dynamic_cast<Button*>(my_window);
+    // printf("chekin\n");
     if (my_window->hitTest(mouse_click->getPos())) {
-        printf("btn hittest\n");
+        // printf("btn hittest\n");
+        printf("%p\n", mouse_click);
         if (!is_pressed && mouse_click->isButtonDown()) {
             is_pressed = true;
             button->setPressed();
             printf("setted pressed\n");
             return true;
         } else if (is_pressed && !(mouse_click->isButtonDown())) {
+            printf("unpressed!\n");
             is_pressed = false;
             button->setUsual();
+            // printf("ugh\n");
+            // printf("%p\n", click_event_responce);
             return (*click_event_responce)();
         }
     } else if (is_pressed && !(mouse_click->isButtonDown())) {
@@ -99,6 +104,7 @@ bool ButtonHandler::onEvent(GUIEvent* event) {
     {
         case static_cast<int>(GUIEvent::GUIEventTypes::MOUSE_BUTTON): {
             GUIMouseClickEvent* mouse_click = dynamic_cast<GUIMouseClickEvent*> (event);
+            // printf("btn!\n");
             return mbResponce(mouse_click);
         }
 
@@ -124,12 +130,13 @@ ListElementHandler::ListElementHandler(AbstractWindow* window, Functor<>* click_
 bool ListElementHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
     Button* button = dynamic_cast<Button*>(my_window);
     if (my_window->hitTest(mouse_click->getPos())) {
-        printf("btn hittest\n");
+        // printf("btn hittest\n");
         if (!is_pressed && mouse_click->isButtonDown()) {
             is_pressed = true;
             printf("setted pressed\n");
             return true;
         } else if (is_pressed && !(mouse_click->isButtonDown())) {
+            printf("unpressed\n");
             GUIListElementChanged list_event;
             button->getParent()->onEvent(&list_event);
             is_pressed = false;
@@ -273,19 +280,6 @@ bool CanvasHandler::onEvent(GUIEvent* event) {
             }
             return spreadEvent(event);
         }
-
-        // case static_cast<int>(GUIEvent::GUIEventTypes::INSTRUMENT_CHANGED): {
-        //     // printf("das a new instrument!\n");
-        //     GUIInstrumentChanged* instr_event = dynamic_cast<GUIInstrumentChanged*>(event);
-        //     // Canvas* canvas = dynamic_cast<Canvas*>(my_window);
-        //     current_instrument = instr_event->getInstrument();
-        //     CanvasDrawerFunctor* canv_drawer = dynamic_cast<CanvasDrawerFunctor*>(canvas_drawer);
-        //     // printf("ugh setting...\n");
-        //     // printf("%p\n", canv_drawer);
-        //     // canv_drawer->setInstrument(current_instrument);
-        //     // printf("ya, new instrument!\n");
-        //     return true;
-        // }
     
         default:
             return spreadEvent(event);

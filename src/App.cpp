@@ -21,14 +21,14 @@ App::App() {
     main_window->attachWindow(canvas_w1);
     printf("uh oh society\n");
     GUIInstrumentChanged event(instrument);
-    printf("sending\n");
+    // printf("sending\n");
     // canvas_w->onEvent(&event);
     // canvas_w1->onEvent(&event);
     
     InstrumentPanel::create(renderer, main_window);
     Texture* brush_texture = new Texture(renderer, "skins/Brush.bmp");
     Texture* brush_texture_pressed = new Texture(renderer, "skins/Brush.bmp");
-    printf("brush texture... %p\n", brush_texture_pressed);
+    // printf("brush texture... %p\n", brush_texture_pressed);
     renderer->setTarget(brush_texture_pressed);
     renderer->drawRect({0, 0}, brush_texture_pressed->getSize(), {255, 0, 0, 255});
     // renderer->setTarget(brush_texture_pressed);
@@ -60,20 +60,34 @@ App::App() {
     InstrumentPanel::getInstance()->setInstrument(brush_instr);
     main_window->attachWindow(InstrumentPanel::getInstance());
 
+
+    Texture* strange_texture1 = new Texture(renderer, {60, 60}, {0, 0, 0, 0});
+    renderer->setTarget(strange_texture1);
+    renderer->drawFilledCircle({30, 30}, 30, {255, 255, 255, 255});
+    renderer->setTarget(strange_texture1);
+    renderer->drawFilledCircle({30, 30}, 15, {0, 0, 0, 0});
+
+    Texture* strange_texture2 = new Texture(renderer, {60, 60}, {0, 0, 0, 0});
+    renderer->setTarget(strange_texture2);
+    renderer->drawFilledCircle({30, 30}, 30, {255, 0, 0, 255});
+    renderer->setTarget(strange_texture2);
+    renderer->drawFilledCircle({30, 30}, 15, {0, 0, 0, 0});
+
+    Skin* strange_skin1 = new LeakyCircleSkin(strange_texture1, nullptr, strange_texture2, 30, 15);
+    EventHandler* strange_handler = dynamic_cast<EventHandler*>(new ButtonHandler(nullptr, new EmptyFunctor()));
+    Button* strange_btn = new Button(
+        {940, 690},
+        {60, 60},
+        strange_handler,
+        main_window,
+        strange_skin1
+    );
+
+    strange_handler->setWindow(strange_btn);
+
+    main_window->attachWindow(strange_btn);
+
     printf("constructed\n");
-    // canvas_w = new CanvasWindow(renderer, {40, 40}, {500, 300});
-    // canvas_w1 = new CanvasWindow(renderer, {400, 400}, {500, 300});
-    // main_window->attachWindow(canvas_w);
-    // main_window->attachWindow(canvas_w1);
-    // canvas_w = new CanvasWindow(renderer, {40, 40}, {500, 300});
-    // canvas_w1 = new CanvasWindow(renderer, {400, 400}, {500, 300});
-    // main_window->attachWindow(canvas_w);
-    // main_window->attachWindow(canvas_w1);
-    // canvas_w = new CanvasWindow(renderer, {40, 40}, {500, 300});
-    // canvas_w1 = new CanvasWindow(renderer, {400, 400}, {500, 300});
-    // main_window->attachWindow(canvas_w);
-    // main_window->attachWindow(canvas_w1);
-    // main_window->onEvent(&event);
 }
 
 void App::run() {

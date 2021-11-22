@@ -81,9 +81,9 @@ Font::~Font() {
 }
 
 Font::Font(int size) : size(size) {
-    printf("%d\n", size);
+    // printf("%d\n", size);
     sdl_font = TTF_OpenFont("font.ttf", size);
-    printf("font: %p\n", sdl_font);
+    // printf("font: %p\n", sdl_font);
     assert(sdl_font);
 }
 
@@ -118,7 +118,7 @@ Renderer::Renderer(int width, int height, Color bg_color) : width(width), height
     // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
     SDL_SetRenderDrawColor(renderer, open_color(bg_color));
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    // SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_RenderClear(renderer);
 
 
@@ -138,7 +138,7 @@ Renderer::~Renderer() {
     printf("renderer destroyed!\n");
 }
 
-void Renderer::drawFilledCircle(const Vector2& center, const float r, Color color) const {
+void Renderer::drawFilledCircle(const Vector2& center, const float r, Color color) {
     SDL_SetRenderDrawColor(renderer, open_color(color));
     float r2 = r * r;
     Vector2 center_point(center);
