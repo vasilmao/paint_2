@@ -6,6 +6,7 @@ const int HEIGHT = 750;
 const Color bg_color = {185, 226, 235, 255};
 
 App::App() {
+    // TODO: SPLIT INTO FUNCTIONS!!!!!!!!!!!!!!!!!!!
     running = false;
 
     width = WIDTH;
@@ -31,11 +32,7 @@ App::App() {
     // printf("brush texture... %p\n", brush_texture_pressed);
     renderer->setTarget(brush_texture_pressed);
     renderer->drawRect({0, 0}, brush_texture_pressed->getSize(), {255, 0, 0, 255});
-    // renderer->setTarget(brush_texture_pressed);
-    // renderer->drawFilledRect({1, 1}, brush_texture_pressed->getSize() - Vector2(2, 2), {255, 0, 0, 255});
-    // renderer->setTarget(brush_texture_pressed);
-    // renderer->drawFilledRect({2, 2}, brush_texture_pressed->getSize() - Vector2(3, 3), {255, 0, 0, 255});
-    // renderer->setTarget(NULL);
+
     ButtonSkin* brush_btn_skin = new ButtonSkin(
         brush_texture,
         nullptr,
@@ -57,7 +54,7 @@ App::App() {
 
     InstrumentPanel::getInstance()->addInstrument(brush_instr, brush_btn_skin);
     InstrumentPanel::getInstance()->addInstrument(eraser_instr, eraser_btn_skin);
-    InstrumentPanel::getInstance()->setInstrument(brush_instr);
+    // InstrumentPanel::getInstance()->setInstrument(brush_instr);
     main_window->attachWindow(InstrumentPanel::getInstance());
 
 

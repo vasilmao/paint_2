@@ -175,7 +175,7 @@ void Renderer::drawFilledRect(const Vector2& p1, const Vector2& size, Color colo
     for (int x = p1.getX(); x <= (p1 + size).getX(); ++x) {
         SDL_RenderDrawLineF(renderer, x, p1.getY(), x, (p1 + size).getY());
     }
-    Texture* ct = current_texture;
+    // Texture* ct = current_texture;
     // exit(0);
 }
 
@@ -275,7 +275,7 @@ void Renderer::drawText(const Vector2& pos, const char* text, Color color) {
     SDL_SetTextureBlendMode(text_texture, SDL_BLENDMODE_BLEND);
     // printf("%f %f %f %f\n", p1.getX(), p1.getY(), p2.getX(), p2.getY());
     // printf("BRUH! %s: %d, %d\n", text, text_surface->w, text_surface->h);
-    SDL_FRect rect = {pos.getX(), pos.getY(), text_surface->w, text_surface->h};
+    SDL_FRect rect = {pos.getX(), pos.getY(), static_cast<float>(text_surface->w), static_cast<float>(text_surface->h)};
     // SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderCopyF(renderer, text_texture, NULL, &rect);
     SDL_RenderPresent(renderer);

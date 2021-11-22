@@ -41,9 +41,13 @@ bool WindowMoverFunctor::operator()(const Vector2& dv) {
 
 bool CanvasDrawerFunctor::operator()(Renderer* renderer, Texture* texture, const Vector2& pos) {
     // printf("")
-    InstrumentPanel::getInstance()->getCurrentInstrument()->apply(renderer, texture, pos);
+    AbstractInstrument* instrument = InstrumentPanel::getInstance()->getCurrentInstrument();
+    if (instrument != nullptr) {
+        instrument->apply(renderer, texture, pos);
+        return true;
+    }
     // current_instrument->apply(renderer, texture, pos);
-    return true;
+    return false;
 }
 
 InstrumentPickerFunctor::InstrumentPickerFunctor(AbstractInstrument* its_instrument) : current_instrument(its_instrument) {}
