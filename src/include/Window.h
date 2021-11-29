@@ -17,7 +17,6 @@ class Functor;
 
 class AbstractWindow {
 protected:
-    char* title = nullptr;
     List<AbstractWindow*>* children;
     Vector2 absolute_pos;
     Vector2 size;
@@ -95,10 +94,14 @@ public:
 
 class InstrumentPanel : public AbstractWindow { // singleton
 private:
-    const float px_offset = 5.0;
-    const float icons_size = 24.0;
+    static constexpr Color bg_color = {138, 135, 134, 255};
+    static constexpr float forced_icon_size = 24.0;
+    static constexpr float up_offset = 10.0;
+    static constexpr float px_interval = 5.0;
+    static constexpr float icons_size = 24.0;
     static bool is_created;
     static InstrumentPanel* panel;
+    static Renderer* my_renderer;
     // List<AbstractInstrument*> instruments;
     AbstractInstrument* current_instrument = nullptr;
     InstrumentPanel();
@@ -111,6 +114,23 @@ public:
     void setInstrument(AbstractInstrument* instr);
     virtual ~InstrumentPanel();
     static InstrumentPanel* getInstance();
+};
+
+class SliderBody : public AbstractWindow {
+public:
+    SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& size); // create the slider
+};
+
+class Slider : public AbstractWindow {
+private:
+    float min_value = 0;
+    float max_value = 1;
+    float current_value = 0;
+    // Vector2 pos_at_min_value;
+    // Vector2 pos_at_max_value;
+    Vector2 move_dir;
+public:
+    Slider(const Vector2& pos, const Vector2& size, AbstractWindow* parent, Functor<float> reaction);
 };
 
 #endif

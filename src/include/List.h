@@ -4,7 +4,7 @@
 template <class T>
 class List {
 private:
-    int max_elem = 100;
+    int max_elem = 10000;
     struct Node {
         T data;
         bool is_valid = true;

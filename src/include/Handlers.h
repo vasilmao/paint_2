@@ -76,4 +76,7 @@ public:
     virtual ~ListElementHandler();
 };
 
+class SliderHandler : public EventHandler {
+
+};
 #endif
