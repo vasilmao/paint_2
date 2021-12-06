@@ -71,12 +71,45 @@ public:
     virtual bool operator()(Renderer* renderer, Texture* texture, const Vector2& pos);
 };
 
+class CanvasViewportDrawerFunctor : public Functor<Renderer*, Texture*, const Vector2&> {
+private:
+    // AbstractInstrument* current_instrument;
+    ViewportSkin* skin;
+public:
+    CanvasViewportDrawerFunctor(ViewportSkin* skin) : skin(skin) {
+        // current_instrument = nullptr;
+    }
+    virtual bool operator()(Renderer* renderer, Texture* texture, const Vector2& pos);
+};
+
 class InstrumentPickerFunctor : public Functor<> {
 private:
     AbstractInstrument* current_instrument;
 public:
     InstrumentPickerFunctor(AbstractInstrument* its_instrument);
     virtual bool operator()();
+};
+
+class MoveViewportFunctor : public Functor<float, float> {
+private:
+    ViewportSkin* skin_to_change;
+    Vector2 move_dir;
+public:
+    MoveViewportFunctor(ViewportSkin* skin, const Vector2& move_dir) : skin_to_change(skin), move_dir(move_dir) {}
+    virtual bool operator()(float last_val, float new_val) {
+        // printf("movements! %f %f\n", last_val, new_val);
+        Rect2f viewport = skin_to_change->getViewport();
+        // printf("x is %f\n", viewport.x);
+        Vector2 real_size = skin_to_change->getFullSize();
+        // new val is percent to move actually
+        float new_x = (real_size.getX() - viewport.width) * (new_val - last_val) * move_dir.getX();
+        float new_y = (real_size.getY() - viewport.height) * (new_val - last_val) * move_dir.getY();
+        viewport.x += new_x;
+        viewport.y += new_y;
+        // printf("new x is %f\n", viewport.x);
+        skin_to_change->setViewPort(viewport);
+        return true;
+    }
 };
 
 #endif

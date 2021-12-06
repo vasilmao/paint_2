@@ -71,6 +71,7 @@ public:
     friend Vector2 operator * (const Vector2& vector, const float coef);
     friend Vector2 operator * (const float coef, const Vector2& vector);
     friend float operator * (const Vector2& v1, const Vector2& v2);
+    friend float operator ^ (const Vector2& v1, const Vector2& v2);
     Vector2 elByElMult(const Vector2& v2) const;
     Vector2 getProjection(const Vector2& other) const;
 };

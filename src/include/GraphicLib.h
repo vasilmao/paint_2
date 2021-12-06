@@ -124,6 +124,7 @@ public:
     void setTarget(Texture* texture);
     void copyTexture(Texture* texture, const Vector2& pos);
     void copyTexture(Texture* texture, const Vector2& pos, const Vector2& dst_size);
+    void copyTexture(Texture* texture, const Rect2f& src_rect, const Rect2f& dst_rect);
     SDL_Renderer* getNativeRenderer();
 };
 

@@ -57,10 +57,10 @@ bool ButtonHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
         if (!is_pressed && mouse_click->isButtonDown()) {
             is_pressed = true;
             button->setPressed();
-            printf("setted pressed\n");
+            // printf("setted pressed\n");
             return true;
         } else if (is_pressed && !(mouse_click->isButtonDown())) {
-            printf("unpressed!\n");
+            // printf("unpressed!\n");
             is_pressed = false;
             button->setUsual();
             // printf("ugh\n");
@@ -133,10 +133,10 @@ bool ListElementHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
         // printf("btn hittest\n");
         if (!is_pressed && mouse_click->isButtonDown()) {
             is_pressed = true;
-            printf("setted pressed\n");
+            // printf("setted pressed\n");
             return true;
         } else if (is_pressed && !(mouse_click->isButtonDown())) {
-            printf("unpressed\n");
+            // printf("unpressed\n");
             GUIListElementChanged list_event;
             button->getParent()->onEvent(&list_event);
             is_pressed = false;
@@ -177,63 +177,120 @@ ListElementHandler::~ListElementHandler() {
     delete click_event_responce;
 }
 
-MovingHandler::MovingHandler(AbstractWindow* window, Functor<const Vector2&>* move_functor) : EventHandler(window), window_mover(move_functor) {
-
-}
-
-bool MovingHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
-    // printf("titlebar got mouseclick\n");
-    if (my_window->hitTest(mouse_click->getPos())) {
-        if (!is_holding && mouse_click->isButtonDown()) {
-            is_holding = true;
-            printf("titlebar captured!\n");
-            return true;
-        } else if (is_holding && !(mouse_click->isButtonDown())) {
-            is_holding = false;
-            printf("titlebar released!\n");
-            return true;
-        }
-    }
-    return false;
-}
-
-bool MovingHandler::onEvent(GUIEvent* event) {
-    // printf("titlebar got event!\n");
+bool MouseCapturingHandler::onEvent(GUIEvent* event) {
     switch (event->getType())
     {
         case static_cast<int>(GUIEvent::GUIEventTypes::MOUSE_BUTTON): {
-            if (!passEvent(event)) {
+            // printf("mosue capturer got event, pressed is %d\n", is_pressed);
+            if (!is_pressed) {
+                if (!passEvent(event)) {
+                    // printf("passed but withous success\n");
+                    GUIMouseClickEvent* mouse_click = dynamic_cast<GUIMouseClickEvent*> (event);
+                    bool res = mbResponce(mouse_click);
+                    // printf("pressed is %d, window %p, handler %p\n", is_pressed, my_window, this);
+                    // printf("%d %d\n", is_pressed, this->is_pressed);
+                    return res;
+                } else {
+                    // printf("passed okay!\n");
+                }
+                return true;
+            } else {
                 GUIMouseClickEvent* mouse_click = dynamic_cast<GUIMouseClickEvent*> (event);
-                return mbResponce(mouse_click);
+                if (mbResponce(mouse_click)) {
+                    return true;
+                }
+                return passEvent(event);
             }
-            return true;
         }
-
+        
         case static_cast<int>(GUIEvent::GUIEventTypes::MOUSE_MOVE): {
-            if (is_holding) {
+            // printf("mosue capturer move, pressed is %d, window %p, handler %p\n", is_pressed, my_window, this);
+            if (is_pressed) {
                 GUIMouseMove* mouse_move = dynamic_cast<GUIMouseMove*>(event);
-                Vector2 delta = mouse_move->getNewPos() - mouse_move->getPrevPos();
-                return (*window_mover)(delta);
+                return mmResponce(mouse_move);
             }
             return spreadEvent(event);
         }
-
+    
         default:
             return spreadEvent(event);
             break;
     }
 }
 
+MouseCapturingHandler::MouseCapturingHandler(AbstractWindow* window) : EventHandler(window) {}
+
+MouseCapturingHandler::~MouseCapturingHandler() {
+
+}
+
+MovingHandler::MovingHandler(AbstractWindow* window, Functor<const Vector2&>* move_functor) : MouseCapturingHandler(window), window_mover(move_functor) {
+
+}
+
+bool MovingHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
+    // printf("moving handler got mouseclick\n");
+    if (my_window->hitTest(mouse_click->getPos())) {
+        if (!is_pressed && mouse_click->isButtonDown()) {
+            is_pressed = true;
+            // printf("titlebar captured!\n");
+            return true;
+        } else if (is_pressed && !(mouse_click->isButtonDown())) {
+            is_pressed = false;
+            // printf("titlebar released!\n");
+            return true;
+        }
+    }
+    return false;
+}
+
+bool MovingHandler::mmResponce(GUIMouseMove* mouse_move) {
+    if (is_pressed) {
+        Vector2 delta = mouse_move->getNewPos() - mouse_move->getPrevPos();
+        return (*window_mover)(delta);
+    }
+    return false;
+}
+
+
+// bool MovingHandler::onEvent(GUIEvent* event) {
+//     // printf("titlebar got event!\n");
+//     switch (event->getType())
+//     {
+//         case static_cast<int>(GUIEvent::GUIEventTypes::MOUSE_BUTTON): {
+//             if (!passEvent(event)) {
+//                 GUIMouseClickEvent* mouse_click = dynamic_cast<GUIMouseClickEvent*> (event);
+//                 return mbResponce(mouse_click);
+//             }
+//             return true;
+//         }
+
+//         case static_cast<int>(GUIEvent::GUIEventTypes::MOUSE_MOVE): {
+//             if (is_holding) {
+//                 GUIMouseMove* mouse_move = dynamic_cast<GUIMouseMove*>(event);
+//                 Vector2 delta = mouse_move->getNewPos() - mouse_move->getPrevPos();
+//                 return (*window_mover)(delta);
+//             }
+//             return spreadEvent(event);
+//         }
+
+//         default:
+//             return spreadEvent(event);
+//             break;
+//     }
+// }
+
 MovingHandler::~MovingHandler() {
     delete window_mover;
 }
 
 CanvasHandler::CanvasHandler(AbstractWindow* window, Renderer* renderer, Functor<Renderer*, Texture*, const Vector2&>* canvas_drawer) :
-    EventHandler(window), renderer(renderer), canvas_drawer(canvas_drawer), current_instrument(nullptr) {
+    MouseCapturingHandler(window), renderer(renderer), canvas_drawer(canvas_drawer), current_instrument(nullptr) {
 
 }
 
 bool CanvasHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
+    // printf("canvas handler got mouseclick\n");
     if (my_window->hitTest(mouse_click->getPos())) {
         // printf("ye, canvas hittest!\n");
         if (!is_pressed && (mouse_click->isButtonDown())) {
@@ -263,30 +320,140 @@ bool CanvasHandler::mmResponce(GUIMouseMove* mouse_move) {
     return false;
 }
 
-bool CanvasHandler::onEvent(GUIEvent* event) {
-    // printf("canvas handler got an event!\n");
-    switch (event->getType())
-    {
-        case static_cast<int>(GUIEvent::GUIEventTypes::MOUSE_BUTTON): {
-            // no pass event
-            GUIMouseClickEvent* mouse_click = dynamic_cast<GUIMouseClickEvent*> (event);
-            return mbResponce(mouse_click);
-        }
+// bool CanvasHandler::onEvent(GUIEvent* event) {
+//     // printf("canvas handler got an event!\n");
+//     switch (event->getType())
+//     {
+//         case static_cast<int>(GUIEvent::GUIEventTypes::MOUSE_BUTTON): {
+//             // no pass event
+//             GUIMouseClickEvent* mouse_click = dynamic_cast<GUIMouseClickEvent*> (event);
+//             return mbResponce(mouse_click);
+//         }
         
-        case static_cast<int>(GUIEvent::GUIEventTypes::MOUSE_MOVE): {
-            if (is_pressed) {
-                GUIMouseMove* mouse_move = dynamic_cast<GUIMouseMove*>(event);
-                return mmResponce(mouse_move);
-            }
-            return spreadEvent(event);
-        }
+//         case static_cast<int>(GUIEvent::GUIEventTypes::MOUSE_MOVE): {
+//             if (is_pressed) {
+//                 GUIMouseMove* mouse_move = dynamic_cast<GUIMouseMove*>(event);
+//                 return mmResponce(mouse_move);
+//             }
+//             return spreadEvent(event);
+//         }
     
-        default:
-            return spreadEvent(event);
-            break;
-    }
-}
+//         default:
+//             return spreadEvent(event);
+//             break;
+//     }
+// }
 
 CanvasHandler::~CanvasHandler() {
     delete canvas_drawer;
+}
+
+// CanvasViewportHandler::CanvasViewportHandler(AbstractWindow* window, Renderer* renderer, Functor<Renderer*, Texture*, const Vector2&>* canvas_drawer) :
+//     CanvasHandler(window, renderer, canvas_drawer) {}
+
+// bool CanvasViewportHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
+//     if (my_window->hitTest(mouse_click->getPos())) {
+//         // printf("ye, canvas hittest!\n");
+//         if (!is_pressed && (mouse_click->isButtonDown())) {
+//             is_pressed = true;
+//             Vector2 mouseclick_pos = mouse_click->getPos();
+//             (*canvas_drawer)(renderer, my_window->getSkin()->getTexture(), mouseclick_pos - my_window->getPos());
+//             return true;
+//         } else if (is_pressed && !(mouse_click->isButtonDown())) {
+//             is_pressed = false;
+//         }
+//     }
+//     return false;
+// }
+
+SliderHandler::SliderHandler(Functor<float, float>* functor, const Vector2& axis, float min_val, float max_val) :
+    move_functor(functor), axis(axis), min_value(min_val), max_value(max_val), current_value(min_value) {
+}
+
+bool SliderHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
+    // printf("slider handler got mouseclick\n");
+    if (my_window->hitTest(mouse_click->getPos())) {
+        // printf("hittest is okay! %d %d\n", (!is_pressed), mouse_click->isButtonDown());
+        if (!is_pressed && mouse_click->isButtonDown()) {
+            is_pressed = true;
+            // printf("mb captured! pressed of window %p is true %d, handler %p\n", my_window, is_pressed, this);
+            // printf("%d %d\n", is_pressed, this->is_pressed);
+            return true;
+        } else if (is_pressed && !(mouse_click->isButtonDown())) {
+            is_pressed = false;
+            // printf("titlebar released!\n");
+            return true;
+        }
+    }
+    else if (is_pressed && !(mouse_click->isButtonDown())) {
+        is_pressed = false;
+        return true;
+    }
+    // printf("but hittest is  not okay\n");
+    return false;
+}
+
+bool SliderHandler::mmResponce(GUIMouseMove* mouse_move) {
+    if (is_pressed) {
+        // printf("slider got mouse movement\n");
+        bool first_result = my_window->hitTest(mouse_move->getPrevPos());
+        bool second_result = my_window->hitTest(mouse_move->getNewPos());
+        // printf("hittest results are %d %d\n", first_result, second_result);
+        if (true) {
+            Vector2 mouse_prev_pos = mouse_move->getPrevPos();
+            Vector2 mouse_pos = mouse_move->getNewPos();
+            Vector2 mouse_delta = mouse_pos - mouse_prev_pos;
+            // printf("mouse delta: %f %f\n", mouse_delta.getX(), mouse_delta.getY());
+            // printf("axis: %f %f\n", axis.getX(), axis.getY());
+            // Vector2 slider_delta = axis.getProjection(mouse_delta);
+            Vector2 slider_delta = mouse_delta.getProjection(axis);
+            // printf("slider delta: %f %f\n", slider_delta.getX(), slider_delta.getY());
+            if (fabs(slider_delta.getX()) < EPS && fabs(slider_delta.getY()) < EPS) {
+                return false;
+            }
+            float value_delta = (slider_delta.getLength() / axis.getLength()) * (max_value - min_value);
+            value_delta *= (slider_delta * axis) / slider_delta.getLength() / axis.getLength();
+            if (value_delta == 0) {
+                return false;
+            }
+            // printf("value delta:%f\n", value_delta);
+            float new_value = Min(max_value, Max(min_value, current_value + value_delta));
+            // printf("new value:%f\n", new_value);
+            // printf("old value:%f\n", current_value);
+            float true_delta = new_value - current_value;
+            // printf("true delta:%f\n", true_delta);
+            Vector2 true_slider_delta = axis * true_delta;
+            my_window->move(true_slider_delta);
+            (*move_functor)(current_value, new_value);
+            current_value = new_value;
+            return true;
+        } else {
+            is_pressed = false;
+        }
+    }
+    return false;
+}
+
+// bool SliderHandler::onEvent(GUIEvent* event) {
+//     switch (event->getType())
+//     {
+//         case static_cast<int>(GUIEvent::GUIEventTypes::MOUSE_BUTTON): {
+//             GUIMouseClickEvent* mouse_click = dynamic_cast<GUIMouseClickEvent*> (event);
+//             return mbResponce(mouse_click);
+//         }
+
+//         case static_cast<int>(GUIEvent::GUIEventTypes::MOUSE_MOVE): {
+//             if (is_pressed) {
+//                 GUIMouseMove* mouse_move = dynamic_cast<GUIMouseMove*>(event);
+//                 return mmResponce(mouse_move);
+//             }
+//             return spreadEvent(event);
+//         }
+//         default:
+//             break;
+//     }
+// }
+
+SliderHandler::~SliderHandler() {
+    delete move_functor;
 }

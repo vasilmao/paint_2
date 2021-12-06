@@ -17,6 +17,24 @@ public:
     Texture* getTexture();
 };
 
+class ViewportSkin : public Skin {
+protected:
+    // Texture* full_texture;
+    Vector2 full_texture_size;
+    Rect2f viewport;
+public:
+    ViewportSkin();
+    ViewportSkin(Texture* texture, const Vector2& viewport_size);
+    virtual void draw(Renderer* renderer, const Vector2& pos);
+    // virtual bool hitTest(const Vector2& pos);
+    // virtual ~ViewportSkin();
+    void resizeViewport(const Vector2& new_size);
+    void moveViewPort(const Vector2& delta);
+    void setViewPort(const Rect2f& new_viewport);
+    const Rect2f& getViewport();
+    const Vector2& getFullSize();
+};
+
 // class RepeatingSkin : public Skin {
 // public:
 //     RepeatingSkin(Texture* texture, const Vector2& size);

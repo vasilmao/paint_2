@@ -28,7 +28,7 @@ protected:
     void renderChildren(Renderer* renderer);
 
 public:
-
+    AbstractWindow() : children(new List<AbstractWindow*>()) {}
     AbstractWindow(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
     virtual ~AbstractWindow();
     virtual bool onEvent(GUIEvent* event);
@@ -71,14 +71,26 @@ public:
 };
 
 class CanvasWindow : public AbstractWindow {
-private:
+protected:
     const float titlebar_height = 25;
     const Vector2 close_button_size = {titlebar_height, titlebar_height};
-    void createTitlebar(Renderer* renderer, const Vector2& tb_pos, const Vector2& tb_size);
-    void createCloseButton(Renderer* renderer, const Vector2& btn_pos, const Vector2& btn_size, AbstractWindow* titlebar);
-    void createCanvas(Renderer* renderer, const Vector2& pos, const Vector2& size); 
+    virtual void createTitlebar(Renderer* renderer, const Vector2& tb_pos, const Vector2& tb_size);
+    virtual void createCloseButton(Renderer* renderer, const Vector2& btn_pos, const Vector2& btn_size, AbstractWindow* titlebar);
+    virtual void createCanvas(Renderer* renderer, const Vector2& pos, const Vector2& size); 
 public:
+    CanvasWindow() {}
     CanvasWindow(Renderer* renderer, const Vector2& pos, const Vector2& size);
+};
+
+class CanvasViewportWindow : public CanvasWindow {
+private:
+    // const float titlebar_height = 25;
+    // const Vector2 close_button_size = {titlebar_height, titlebar_height};
+    // void createTitlebar(Renderer* renderer, const Vector2& tb_pos, const Vector2& tb_size);
+    // void createCloseButton(Renderer* renderer, const Vector2& btn_pos, const Vector2& btn_size, AbstractWindow* titlebar);
+    void createCanvas(Renderer* renderer, const Vector2& pos, const Vector2& size);
+public:
+    CanvasViewportWindow(Renderer* renderer, const Vector2& pos, const Vector2& size);
 };
 
 class TitleBar : public AbstractWindow {
@@ -118,19 +130,19 @@ public:
 
 class SliderBody : public AbstractWindow {
 public:
-    SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& size); // create the slider
+    SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& size, Functor<float, float>* slider_reaction); // creates the slider
 };
 
 class Slider : public AbstractWindow {
 private:
-    float min_value = 0;
-    float max_value = 1;
-    float current_value = 0;
+    // float min_value = 0;
+    // float max_value = 1;
+    // float current_value = 0;
     // Vector2 pos_at_min_value;
     // Vector2 pos_at_max_value;
     Vector2 move_dir;
 public:
-    Slider(const Vector2& pos, const Vector2& size, AbstractWindow* parent, Functor<float> reaction);
+    Slider(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
 };
 
 #endif

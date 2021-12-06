@@ -16,7 +16,7 @@ App::App() {
     instrument = new Brush();
     main_window = new MainWindow(renderer, {static_cast<float>(width), static_cast<float>(height)});
     CanvasWindow* canvas_w = new CanvasWindow(renderer, {40, 40}, {500, 300});
-    CanvasWindow* canvas_w1 = new CanvasWindow(renderer, {400, 400}, {500, 300});
+    CanvasViewportWindow* canvas_w1 = new CanvasViewportWindow(renderer, {400, 400}, {500, 300});
     // canvas_w->setInstrument(instrument);
     main_window->attachWindow(canvas_w);
     main_window->attachWindow(canvas_w1);

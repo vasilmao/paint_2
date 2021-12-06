@@ -50,6 +50,32 @@ void Skin::resize(const Vector2& new_size) {
 //     }
 // }
 
+ViewportSkin::ViewportSkin(Texture* texture, const Vector2& viewport_size) : Skin(texture, {viewport_size.getX(), viewport_size.getY()}),
+    full_texture_size(texture->getSize()) {
+    viewport = {0, 0, viewport_size.getX(), viewport_size.getY()};
+}
+
+const Rect2f& ViewportSkin::getViewport() {
+    return viewport;
+}
+
+void ViewportSkin::draw(Renderer* renderer, const Vector2& pos) {
+    renderer->copyTexture(texture, viewport, Rect2f{pos.getX(), pos.getY(), viewport.width, viewport.height});
+}
+
+void ViewportSkin::moveViewPort(const Vector2& delta) {
+    viewport.x += delta.getX();
+    viewport.y += delta.getY();
+}
+
+void ViewportSkin::setViewPort(const Rect2f& new_viewport) {
+    viewport = new_viewport;
+}
+
+const Vector2& ViewportSkin::getFullSize() {
+    return texture->getSize();
+}
+
 ButtonSkin::ButtonSkin(Texture* texture, Texture* h_t, Texture* p_t) : usual_texture(texture), hovered_texture(h_t), pressed_texture(p_t) {
     current_texture = usual_texture;
     // printf("usual vs pressed: %p, %p\n", usual_texture, pressed_texture);

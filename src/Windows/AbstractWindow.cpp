@@ -15,7 +15,9 @@ AbstractWindow* AbstractWindow::getParent(){
 }
 
 void AbstractWindow::attachWindow(AbstractWindow* window) {
+    // printf("attaching\n");
     children->pushFront(window);
+    // printf("attached\n");
 }
 
 bool AbstractWindow::hitTest(const Vector2& pos) const {
@@ -34,6 +36,7 @@ AbstractWindow::~AbstractWindow() {
 
 bool AbstractWindow::onEvent(GUIEvent* event) {
     // printf("yaaa yoy\n");
+    // printf("window %p got event\n", this);
     if (handler) {
         // printf("eeee\n");
         return handler->onEvent(event);

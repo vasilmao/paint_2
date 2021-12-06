@@ -50,6 +50,16 @@ bool CanvasDrawerFunctor::operator()(Renderer* renderer, Texture* texture, const
     return false;
 }
 
+bool CanvasViewportDrawerFunctor::operator()(Renderer* renderer, Texture* texture, const Vector2& pos) {
+    AbstractInstrument* instrument = InstrumentPanel::getInstance()->getCurrentInstrument();
+    if (instrument != nullptr) {
+        Rect2f viewport = skin->getViewport();
+        instrument->apply(renderer, texture, pos + Vector2{viewport.x, viewport.y});
+        return true;
+    }
+    return false;
+}
+
 InstrumentPickerFunctor::InstrumentPickerFunctor(AbstractInstrument* its_instrument) : current_instrument(its_instrument) {}
 
 bool InstrumentPickerFunctor::operator()() {

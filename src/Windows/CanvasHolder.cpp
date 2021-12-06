@@ -68,3 +68,42 @@ void CanvasWindow::createCanvas(Renderer* renderer, const Vector2& canvas_pos, c
     canvas_handler->setWindow(canvas);
     attachWindow(canvas);
 }
+
+CanvasViewportWindow::CanvasViewportWindow(Renderer* renderer, const Vector2& pos, const Vector2& size) {
+    absolute_pos = pos;
+    this->size = size; 
+    // create titlebar, close button, canvas
+    skin = new Skin(new Texture(renderer, size + Vector2(2, 2), {20, 20, 20, 255}), size + Vector2(2, 2));
+    handler = new EventHandler(this);
+    Vector2 titlebar_size(size.getX(), titlebar_height);
+    // printf("creating titlebar\n");
+    createTitlebar(renderer, absolute_pos, titlebar_size);
+    Vector2 canvas_pos(absolute_pos.getX(), absolute_pos.getY() + titlebar_size.getY());
+    Vector2 canvas_size(size.getX(), size.getY() - titlebar_size.getY());
+    // printf("creating canvas\n");
+    createCanvas(renderer, canvas_pos, canvas_size);
+
+    absolute_pos -= Vector2(1, 1);
+    this->size += Vector2(2, 2);
+}
+
+void CanvasViewportWindow::createCanvas(Renderer* renderer, const Vector2& canvas_pos, const Vector2& canvas_size) {
+    // printf("creating canvas!\n");
+    ViewportSkin* canvas_skin = new ViewportSkin(new Texture(renderer, canvas_size * 2, {255, 255, 255, 255}), canvas_size);
+    CanvasViewportDrawerFunctor* canvas_drawer = new CanvasViewportDrawerFunctor(canvas_skin);
+    CanvasHandler* canvas_handler = new CanvasHandler(nullptr, renderer, canvas_drawer);
+    Canvas* canvas = new Canvas(canvas_pos, canvas_size, canvas_handler, this, canvas_skin);
+    canvas_handler->setWindow(canvas);
+    attachWindow(canvas);
+    printf("Canvas: %p\n", canvas);
+    // create horizontal slider
+    MoveViewportFunctor* horizontal_functor = new MoveViewportFunctor(canvas_skin, Vector2{1, 0});
+    SliderBody* horizontal_slider = new SliderBody(renderer, Vector2{canvas_pos.getX(), canvas_pos.getY() + canvas_size.getY() - 20}, Vector2{canvas_size.getX() - 20, 20}, horizontal_functor);
+    canvas->attachWindow(horizontal_slider);
+    printf("HorizSlider: %p\n", horizontal_slider);
+    // create vertical slider
+    MoveViewportFunctor* vertical_functor = new MoveViewportFunctor(canvas_skin, Vector2{0, 1});
+    SliderBody* vertical_slider = new SliderBody(renderer, Vector2{canvas_pos.getX() + canvas_size.getX() - 20, canvas_pos.getY()}, Vector2{20, canvas_size.getY() - 20}, vertical_functor);
+    canvas->attachWindow(vertical_slider);
+    printf("VerticSlider: %p\n", vertical_slider);
+}

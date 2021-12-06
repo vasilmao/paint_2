@@ -177,6 +177,11 @@ float operator * (const Vector2& v1, const Vector2& v2) {
     return result;
 }
 
+float operator ^ (const Vector2& v1, const Vector2& v2) {
+    float result = v1.x * v2.y - v1.y * v2.x;
+    return result;
+}
+
 Vector2 Vector2::elByElMult(const Vector2& v2) const {
     return Vector2(x * v2.x, y * v2.y);
 }

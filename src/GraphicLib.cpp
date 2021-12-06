@@ -229,6 +229,12 @@ void Renderer::copyTexture(Texture* texture, const Vector2& pos, const Vector2& 
     SDL_RenderCopyF(renderer, texture->getNativeTexture(), NULL, &dst_rect);
 }
 
+void Renderer::copyTexture(Texture* texture, const Rect2f& src_rect, const Rect2f& dst_rect) {
+    SDL_Rect sdl_src_rect = {static_cast<int>(src_rect.x), static_cast<int>(src_rect.y), static_cast<int>(src_rect.width), static_cast<int>(src_rect.height)};
+    SDL_FRect sdl_dst_rect = {(dst_rect.x), (dst_rect.y), (dst_rect.width), (dst_rect.height)};
+    SDL_RenderCopyF(renderer, texture->getNativeTexture(), &sdl_src_rect, &sdl_dst_rect);
+}
+
 // void Renderer::copyTextureRect(Texture* texture, const Vector2& pos, const Rect2f& rect) {
 //     SDL_FRect dst_rect = {pos.getX(), pos.getY(), rect.width, rect.height};
 //     SDL_Rect src_rect = {static_cast<int>(rect.x), static_cast<int>(rect.y), static_cast<int>(rect.width), static_cast<int>(rect.height)};
