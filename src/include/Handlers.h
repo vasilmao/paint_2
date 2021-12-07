@@ -28,7 +28,7 @@ private:
     bool is_pressed = false;
     bool is_hovered = false;
     Functor<>* click_event_responce;
-    bool mbResponce(GUIMouseClickEvent* mouse_click);
+    bool mbResponce(GUILeftMouseButton* mouse_click);
     bool mhResponce(GUIMouseMove* mouse_move);
 public:
     ButtonHandler(AbstractWindow* window, Functor<>* click_functor);
@@ -44,7 +44,7 @@ public:
     MouseCapturingHandler() : EventHandler(nullptr) {};
     MouseCapturingHandler(AbstractWindow* window);
     virtual bool onEvent(GUIEvent* event);
-    virtual bool mbResponce(GUIMouseClickEvent* mouse_click) = 0;
+    virtual bool mbResponce(GUILeftMouseButton* mouse_click) = 0;
     virtual bool mmResponce(GUIMouseMove* mouse_move) = 0;
     virtual ~MouseCapturingHandler() = 0;
 };
@@ -53,7 +53,7 @@ class MovingHandler : public MouseCapturingHandler {
 private:
     bool is_holding = false;
     Functor<const Vector2&>* window_mover;
-    virtual bool mbResponce(GUIMouseClickEvent* mouse_click);
+    virtual bool mbResponce(GUILeftMouseButton* mouse_click);
     virtual bool mmResponce(GUIMouseMove* mouse_move);
 public:
     MovingHandler(AbstractWindow* window, Functor<const Vector2&>* move_functor);
@@ -64,7 +64,7 @@ public:
 class CanvasHandler : public MouseCapturingHandler {
 protected:
     // bool is_pressed = false;
-    virtual bool mbResponce(GUIMouseClickEvent* mouse_click);
+    virtual bool mbResponce(GUILeftMouseButton* mouse_click);
     virtual bool mmResponce(GUIMouseMove* mouse_move);
     Renderer* renderer;
     Functor<Renderer*, Texture*, const Vector2&>* canvas_drawer;
@@ -88,7 +88,7 @@ private:
     bool is_pressed = false;
     bool is_chosen = false;
     Functor<>* click_event_responce;
-    bool mbResponce(GUIMouseClickEvent* mouse_click);
+    bool mbResponce(GUILeftMouseButton* mouse_click);
     bool mhResponce(GUIMouseMove* mouse_move);
 public:
     ListElementHandler(AbstractWindow* window, Functor<>* click_functor);
@@ -105,7 +105,7 @@ private:
     float current_value = 0;
     // bool is_pressed = false;
 public:
-    virtual bool mbResponce(GUIMouseClickEvent* mouse_click);
+    virtual bool mbResponce(GUILeftMouseButton* mouse_click);
     virtual bool mmResponce(GUIMouseMove* mouse_move);
     SliderHandler(Functor<float, float>* functor, const Vector2& axis, float min_val = 0, float max_val = 1);
     // virtual bool onEvent(GUIEvent* event);

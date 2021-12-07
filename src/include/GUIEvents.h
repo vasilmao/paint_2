@@ -30,15 +30,15 @@ public:
 
 };
 
-class GUIMouseClickEvent : public GUIEvent {
+class GUILeftMouseButton : public GUIEvent {
 private:
     Vector2 pos;
     uint8_t button_type;
     bool button_down;
 public:
-    GUIMouseClickEvent(Vector2 pos, uint8_t button_type, bool button_down) : GUIEvent(GUIEventTypes::MOUSE_BUTTON), pos(pos), button_type(button_type), button_down(button_down) {}
+    GUILeftMouseButton(Vector2 pos, uint8_t button_type, bool button_down) : GUIEvent(GUIEventTypes::MOUSE_BUTTON), pos(pos), button_type(button_type), button_down(button_down) {}
 
-    GUIMouseClickEvent(SystemEvent event) : GUIEvent(GUIEventTypes::MOUSE_BUTTON), pos(event.mb_press_info.pos), button_type(event.mb_press_info.button_type), button_down(event.mb_press_info.button_down) {
+    GUILeftMouseButton(SystemEvent event) : GUIEvent(GUIEventTypes::MOUSE_BUTTON), pos(event.mb_press_info.pos), button_type(event.mb_press_info.button_type), button_down(event.mb_press_info.button_down) {
         assert(event.event_type == SystemEventTypes::MOUSE_CLICK);
     }
 
@@ -95,5 +95,9 @@ class GUIListElementChanged : public GUIEvent {
 public:
     GUIListElementChanged() : GUIEvent(GUIEventTypes::LIST_ELEMENT_CHANGED) {}
 };
+
+// class GUILeftMouseButton : public GUIEvent {
+
+// }
 
 #endif

@@ -48,7 +48,7 @@ void EventHandler::setWindow(AbstractWindow* window) {
 
 ButtonHandler::ButtonHandler(AbstractWindow* window, Functor<>* click_functor) : EventHandler(window), click_event_responce(click_functor){}
 
-bool ButtonHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
+bool ButtonHandler::mbResponce(GUILeftMouseButton* mouse_click) {
     Button* button = dynamic_cast<Button*>(my_window);
     // printf("chekin\n");
     if (my_window->hitTest(mouse_click->getPos())) {
@@ -103,7 +103,7 @@ bool ButtonHandler::onEvent(GUIEvent* event) {
     switch (event->getType())
     {
         case static_cast<int>(GUIEvent::GUIEventTypes::MOUSE_BUTTON): {
-            GUIMouseClickEvent* mouse_click = dynamic_cast<GUIMouseClickEvent*> (event);
+            GUILeftMouseButton* mouse_click = dynamic_cast<GUILeftMouseButton*> (event);
             // printf("btn!\n");
             return mbResponce(mouse_click);
         }
@@ -127,7 +127,7 @@ ListElementHandler::ListElementHandler(AbstractWindow* window, Functor<>* click_
     
 }
 
-bool ListElementHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
+bool ListElementHandler::mbResponce(GUILeftMouseButton* mouse_click) {
     Button* button = dynamic_cast<Button*>(my_window);
     if (my_window->hitTest(mouse_click->getPos())) {
         // printf("btn hittest\n");
@@ -157,7 +157,7 @@ bool ListElementHandler::onEvent(GUIEvent* event) {
     switch (event->getType())
     {
         case static_cast<int>(GUIEvent::GUIEventTypes::MOUSE_BUTTON): {
-            GUIMouseClickEvent* mouse_click = dynamic_cast<GUIMouseClickEvent*> (event);
+            GUILeftMouseButton* mouse_click = dynamic_cast<GUILeftMouseButton*> (event);
             return mbResponce(mouse_click);
         }
 
@@ -185,7 +185,7 @@ bool MouseCapturingHandler::onEvent(GUIEvent* event) {
             if (!is_pressed) {
                 if (!passEvent(event)) {
                     // printf("passed but withous success\n");
-                    GUIMouseClickEvent* mouse_click = dynamic_cast<GUIMouseClickEvent*> (event);
+                    GUILeftMouseButton* mouse_click = dynamic_cast<GUILeftMouseButton*> (event);
                     bool res = mbResponce(mouse_click);
                     // printf("pressed is %d, window %p, handler %p\n", is_pressed, my_window, this);
                     // printf("%d %d\n", is_pressed, this->is_pressed);
@@ -195,7 +195,7 @@ bool MouseCapturingHandler::onEvent(GUIEvent* event) {
                 }
                 return true;
             } else {
-                GUIMouseClickEvent* mouse_click = dynamic_cast<GUIMouseClickEvent*> (event);
+                GUILeftMouseButton* mouse_click = dynamic_cast<GUILeftMouseButton*> (event);
                 if (mbResponce(mouse_click)) {
                     return true;
                 }
@@ -228,7 +228,7 @@ MovingHandler::MovingHandler(AbstractWindow* window, Functor<const Vector2&>* mo
 
 }
 
-bool MovingHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
+bool MovingHandler::mbResponce(GUILeftMouseButton* mouse_click) {
     // printf("moving handler got mouseclick\n");
     if (my_window->hitTest(mouse_click->getPos())) {
         if (!is_pressed && mouse_click->isButtonDown()) {
@@ -240,6 +240,9 @@ bool MovingHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
             // printf("titlebar released!\n");
             return true;
         }
+    } else if (is_pressed && !(mouse_click->isButtonDown())) {
+        is_pressed = false;
+        return true;
     }
     return false;
 }
@@ -289,7 +292,7 @@ CanvasHandler::CanvasHandler(AbstractWindow* window, Renderer* renderer, Functor
 
 }
 
-bool CanvasHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
+bool CanvasHandler::mbResponce(GUILeftMouseButton* mouse_click) {
     // printf("canvas handler got mouseclick\n");
     if (my_window->hitTest(mouse_click->getPos())) {
         // printf("ye, canvas hittest!\n");
@@ -370,7 +373,7 @@ SliderHandler::SliderHandler(Functor<float, float>* functor, const Vector2& axis
     move_functor(functor), axis(axis), min_value(min_val), max_value(max_val), current_value(min_value) {
 }
 
-bool SliderHandler::mbResponce(GUIMouseClickEvent* mouse_click) {
+bool SliderHandler::mbResponce(GUILeftMouseButton* mouse_click) {
     // printf("slider handler got mouseclick\n");
     if (my_window->hitTest(mouse_click->getPos())) {
         // printf("hittest is okay! %d %d\n", (!is_pressed), mouse_click->isButtonDown());

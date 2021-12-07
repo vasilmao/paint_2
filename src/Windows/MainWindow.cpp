@@ -9,8 +9,9 @@ const Vector2 default_canvas_size = {500, 300};
 void MainWindow::createTitlebar(Renderer* renderer, const Vector2& tb_pos, const Vector2& tb_size) {
     Texture* titlebar_texture = new Texture(renderer, tb_size, titlebar_color);
     Skin* titlebar_skin = new Skin(titlebar_texture, tb_size);
-    WindowMoverFunctor* move_f = new WindowMoverFunctor(this);
-    EventHandler* titlebar_handler = new MovingHandler(nullptr, move_f);
+    // WindowMoverFunctor* move_f = new WindowMoverFunctor(this);
+    // EventHandler* titlebar_handler = new MovingHandler(nullptr, move_f);
+    EventHandler* titlebar_handler = new EventHandler(nullptr);
     TitleBar* titlebar = new TitleBar(tb_pos, tb_size, titlebar_handler, nullptr, titlebar_skin);
     // printf("canvas titlebar: %p\n", titlebar);
     titlebar_handler->setWindow(titlebar);

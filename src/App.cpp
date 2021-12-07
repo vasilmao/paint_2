@@ -95,7 +95,7 @@ void App::run() {
         while (sys_event.event_type != SystemEventTypes::NO_EVENT) {
             // printf("event got\n");
             if (sys_event.event_type == SystemEventTypes::MOUSE_CLICK) {
-                GUIMouseClickEvent event(sys_event);
+                GUILeftMouseButton event(sys_event);
                 printf("uh oh mouse button society\n");
                 main_window->onEvent(&event);
             } else if (sys_event.event_type == SystemEventTypes::MOUSE_MOVE) {
