@@ -6,6 +6,9 @@ Skin::Skin(Texture* texture, const Vector2& size) : texture(texture), real_size(
 
 }
 
+Skin::Skin(Texture* texture) : texture(texture), real_size(texture->getSize()) {
+
+}
 
 Skin::~Skin() {
     delete texture;

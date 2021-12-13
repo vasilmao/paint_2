@@ -138,6 +138,10 @@ Renderer::~Renderer() {
     printf("renderer destroyed!\n");
 }
 
+void Renderer::drawPoint(const Vector2& point, Color color) {
+    SDL_RenderDrawPointF(renderer, point.getX(), point.getY());
+}
+
 void Renderer::drawFilledCircle(const Vector2& center, const float r, Color color) {
     SDL_SetRenderDrawColor(renderer, open_color(color));
     float r2 = r * r;

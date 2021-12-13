@@ -12,7 +12,8 @@ public:
     enum class GUIEventTypes {
         NO_EVENT,
         OTHER_EVENTS,
-        MOUSE_BUTTON,
+        LEFT_MOUSE_BUTTON,
+        RIGHT_MOUSE_BUTTON,
         MOUSE_MOVE,
         CLOSE,
         INSTRUMENT_CHANGED,
@@ -36,9 +37,34 @@ private:
     uint8_t button_type;
     bool button_down;
 public:
-    GUILeftMouseButton(Vector2 pos, uint8_t button_type, bool button_down) : GUIEvent(GUIEventTypes::MOUSE_BUTTON), pos(pos), button_type(button_type), button_down(button_down) {}
+    GUILeftMouseButton(Vector2 pos, uint8_t button_type, bool button_down) : GUIEvent(GUIEventTypes::LEFT_MOUSE_BUTTON), pos(pos), button_type(button_type), button_down(button_down) {}
 
-    GUILeftMouseButton(SystemEvent event) : GUIEvent(GUIEventTypes::MOUSE_BUTTON), pos(event.mb_press_info.pos), button_type(event.mb_press_info.button_type), button_down(event.mb_press_info.button_down) {
+    GUILeftMouseButton(SystemEvent event) : GUIEvent(GUIEventTypes::LEFT_MOUSE_BUTTON), pos(event.mb_press_info.pos), button_type(event.mb_press_info.button_type), button_down(event.mb_press_info.button_down) {
+        assert(event.event_type == SystemEventTypes::MOUSE_CLICK);
+    }
+
+    const Vector2& getPos() const {
+        return pos;
+    }
+
+    uint8_t getButtonType() {
+        return button_type;
+    }
+
+    bool isButtonDown() {
+        return button_down;
+    }
+};
+
+class GUIRightMouseButton : public GUIEvent {
+private:
+    Vector2 pos;
+    uint8_t button_type;
+    bool button_down;
+public:
+    GUIRightMouseButton(Vector2 pos, uint8_t button_type, bool button_down) : GUIEvent(GUIEventTypes::RIGHT_MOUSE_BUTTON), pos(pos), button_type(button_type), button_down(button_down) {}
+
+    GUIRightMouseButton(SystemEvent event) : GUIEvent(GUIEventTypes::RIGHT_MOUSE_BUTTON), pos(event.mb_press_info.pos), button_type(event.mb_press_info.button_type), button_down(event.mb_press_info.button_down) {
         assert(event.event_type == SystemEventTypes::MOUSE_CLICK);
     }
 
@@ -75,21 +101,21 @@ public:
 
 };
 
-class GUIClose : public GUIEvent {
-public:
-    GUIClose() : GUIEvent(GUIEventTypes::CLOSE) {}
-};
+// class GUIClose : public GUIEvent {
+// public:
+//     GUIClose() : GUIEvent(GUIEventTypes::CLOSE) {}
+// };
 
 
-class GUIInstrumentChanged : public GUIEvent {
-private:
-    AbstractInstrument* new_instrument;
-public:
-    GUIInstrumentChanged(AbstractInstrument* new_instr) : GUIEvent(GUIEventTypes::INSTRUMENT_CHANGED), new_instrument(new_instr) {}
-    AbstractInstrument* getInstrument() {
-        return new_instrument;
-    }
-};
+// class GUIInstrumentChanged : public GUIEvent {
+// private:
+//     AbstractInstrument* new_instrument;
+// public:
+//     GUIInstrumentChanged(AbstractInstrument* new_instr) : GUIEvent(GUIEventTypes::INSTRUMENT_CHANGED), new_instrument(new_instr) {}
+//     AbstractInstrument* getInstrument() {
+//         return new_instrument;
+//     }
+// };
 
 class GUIListElementChanged : public GUIEvent {
 public:

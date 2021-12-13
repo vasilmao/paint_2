@@ -21,7 +21,7 @@ App::App() {
     main_window->attachWindow(canvas_w);
     main_window->attachWindow(canvas_w1);
     printf("uh oh society\n");
-    GUIInstrumentChanged event(instrument);
+    // GUIInstrumentChanged event(instrument);
     
     InstrumentPanel::create(renderer, main_window);
     Texture* brush_texture = new Texture(renderer, "skins/Brush.bmp");

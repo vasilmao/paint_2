@@ -9,6 +9,7 @@ protected:
     Vector2 real_size;
 public:
     Skin();
+    Skin(Texture* texture);
     Skin(Texture* texture, const Vector2& size);
     virtual void draw(Renderer* renderer, const Vector2& pos);
     virtual bool hitTest(const Vector2& pos);
