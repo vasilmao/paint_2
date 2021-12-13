@@ -7,6 +7,8 @@
 #include "Functors.h"
 #include "Instruments.h"
 
+#include "RayCaster.h"
+
 class EventHandler {
 protected:
     AbstractWindow* my_window;
@@ -18,6 +20,7 @@ public:
     virtual bool MBLResponce(GUILeftMouseButton* mbl_event);
     virtual bool MBRResponce(GUIRightMouseButton* mbr_event);
     virtual bool LECResponce(GUIListElementChanged* list_event);
+    virtual bool TIMEResponce(GUITimePassed* time_event);
     EventHandler(AbstractWindow* window) : my_window(window){};
     EventHandler() : my_window(nullptr) {}
     virtual ~EventHandler();
@@ -111,6 +114,36 @@ public:
     SliderHandler(Functor<float, float>* functor, const Vector2& axis, float min_val = 0, float max_val = 1);
     // virtual bool onEvent(GUIEvent* event);
     virtual ~SliderHandler();
+};
+
+class RayCasterHandler : public EventHandler {
+private:
+    Renderer* renderer;
+    Camera* camera;
+    Light* light_source;
+    Sphere* sphere;
+    Texture* texture = nullptr;
+    virtual bool TIMEResponce(GUITimePassed* time_event);
+public:
+    RayCasterHandler(Renderer* renderer, Camera* camera, Light* light_source, Sphere* sphere);
+    void setTexture(Texture* new_texture) {
+        texture = new_texture;
+    }
+    void rotateLight(float angle) {
+        Vector3 light_pos = light_source->getPos();
+        float s = sin(angle);
+        float c = cos(angle);
+        float new_x = light_pos.getX() * c - light_pos.getZ() * s;
+        // float new_y = light_pos.getX() * s + light_pos.getY() * c;
+        float new_z = light_pos.getX() * s + light_pos.getZ() * c;
+        light_pos.setX(new_x);
+        // light_pos.setY(new_y);
+        light_pos.setZ(new_z);
+        light_source->setPos(light_pos);
+        renderer->setTarget(texture);
+        renderSphere(renderer, sphere, camera, light_source);
+        renderer->setTarget(nullptr);
+    }
 };
 
 #endif

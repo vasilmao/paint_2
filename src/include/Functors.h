@@ -47,6 +47,17 @@ public:
     virtual bool operator()();
 };
 
+class CreateRayCasterFunctor : public Functor<> {
+private:
+    AbstractWindow* parent;
+    Renderer* renderer;
+    Vector2 pos;
+    Vector2 size;
+public:
+    CreateRayCasterFunctor(AbstractWindow* parent, Renderer* renderer, const Vector2& pos, const Vector2& size);
+    virtual bool operator()();
+};
+
 class WindowMoverFunctor : public Functor<const Vector2&> {
 private:
     AbstractWindow* window_to_move;

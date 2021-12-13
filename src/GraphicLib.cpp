@@ -139,6 +139,7 @@ Renderer::~Renderer() {
 }
 
 void Renderer::drawPoint(const Vector2& point, Color color) {
+    SDL_SetRenderDrawColor(renderer, open_color(color));
     SDL_RenderDrawPointF(renderer, point.getX(), point.getY());
 }
 
@@ -321,8 +322,8 @@ void Renderer::drawTextCentered(const Vector2& pos, const Vector2& size, const c
     // printf("text height: %f\n", text_size_y);
 
     SDL_FRect rect = {
-        pos.getX() + (size.getX() - text_size_x) / 2 ,
-        pos.getY() + (size.getY() - text_size_y) / 2,
+        /*pos.getX() +*/ (size.getX() - text_size_x) / 2 ,
+        /*pos.getY() +*/ (size.getY() - text_size_y) / 2,
         text_size_x,
         text_size_y};
     // SDL_SetRenderTarget(renderer, NULL);

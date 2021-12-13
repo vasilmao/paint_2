@@ -2,7 +2,7 @@
 #define INCLUDE_OBJECTS
 
 #include "GraphicLib.h"
-#include "RayCaster.h"
+// #include "RayCaster.h"
 #include "Vector.h"
 
 class Light {
@@ -38,6 +38,8 @@ public:
     void setViewArea(const Vector2& new_view_area);
     ~Camera(){}
 };
+
+// void renderSphere(Renderer* renderer, Sphere* sphere, Camera* camera, Light* light);
 
 class Sphere {
 private:

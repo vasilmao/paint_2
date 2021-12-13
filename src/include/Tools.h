@@ -42,11 +42,10 @@ struct Colorf {
     float r;
     float g;
     float b;
-    float a;
 };
 
 #define open_color(color) color.r, color.g, color.b, color.a
-#define open_color01(color) color.r, color.g, color.b
+#define open_colorf(color) color.r, color.g, color.b
 #define int32_color(color) (((uint32_t)color.r) << 24) + (((uint32_t)color.g) << 16) + (((uint32_t)color.b) << 8) + (uint32_t)color.a
 
 

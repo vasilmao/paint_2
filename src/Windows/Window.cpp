@@ -1,6 +1,8 @@
 #include "Window.h"
 #include "Handlers.h"
 
+#include "RayCaster.h"
+
 // const char MAIN_WINDOW_NAME[] = "main window";
 // const char MAIN_WINDOW_TITLE_NAME[] = "main window TITLE";
 // const char BUTTON_NAME[] = "button";
@@ -67,14 +69,43 @@ Slider::Slider(const Vector2& abs_pos, const Vector2& size, EventHandler* handle
 
 
 
-RayCasterHolder::RayCasterHolder(Renderer* renderer, const Vector2& abs_pos, const Vector2& size, AbstractWindow* parent) :
-AbstractWindow(abs_pos - Vector2(1, 1), size + Vector2(2, 2), nullptr, parent, nullptr) {
+RayCasterHolder::RayCasterHolder(Renderer* renderer, const Vector2& abs_pos, const Vector2& sz, AbstractWindow* parent) :
+AbstractWindow(abs_pos - Vector2(1, 1), sz + Vector2(2, 2), nullptr, parent, nullptr) {
     handler = new EventHandler(this);
     skin = new Skin(new Texture(renderer, size, Color{0, 0, 0, 255}));
     Vector2 titlebar_size(size.getX(), titlebar_height);
     createTitlebar(renderer, absolute_pos, titlebar_size);
     // now creating sphere
 
+    Vector2 rc_size(size.getX(), size.getY() - titlebar_size.getY());
+    Vector2 rc_pos(abs_pos.getX(), abs_pos.getY() + titlebar_size.getY());
+    const Rect2f range_rect = {0, 0, rc_size.getX(), rc_size.getY()};
+    Camera* camera = new Camera({0, 0, 150}, {0, 1, 0}, {range_rect.width, range_rect.height});
+    Sphere* sphere = new Sphere({0, 0, 0}, 120, {1, 0, 0});
+    Light* light_source = new Light({-1300, -300, 0}, {1, 1, 1});
+    
+    Texture* rc_texture = new Texture(renderer, Vector2{range_rect.width, range_rect.height}, {0, 0, 0, 255});
+    Skin* rc_skin = new Skin(rc_texture);
+
+    RayCasterHandler* rc_handler = new RayCasterHandler(renderer, camera, light_source, sphere);
+
+    rc_handler->setTexture(rc_texture);
+
+    printf("updating...\n");
+    rc_handler->rotateLight(0);
+    printf("updated!\n");
+    // renderer->setTarget(rc_texture);
+    // renderer->drawRect({0, 0}, {100, 100}, {255, 255, 255, 255});
+    renderer->setTarget(nullptr);
+    // renderer->copyTexture(rc_texture, Vector2{0, 0});
+    // renderer->render();
+    // printf("%f %f\n", rc_texture->getSize().getX(), rc_texture->getSize().getY());
+    // SDL_Delay(3000);
+    // exit(0);
+
+    RayCaster* rc = new RayCaster(rc_pos, rc_size, rc_handler, this, rc_skin);
+    rc_handler->setWindow(rc);
+    attachWindow(rc);
 }
 
 void RayCasterHolder::createTitlebar(Renderer* renderer, const Vector2& tb_pos, const Vector2& tb_size) {
@@ -119,3 +150,9 @@ void RayCasterHolder::createCloseButton(Renderer* renderer, const Vector2& btn_p
 
 RayCaster::RayCaster(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin) :
 AbstractWindow(abs_pos, size, handler, parent, skin) {}
+
+// void RayCaster::soloRender(Renderer* renderer) {
+//     dynamic_cast<RayCasterHandler*>(handler)->update();
+//     renderer->setTarget(NULL);
+//     skin->draw(renderer, absolute_pos);
+// }

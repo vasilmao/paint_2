@@ -30,6 +30,18 @@ bool CreateCanvasWindowFunctor::operator()() {
     return true;
 }
 
+CreateRayCasterFunctor::CreateRayCasterFunctor(AbstractWindow* parent, Renderer* renderer, const Vector2& pos, const Vector2& size) :
+    parent(parent), renderer(renderer), pos(pos), size(size) {
+}
+
+bool CreateRayCasterFunctor::operator()() {
+    // RayCasterHolder* rc = new RayCasterHolder(renderer, {10, 10}, {430, 430}, main_window);
+    // main_window->attachWindow(rc);
+    RayCasterHolder* c_w = new RayCasterHolder(renderer, pos, size, parent);
+    parent->attachWindow(c_w);
+    return true;
+}
+
 WindowMoverFunctor::WindowMoverFunctor(AbstractWindow* to_move_window) : window_to_move(to_move_window) {
 
 }

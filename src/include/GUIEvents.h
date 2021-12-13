@@ -15,9 +15,10 @@ public:
         LEFT_MOUSE_BUTTON,
         RIGHT_MOUSE_BUTTON,
         MOUSE_MOVE,
-        CLOSE,
-        INSTRUMENT_CHANGED,
+        // CLOSE,
+        // INSTRUMENT_CHANGED,
         LIST_ELEMENT_CHANGED,
+        TIME_PASSED,
         EVENTS_CNT
     };
 protected:
@@ -120,6 +121,16 @@ public:
 class GUIListElementChanged : public GUIEvent {
 public:
     GUIListElementChanged() : GUIEvent(GUIEventTypes::LIST_ELEMENT_CHANGED) {}
+};
+
+class GUITimePassed : public GUIEvent {
+private:
+    float dt;
+public:
+    GUITimePassed(float time) : GUIEvent(GUIEventTypes::TIME_PASSED), dt(time) {}
+    float getTime() {
+        return dt;
+    }
 };
 
 // class GUILeftMouseButton : public GUIEvent {

@@ -81,16 +81,21 @@ App::App() {
 
     main_window->attachWindow(strange_btn);
 
+    printf("ya1\n");
+    // RayCasterHolder* rc = new RayCasterHolder(renderer, {10, 10}, {430, 430}, main_window);
+    // main_window->attachWindow(rc);
+    printf("ya2\n");
+
     printf("constructed\n");
 }
 
 void App::run() {
     running = true;
     // printf("running\n");
-    // clock_t time1 = 0;
-    // clock_t time2 = 0;
+    clock_t time1 = clock();
+    clock_t time2 = 0;
     while (running) {
-        // time1 = clock();
+        time1 = clock();
         SystemEvent sys_event = getSystemEvent();
         while (sys_event.event_type != SystemEventTypes::NO_EVENT) {
             // printf("event got\n");
@@ -110,6 +115,10 @@ void App::run() {
             // printf("yaa\n");
             sys_event = getSystemEvent();
         }
+        time2 = clock();
+        GUITimePassed time_event(((float) (time2 - time1)) / CLOCKS_PER_SEC);
+        main_window->onEvent(&time_event);
+        time1 = clock();
         if (main_window->isToDelete()) {
             // delete main_window;
             running = false;

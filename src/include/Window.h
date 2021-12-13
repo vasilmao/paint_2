@@ -150,7 +150,7 @@ private:
     const float titlebar_height = 25;
     const Vector2 close_button_size = {titlebar_height, titlebar_height};
     virtual void createTitlebar(Renderer* renderer, const Vector2& tb_pos, const Vector2& tb_size);
-    virtual void createSphere(Renderer* renderer, const Vector2& pos, const Vector2& size);
+    // virtual void createSphere(Renderer* renderer, const Vector2& pos, const Vector2& size);
     virtual void createCloseButton(Renderer* renderer, const Vector2& btn_pos, const Vector2& btn_size, AbstractWindow* titlebar);
 public:
     RayCasterHolder(Renderer* renderer, const Vector2& abs_pos, const Vector2& size, AbstractWindow* parent);
@@ -159,6 +159,7 @@ public:
 class RayCaster : public AbstractWindow {
 public:
     RayCaster(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
+    // virtual void soloRender(Renderer* renderer);
 };
 
 #endif

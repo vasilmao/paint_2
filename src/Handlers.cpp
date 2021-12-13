@@ -13,7 +13,7 @@ bool EventHandler::spreadEvent(GUIEvent* event) {
 }
 
 bool EventHandler::passEvent(GUIEvent* event) {
-    // printf("passing... %p\n", my_window);
+    // printf("passing... %p\n", this);
     for (List<AbstractWindow*>::Iterator it = my_window->getChildren()->begin(); it.isValid(); ++it) {
         if (it.getData()->onEvent(event)) {
             // printf("found!\n");
@@ -29,6 +29,7 @@ bool EventHandler::passEvent(GUIEvent* event) {
 }
 
 bool EventHandler::onEvent(GUIEvent* event) {
+    // printf("handler: %p\n", this);
     switch (event->getType())
     {
         case static_cast<int>(GUIEvent::GUIEventTypes::LEFT_MOUSE_BUTTON): {
@@ -37,8 +38,6 @@ bool EventHandler::onEvent(GUIEvent* event) {
             }
             GUILeftMouseButton* lmb_event = dynamic_cast<GUILeftMouseButton*>(event);
             return MBLResponce(lmb_event);
-            // printf("passing mousebutton\n");
-            // return passEvent(event);
             break;
         }
 
@@ -48,8 +47,6 @@ bool EventHandler::onEvent(GUIEvent* event) {
             }
             GUIRightMouseButton* rmb_event = dynamic_cast<GUIRightMouseButton*>(event);
             return MBRResponce(rmb_event);
-            // printf("passing mousebutton\n");
-            // return passEvent(event);
             break;
         }
 
@@ -59,8 +56,6 @@ bool EventHandler::onEvent(GUIEvent* event) {
             }
             GUIMouseMove* mm_event = dynamic_cast<GUIMouseMove*>(event);
             return MMResponce(mm_event);
-            // printf("passing mousebutton\n");
-            // return passEvent(event);
             break;
         }
 
@@ -74,7 +69,14 @@ bool EventHandler::onEvent(GUIEvent* event) {
             // return passEvent(event);
             break;
         }
-    
+
+        case static_cast<int>(GUIEvent::GUIEventTypes::TIME_PASSED): {
+            bool res = spreadEvent(event);
+            GUITimePassed* list_event = dynamic_cast<GUITimePassed*>(event);
+            res |= TIMEResponce(list_event);
+            return res;
+            break;
+        }
         default: {
             return spreadEvent(event);
         }
@@ -82,7 +84,7 @@ bool EventHandler::onEvent(GUIEvent* event) {
 }
 
 bool EventHandler::MBLResponce(GUILeftMouseButton* event) {
-    return false;
+    return my_window->hitTest(event->getPos());
 }
 
 bool EventHandler::MBRResponce(GUIRightMouseButton* event) {
@@ -97,9 +99,14 @@ bool EventHandler::LECResponce(GUIListElementChanged* event) {
     return false;
 }
 
+bool EventHandler::TIMEResponce(GUITimePassed* time_event) {
+    return false;
+}
+
 void EventHandler::setWindow(AbstractWindow* window) {
     my_window = window;
 }
+
 
 ButtonHandler::ButtonHandler(AbstractWindow* window, Functor<>* click_functor) : EventHandler(window), click_event_responce(click_functor){}
 
@@ -522,4 +529,14 @@ bool SliderHandler::MMResponce(GUIMouseMove* mouse_move) {
 
 SliderHandler::~SliderHandler() {
     delete move_functor;
+}
+
+RayCasterHandler::RayCasterHandler(Renderer* renderer, Camera* camera, Light* light_source, Sphere* sphere) :
+renderer(renderer), camera(camera), light_source(light_source), sphere(sphere) {
+    printf("rc handler: %p\n", this);
+}
+bool RayCasterHandler::TIMEResponce(GUITimePassed* time_event) {
+    float angle = M_PI_4 / 16;
+    rotateLight(angle);
+    return true;
 }

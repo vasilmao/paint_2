@@ -18,7 +18,8 @@ void MainWindow::createTitlebar(Renderer* renderer, const Vector2& tb_pos, const
     attachWindow(titlebar);
     createCloseButton(renderer, {tb_pos.getX() + tb_size.getX() - close_button_size.getX(), tb_pos.getY()}, close_button_size, titlebar);
     Vector2 buttons_size(72, titlebar_height);
-    createSignedButton(renderer, {0, 0}, buttons_size, titlebar, "Canvas", new CreateCanvasWindowFunctor(this, renderer, default_canvas_pos, default_canvas_size));
+    createSignedButton(renderer, {0, 0},                   buttons_size, titlebar, "Canvas", new CreateCanvasWindowFunctor(this, renderer, default_canvas_pos, default_canvas_size));
+    createSignedButton(renderer, {buttons_size.getX(), 0}, buttons_size, titlebar, "Sphere", new CreateRayCasterFunctor   (this, renderer, default_canvas_pos, {430, 430}));
 }
 
 void MainWindow::createCloseButton(Renderer* renderer, const Vector2& btn_pos, const Vector2& btn_size, AbstractWindow* titlebar) {
@@ -46,9 +47,10 @@ void MainWindow::createCloseButton(Renderer* renderer, const Vector2& btn_pos, c
 void MainWindow::createSignedButton(Renderer* renderer, const Vector2& btn_pos, const Vector2& btn_size, AbstractWindow* titlebar, const char* text, Functor<>* butn_functor) {
     Texture* button_texture = new Texture(renderer, btn_size, {0, 0, 0, 0});
     renderer->setTarget(button_texture);
+    // renderer->drawText(btn_pos, text, {0, 0, 0, 255});
     renderer->drawTextCentered(btn_pos, btn_size, text, {0, 0, 0, 255});
     Texture* button_texture_pressed = new Texture(renderer, btn_size, {237, 104, 64, 255});
-    renderer->setTarget(button_texture);
+    renderer->setTarget(button_texture_pressed);
     renderer->drawTextCentered(btn_pos, btn_size, text, {0, 0, 0, 255});
     ButtonSkin* button_skin = new ButtonSkin(
         button_texture,
