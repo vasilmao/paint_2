@@ -40,7 +40,22 @@ SliderBody::SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& si
     AbstractWindow(pos, size, new EventHandler(this), nullptr, nullptr) {
     // create texture for self, for slider, handler for slider
     // 1
-    Texture* my_texture = new Texture(renderer, size, {0, 0, 0, 100});
+    // Texture* my_texture = new Texture(renderer, size, {0, 0, 0, 100});
+    Texture* my_texture = new Texture(renderer, size, {0, 0, 0, 0});
+    renderer->setTarget(my_texture);
+    Color line_color = {0, 0, 0, 100};
+    if (size.getX() > size.getY()) {
+        float delta = size.getY() / 2;
+        renderer->drawLine(Vector2{delta, delta}, Vector2{size.getX() - delta, delta}, line_color);
+        renderer->drawFilledCircle(Vector2{delta, delta}, delta * 2 / 3, line_color);
+        renderer->drawFilledCircle(Vector2{size.getX() - delta, delta}, delta * 2 / 3, line_color);
+    } else {
+        float delta = size.getX() / 2;
+        renderer->drawLine(Vector2{delta, delta}, Vector2{delta, size.getY() - delta}, line_color);
+        renderer->drawFilledCircle(Vector2{delta, delta}, delta * 2 / 3, line_color);
+        renderer->drawFilledCircle(Vector2{delta, size.getY() - delta}, delta * 2 / 3, line_color);
+    }
+    renderer->setTarget(nullptr);
     skin = new Skin(my_texture, size);
     // 2
     Vector2 slider_axis(0, 0);
