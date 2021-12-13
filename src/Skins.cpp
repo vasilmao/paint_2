@@ -86,6 +86,7 @@ ButtonSkin::ButtonSkin(Texture* texture, Texture* h_t, Texture* p_t) : usual_tex
 }
 
 void ButtonSkin::setUsual() {
+    printf("usual!\n");
     current_texture = usual_texture;
 }
 
@@ -96,6 +97,7 @@ void ButtonSkin::setHover() {
 }
 
 void ButtonSkin::setPressed() {
+    printf("pressed!\n");
     if (pressed_texture != nullptr) {
         current_texture = pressed_texture;
     }

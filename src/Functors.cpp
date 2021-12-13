@@ -42,6 +42,16 @@ bool CreateRayCasterFunctor::operator()() {
     return true;
 }
 
+CreateViewportCanvasWindowFunctor::CreateViewportCanvasWindowFunctor(AbstractWindow* parent, Renderer* renderer, const Vector2& pos, const Vector2& size) :
+    parent(parent), renderer(renderer), pos(pos), size(size) {
+}
+
+bool CreateViewportCanvasWindowFunctor::operator()() {
+    CanvasViewportWindow* c_w = new CanvasViewportWindow(renderer, pos, size);
+    parent->attachWindow(c_w);
+    return true;
+}
+
 WindowMoverFunctor::WindowMoverFunctor(AbstractWindow* to_move_window) : window_to_move(to_move_window) {
 
 }

@@ -451,9 +451,11 @@ bool SliderHandler::MBLResponce(GUILeftMouseButton* mouse_click) {
             is_pressed = true;
             // printf("mb captured! pressed of window %p is true %d, handler %p\n", my_window, is_pressed, this);
             // printf("%d %d\n", is_pressed, this->is_pressed);
+            dynamic_cast<Slider*>(my_window)->setPressed();
             return true;
         } else if (is_pressed && !(mouse_click->isButtonDown())) {
             is_pressed = false;
+            dynamic_cast<Slider*>(my_window)->setUsual();
             // printf("titlebar released!\n");
             return true;
         }

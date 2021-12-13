@@ -117,8 +117,8 @@ void App::run() {
         }
         time2 = clock();
         GUITimePassed time_event(((float) (time2 - time1)) / CLOCKS_PER_SEC);
-        main_window->onEvent(&time_event);
         time1 = clock();
+        main_window->onEvent(&time_event);
         if (main_window->isToDelete()) {
             // delete main_window;
             running = false;

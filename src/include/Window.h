@@ -142,6 +142,8 @@ private:
     // Vector2 pos_at_max_value;
     Vector2 move_dir;
 public:
+    void setPressed();
+    void setUsual();
     Slider(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
 };
 

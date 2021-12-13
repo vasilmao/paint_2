@@ -31,10 +31,16 @@ void Button::setUsual() {
     dynamic_cast<ButtonSkin*>(skin)->setUsual();
 }
 
-
 Canvas::Canvas(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin) :
     AbstractWindow(abs_pos, size, handler, parent, skin) {}
 
+void Slider::setPressed() {
+    dynamic_cast<ButtonSkin*>(skin)->setPressed();
+}
+
+void Slider::setUsual() {
+    dynamic_cast<ButtonSkin*>(skin)->setUsual();
+}
 
 SliderBody::SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& size, Functor<float, float>* slider_reaction) :
     AbstractWindow(pos, size, new EventHandler(this), nullptr, nullptr) {
@@ -129,7 +135,7 @@ void RayCasterHolder::createTitlebar(Renderer* renderer, const Vector2& tb_pos, 
     // Vector2 text_size(tb_size.getY() * (sizeof("Canvas") - 1) / 3, tb_size.getY() / 1.5);
     // renderer->drawText({0, 0}, text_size, "Canvas", {255, 255, 255, 255});
     // renderer->drawText({tb_size.getX() / 2, 0}, "Canvas", {255, 255, 255, 255});
-    renderer->drawTextCentered({0, 0}, tb_size, "Canvas", {0, 0, 0, 255});
+    renderer->drawTextCentered({0, 0}, tb_size, "Sphere", {0, 0, 0, 255});
     renderer->setTarget(NULL);
     Skin* titlebar_skin = new Skin(titlebar_texture, tb_size);
     WindowMoverFunctor* move_f = new WindowMoverFunctor(this);

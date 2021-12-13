@@ -17,9 +17,10 @@ void MainWindow::createTitlebar(Renderer* renderer, const Vector2& tb_pos, const
     titlebar_handler->setWindow(titlebar);
     attachWindow(titlebar);
     createCloseButton(renderer, {tb_pos.getX() + tb_size.getX() - close_button_size.getX(), tb_pos.getY()}, close_button_size, titlebar);
-    Vector2 buttons_size(72, titlebar_height);
-    createSignedButton(renderer, {0, 0},                   buttons_size, titlebar, "Canvas", new CreateCanvasWindowFunctor(this, renderer, default_canvas_pos, default_canvas_size));
-    createSignedButton(renderer, {buttons_size.getX(), 0}, buttons_size, titlebar, "Sphere", new CreateRayCasterFunctor   (this, renderer, default_canvas_pos, {430, 430}));
+    Vector2 buttons_size(300, titlebar_height);
+    createSignedButton(renderer, {0, 0},                       buttons_size, titlebar, "Canvas", new CreateCanvasWindowFunctor(this, renderer, default_canvas_pos, default_canvas_size));
+    createSignedButton(renderer, {buttons_size.getX(), 0},     buttons_size, titlebar, "Sphere", new CreateRayCasterFunctor   (this, renderer, default_canvas_pos, {430, 430}));
+    createSignedButton(renderer, {buttons_size.getX() * 2, 0}, buttons_size, titlebar, "Viewport Canvas", new CreateViewportCanvasWindowFunctor(this, renderer, default_canvas_pos, default_canvas_size));
 }
 
 void MainWindow::createCloseButton(Renderer* renderer, const Vector2& btn_pos, const Vector2& btn_size, AbstractWindow* titlebar) {
