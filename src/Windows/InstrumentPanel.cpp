@@ -37,9 +37,9 @@ void InstrumentPanel::create(Renderer* renderer, AbstractWindow* parent) {
     Texture* texture = new Texture(renderer, real_size, bg_color);
     renderer->setTarget(texture);
     renderer->drawRect({0, 0}, real_size - Vector2(1, 1), {0, 0, 0, 255});
-    renderer->setTarget(NULL);
+    // renderer->setTarget(NULL);
     panel = new InstrumentPanel({0, 0}, real_size, nullptr, parent, new Skin(texture, real_size));
-    panel->absolute_pos = {0, 0};
+    panel->absolute_pos = {10, 30};
     panel->size = real_size;
     // panel->is_created = true;
     EventHandler* panel_handler = new MovingHandler(panel, new WindowMoverFunctor(panel));

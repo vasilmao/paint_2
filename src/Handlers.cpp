@@ -461,6 +461,7 @@ bool SliderHandler::MBLResponce(GUILeftMouseButton* mouse_click) {
         }
     }
     else if (is_pressed && !(mouse_click->isButtonDown())) {
+        dynamic_cast<Slider*>(my_window)->setUsual();
         is_pressed = false;
         return true;
     }
@@ -471,8 +472,8 @@ bool SliderHandler::MBLResponce(GUILeftMouseButton* mouse_click) {
 bool SliderHandler::MMResponce(GUIMouseMove* mouse_move) {
     if (is_pressed) {
         // printf("slider got mouse movement\n");
-        bool first_result = my_window->hitTest(mouse_move->getPrevPos());
-        bool second_result = my_window->hitTest(mouse_move->getNewPos());
+        // bool first_result = my_window->hitTest(mouse_move->getPrevPos());
+        // bool second_result = my_window->hitTest(mouse_move->getNewPos());
         // printf("hittest results are %d %d\n", first_result, second_result);
         if (true) {
             Vector2 mouse_prev_pos = mouse_move->getPrevPos();

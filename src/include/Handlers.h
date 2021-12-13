@@ -103,9 +103,9 @@ public:
 class SliderHandler : public EventHandler {
 private:
     Functor<float, float>* move_functor;
+    Vector2 axis;
     float min_value = 0;
     float max_value = 1;
-    Vector2 axis;
     float current_value = 0;
     bool is_pressed = false;
 public:

@@ -13,22 +13,25 @@ App::App() {
     height = HEIGHT;
     renderer = new Renderer(width, height, bg_color);
     // printf("render created\n");
-    instrument = new Brush();
     main_window = new MainWindow(renderer, {static_cast<float>(width), static_cast<float>(height)});
-    CanvasWindow* canvas_w = new CanvasWindow(renderer, {40, 40}, {500, 300});
-    CanvasViewportWindow* canvas_w1 = new CanvasViewportWindow(renderer, {400, 400}, {500, 300});
+    // CanvasWindow* canvas_w = new CanvasWindow(renderer, {40, 40}, {500, 300});
+    // CanvasViewportWindow* canvas_w1 = new CanvasViewportWindow(renderer, {400, 400}, {500, 300});
     // canvas_w->setInstrument(instrument);
-    main_window->attachWindow(canvas_w);
-    main_window->attachWindow(canvas_w1);
+    // main_window->attachWindow(canvas_w);
+    // main_window->attachWindow(canvas_w1);
     printf("uh oh society\n");
     // GUIInstrumentChanged event(instrument);
     
     InstrumentPanel::create(renderer, main_window);
+    // Texture* brush_texture = new Texture(renderer, "skins/Brush.bmp");
+    Texture* kostil_texture = new Texture(renderer, "skins/Brush.bmp");
+    delete kostil_texture;
     Texture* brush_texture = new Texture(renderer, "skins/Brush.bmp");
     Texture* brush_texture_pressed = new Texture(renderer, "skins/Brush.bmp");
     // printf("brush texture... %p\n", brush_texture_pressed);
     renderer->setTarget(brush_texture_pressed);
     renderer->drawRect({0, 0}, brush_texture_pressed->getSize(), {255, 0, 0, 255});
+    renderer->setTarget(nullptr);
 
     ButtonSkin* brush_btn_skin = new ButtonSkin(
         brush_texture,
@@ -42,6 +45,7 @@ App::App() {
     Texture* eraser_texture_pressed = new Texture(renderer, "skins/Eraser.bmp");
     renderer->setTarget(eraser_texture_pressed);
     renderer->drawRect({0, 0}, eraser_texture_pressed->getSize(), {255, 0, 0, 255});
+    renderer->setTarget(nullptr);
 
     ButtonSkin* eraser_btn_skin = new ButtonSkin(
         eraser_texture,
@@ -145,6 +149,5 @@ void App::stop() {
 
 App::~App() {
     delete main_window;
-    delete instrument;
     delete renderer;
 }

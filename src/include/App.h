@@ -25,7 +25,7 @@ private:
 
     MainWindow* main_window;
 
-    AbstractInstrument* instrument;
+    // AbstractInstrument* instrument;
 
 public:
     App();
