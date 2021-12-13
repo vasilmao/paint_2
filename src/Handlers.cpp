@@ -539,7 +539,8 @@ renderer(renderer), camera(camera), light_source(light_source), sphere(sphere) {
     printf("rc handler: %p\n", this);
 }
 bool RayCasterHandler::TIMEResponce(GUITimePassed* time_event) {
-    float angle = M_PI_4 / 16;
+    float angle = M_PI * time_event->getTime();
+    // printf("%f\n", angle);  
     rotateLight(angle);
     return true;
 }

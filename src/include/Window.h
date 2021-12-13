@@ -107,10 +107,10 @@ public:
 class InstrumentPanel : public AbstractWindow { // singleton
 private:
     static constexpr Color bg_color = {138, 135, 134, 255};
-    static constexpr float forced_icon_size = 24.0;
-    static constexpr float up_offset = 10.0;
+    static constexpr float forced_icon_size = 32.0;
+    static constexpr float up_offset = 20.0;
     static constexpr float px_interval = 5.0;
-    static constexpr float icons_size = 24.0;
+    static constexpr float icons_size = 32.0;
     static bool is_created;
     static InstrumentPanel* panel;
     static Renderer* my_renderer;

@@ -7,6 +7,12 @@ const Color bg_color = {185, 226, 235, 255};
 
 App::App() {
     // TODO: SPLIT INTO FUNCTIONS!!!!!!!!!!!!!!!!!!!
+    // TODO: MORE SKINS
+    // TODO: more instruments with more pref panel
+    // TODO: BETTER SLIDER
+    // TODO: FILTERS
+    // TODO: canvas from file
+    // TODO: PLUGINS!!
     running = false;
 
     width = WIDTH;
@@ -99,7 +105,6 @@ void App::run() {
     clock_t time1 = clock();
     clock_t time2 = 0;
     while (running) {
-        time1 = clock();
         SystemEvent sys_event = getSystemEvent();
         while (sys_event.event_type != SystemEventTypes::NO_EVENT) {
             // printf("event got\n");
