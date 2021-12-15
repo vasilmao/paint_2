@@ -25,11 +25,11 @@
 InstrumentPanel* InstrumentPanel::panel{nullptr};
 Renderer* InstrumentPanel::my_renderer{nullptr};
 
-InstrumentPanel::InstrumentPanel(const Vector2& pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin) : AbstractWindow(pos, size, handler, parent, skin) {
+InstrumentPanel::InstrumentPanel(const Vector2& pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin) : AbstractWindow(pos, size, handler, parent, skin), main_window(parent) {
 
 }
 
-void InstrumentPanel::create(Renderer* renderer, AbstractWindow* parent) {
+void InstrumentPanel::create(Renderer* renderer, AbstractWindow* main_wnd) {
     // assert(!is_created && (panel == nullptr));
     // panel->instrument_buttons = new List<Button*>();
     // EventHandler* panel_handler = dynamic_cast<EventHandler*>(new MovingHandler(nullptr, ))
@@ -38,7 +38,7 @@ void InstrumentPanel::create(Renderer* renderer, AbstractWindow* parent) {
     renderer->setTarget(texture);
     renderer->drawRect({0, 0}, real_size - Vector2(1, 1), {0, 0, 0, 255});
     // renderer->setTarget(NULL);
-    panel = new InstrumentPanel({0, 0}, real_size, nullptr, parent, new Skin(texture, real_size));
+    panel = new InstrumentPanel({0, 0}, real_size, nullptr, main_wnd, new Skin(texture, real_size));
     panel->absolute_pos = {10, 30};
     panel->size = real_size;
     // panel->is_created = true;

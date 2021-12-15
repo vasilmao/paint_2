@@ -135,12 +135,52 @@ public:
     }
 };
 
-class ChangeBrushRColorFunctor : public Functor<> {
+class ChangeBrushRColorFunctor : public Functor<float, float> {
 private:
     Brush* brush;
 public:
-    ChangeBrushRColorFunctor(Brush* brush);
-    virtual bool operator()() {
+    ChangeBrushRColorFunctor(Brush* brush) : brush(brush) {}
+    virtual bool operator()(float last_val, float new_val) {
+        Color cur_color = brush->getColor();
+        cur_color.r = static_cast<unsigned char>(new_val);
+        brush->setColor(cur_color);
+        return true;
+    }
+};
+
+class ChangeBrushGColorFunctor : public Functor<float, float> {
+private:
+    Brush* brush;
+public:
+    ChangeBrushGColorFunctor(Brush* brush) : brush(brush) {}
+    virtual bool operator()(float last_val, float new_val) {
+        Color cur_color = brush->getColor();
+        cur_color.g = static_cast<unsigned char>(new_val);
+        brush->setColor(cur_color);
+        return true;
+    }
+};
+
+class ChangeBrushBColorFunctor : public Functor<float, float> {
+private:
+    Brush* brush;
+public:
+    ChangeBrushBColorFunctor(Brush* brush) : brush(brush) {}
+    virtual bool operator()(float last_val, float new_val) {
+        Color cur_color = brush->getColor();
+        cur_color.b = static_cast<unsigned char>(new_val);
+        brush->setColor(cur_color);
+        return true;
+    }
+};
+
+class ChangeBrushRFunctor : public Functor<float, float> {
+private:
+    Brush* brush;
+public:
+    ChangeBrushRFunctor(Brush* brush) : brush(brush) {}
+    virtual bool operator()(float last_val, float new_val) {
+        brush->setR(new_val);
         return true;
     }
 };

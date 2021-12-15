@@ -147,4 +147,22 @@ public:
     }
 };
 
+class SensitiveHandler : public EventHandler {
+public:
+    SensitiveHandler(AbstractWindow* my_window) : EventHandler(my_window) {}
+    virtual bool MBLResponce(GUILeftMouseButton* mbl_event) {
+        if (!my_window->hitTest(mbl_event->getPos())) {
+            my_window->markToDelete();
+        }
+        return false;
+    }
+
+    virtual bool MBRResponce(GUILeftMouseButton* mbr_event) {
+        if (!my_window->hitTest(mbr_event->getPos())) {
+            my_window->markToDelete();
+        }
+        return false;
+    }
+};
+
 #endif

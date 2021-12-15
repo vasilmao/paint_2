@@ -116,10 +116,11 @@ private:
     static Renderer* my_renderer;
     // List<AbstractInstrument*> instruments;
     AbstractInstrument* current_instrument = nullptr;
+    AbstractWindow* main_window;
     InstrumentPanel();
     InstrumentPanel(const Vector2& pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
 public:
-    static void create(Renderer* renderer, AbstractWindow* parent);
+    static void create(Renderer* renderer, AbstractWindow* main_window);
     static void destroy();
     void addInstrument(AbstractInstrument* instr, ButtonSkin* skin);
     AbstractInstrument* getCurrentInstrument();
@@ -131,7 +132,7 @@ public:
 
 class SliderBody : public AbstractWindow {
 public:
-    SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& size, Functor<float, float>* slider_reaction); // creates the slider
+    SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& size, Functor<float, float>* slider_reaction, float min_val = 0, float max_val = 1); // creates the slider
 };
 
 class Slider : public AbstractWindow {

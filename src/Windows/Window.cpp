@@ -42,7 +42,7 @@ void Slider::setUsual() {
     dynamic_cast<ButtonSkin*>(skin)->setUsual();
 }
 
-SliderBody::SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& size, Functor<float, float>* slider_reaction) :
+SliderBody::SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& size, Functor<float, float>* slider_reaction, float min_val, float max_val) :
     AbstractWindow(pos, size, new EventHandler(this), nullptr, nullptr) {
     // create texture for self, for slider, handler for slider
     // 1
@@ -78,7 +78,7 @@ SliderBody::SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& si
     Vector2 slider_size(slider_len, slider_len);
     Skin* slider_skin = new ButtonSkin(slider_texture, nullptr, slider_texture_pressed);
     // 3
-    EventHandler* slider_handler = new SliderHandler(slider_reaction, slider_axis);
+    EventHandler* slider_handler = new SliderHandler(slider_reaction, slider_axis, min_val, max_val);
     // the slider
     Slider* slider = new Slider(pos, slider_size, slider_handler, this, slider_skin);
     slider_handler->setWindow(slider);

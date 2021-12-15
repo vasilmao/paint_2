@@ -215,8 +215,10 @@ bool InstrumentListElementHandler::MBLResponce(GUILeftMouseButton* mouse_click) 
     return false;
 }
 
-bool InstrumentListElementHandler::MBRResponce(GUIRightMouseButton* mbl_event) {
+bool InstrumentListElementHandler::MBRResponce(GUIRightMouseButton* mbr_event) {
+    printf("ya!\n");
     my_window->attachWindow(InstrumentPanel::getInstance()->getPrefPanel(my_window->getPos() + Vector2{my_window->getSize().getX(), 0}, my_window));
+    return true;
 }
 
 bool InstrumentListElementHandler::LECResponce(GUIListElementChanged* list_event) {
