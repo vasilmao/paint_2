@@ -45,10 +45,11 @@ void InstrumentPanel::create(Renderer* renderer, AbstractWindow* main_wnd) {
     EventHandler* panel_handler = new MovingHandler(panel, new WindowMoverFunctor(panel));
     panel->setHandler(panel_handler);
     my_renderer = renderer;
+    printf("panel %p\n", panel);
 }
 
 void InstrumentPanel::addInstrument(AbstractInstrument* instr, ButtonSkin* skin) {
-    EventHandler* btn_handler = new InstrumentListElementHandler(nullptr, new InstrumentPickerFunctor(instr));
+    EventHandler* btn_handler = new InstrumentListElementHandler(nullptr, instr, new InstrumentPickerFunctor(instr));
     int instr_cnt = panel->children->getSize();
     Vector2 btn_pos(0, 0);
     if (instr_cnt % 2 == 1) {
@@ -68,7 +69,7 @@ void InstrumentPanel::addInstrument(AbstractInstrument* instr, ButtonSkin* skin)
     skin->resize(btn_sz);
     AbstractWindow* btn = dynamic_cast<AbstractWindow*>(new Button(btn_pos, btn_sz, btn_handler, panel, skin));
     btn_handler->setWindow(btn);
-    // printf("created button %p\n", btn);
+    printf("instrument button %p\n", btn);
     attachWindow(btn);
 }
 
@@ -96,5 +97,6 @@ InstrumentPanel::~InstrumentPanel() {
 };
 
 AbstractWindow* InstrumentPanel::getPrefPanel(const Vector2& pos, AbstractWindow* parent) {
+    printf("im here\n");
     return current_instrument->createPrefPanel(my_renderer, pos, parent);
 }

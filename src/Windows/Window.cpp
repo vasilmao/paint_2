@@ -16,7 +16,7 @@ TitleBar::TitleBar(const Vector2& abs_pos, const Vector2& size, EventHandler* ha
 
 Button::Button(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin) : 
     AbstractWindow(abs_pos, size, handler, parent, skin) {
-    // printf("button %p\n", this);
+    printf("\t button %p\n", this);
 }
 
 void Button::setHover() {
@@ -42,8 +42,11 @@ void Slider::setUsual() {
     dynamic_cast<ButtonSkin*>(skin)->setUsual();
 }
 
-SliderBody::SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& size, Functor<float, float>* slider_reaction, float min_val, float max_val) :
+SliderBody::SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& size, Functor<float, float>* slider_reaction, float min_val, float max_val, float init_val) :
     AbstractWindow(pos, size, new EventHandler(this), nullptr, nullptr) {
+    if (isnanf(init_val)) {
+        init_val = min_val;
+    }
     // create texture for self, for slider, handler for slider
     // 1
     // Texture* my_texture = new Texture(renderer, size, {0, 0, 0, 100});
@@ -65,8 +68,9 @@ SliderBody::SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& si
     skin = new Skin(my_texture, size);
     // 2
     Vector2 slider_axis(0, 0);
-    Texture* slider_texture = new Texture(renderer, {20, 20}, {255, 168, 242, 255});
-    Texture* slider_texture_pressed = new Texture(renderer, {20, 20}, {176, 247, 234, 255});
+    float slider_wh = Min(size.getX(), size.getY());
+    Texture* slider_texture = new Texture(renderer, {slider_wh, slider_wh}, {255, 168, 242, 255});
+    Texture* slider_texture_pressed = new Texture(renderer, {slider_wh, slider_wh}, {176, 247, 234, 255});
     float slider_len = 0;
     if (size.getX() > size.getY()) {
         slider_len = size.getY();
@@ -78,9 +82,9 @@ SliderBody::SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& si
     Vector2 slider_size(slider_len, slider_len);
     Skin* slider_skin = new ButtonSkin(slider_texture, nullptr, slider_texture_pressed);
     // 3
-    EventHandler* slider_handler = new SliderHandler(slider_reaction, slider_axis, min_val, max_val);
+    EventHandler* slider_handler = new SliderHandler(slider_reaction, slider_axis, min_val, max_val, init_val);
     // the slider
-    Slider* slider = new Slider(pos, slider_size, slider_handler, this, slider_skin);
+    Slider* slider = new Slider(pos + (init_val - min_val) / (max_val - min_val) * slider_axis, slider_size, slider_handler, this, slider_skin);
     slider_handler->setWindow(slider);
     attachWindow(slider);
 }

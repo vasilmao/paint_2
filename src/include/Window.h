@@ -128,11 +128,14 @@ public:
     virtual ~InstrumentPanel();
     static InstrumentPanel* getInstance();
     AbstractWindow* getPrefPanel(const Vector2& pos, AbstractWindow* parent);
+    Renderer* getRenderer() {
+        return my_renderer;
+    }
 };
 
 class SliderBody : public AbstractWindow {
 public:
-    SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& size, Functor<float, float>* slider_reaction, float min_val = 0, float max_val = 1); // creates the slider
+    SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& size, Functor<float, float>* slider_reaction, float min_val = 0, float max_val = 1, float init_val = nanf("1")); // creates the slider
 };
 
 class Slider : public AbstractWindow {

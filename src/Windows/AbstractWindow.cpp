@@ -15,7 +15,7 @@ AbstractWindow* AbstractWindow::getParent(){
 }
 
 void AbstractWindow::attachWindow(AbstractWindow* window) {
-    // printf("attaching\n");
+    printf("attaching %p to %p\n", window, this);
     children->pushFront(window);
     // printf("attached\n");
 }
@@ -67,6 +67,7 @@ Skin* AbstractWindow::getSkin() {
 }
 
 void AbstractWindow::markToDelete() {
+    printf("%p is now to delete!\n", this);
     on_delete = true;
 }
 
@@ -75,15 +76,40 @@ bool AbstractWindow::isToDelete() {
 }
 
 void AbstractWindow::clean() {
-    for (List<AbstractWindow*>::Iterator it = children->begin(); it != children->end(); ++it) {
+    // bool deletedd = false;
+    // if ((dynamic_cast<MainWindow*>(InstrumentPanel::getInstance()->getParent()))->kek) {
+    //     printf("clearing %p\n", this);
+    //     printf("%d children\n", children->getSize());
+    //     if (children->getSize() > 0) {
+    //         List<AbstractWindow*>::Iterator it = children->begin();
+    //         printf("%p, %p, %d\n", it.getNode(), it.getData(), it == children->cycleEnd());
+    //     }
+    // }
+    // int cycle_cnt = 0;
+    for (List<AbstractWindow*>::Iterator it = children->begin(); it != children->cycleEnd(); ++it) {
+        // ++cycle_cnt;
+        // if ((dynamic_cast<MainWindow*>(InstrumentPanel::getInstance()->getParent()))->kek) {
+        //     printf("%p's child is %p\n", this, it.getData());
+        // }
         if (it.getData()->isToDelete()) {
+            // printf("%p is onto delete by %p\n", it.getData(), this);
+            // deletedd = true;
             delete it.getData();
             children->erase(it);
         } else {
             it.getData()->clean();
         }
     }
+    // if (deletedd) {
+    //     printf("%p children were %d\n", this, children->getSize());
+    // }
     children->clear();
+    // if (deletedd) {
+    //     printf("children now are %d\n", children->getSize());
+    // }
+    // if ((dynamic_cast<MainWindow*>(InstrumentPanel::getInstance()->getParent()))->kek) {
+    //     printf("%p cleared, %d\n", this, cycle_cnt);
+    // }
 }
 
 void AbstractWindow::move(const Vector2& dv) {

@@ -29,7 +29,6 @@ bool EventHandler::passEvent(GUIEvent* event) {
 }
 
 bool EventHandler::onEvent(GUIEvent* event) {
-    // printf("handler: %p\n", this);
     switch (event->getType())
     {
         case static_cast<int>(GUIEvent::GUIEventTypes::LEFT_MOUSE_BUTTON): {
@@ -42,9 +41,11 @@ bool EventHandler::onEvent(GUIEvent* event) {
         }
 
         case static_cast<int>(GUIEvent::GUIEventTypes::RIGHT_MOUSE_BUTTON): {
+            // printf("entered event, handler: %p, window %p\n", this, my_window);
             if (passEvent(event)) {
                 return true;
             }
+            // printf("window %p havent passed event\n", my_window);
             GUIRightMouseButton* rmb_event = dynamic_cast<GUIRightMouseButton*>(event);
             return MBRResponce(rmb_event);
             break;
@@ -81,6 +82,7 @@ bool EventHandler::onEvent(GUIEvent* event) {
             return spreadEvent(event);
         }
     }
+    assert(0);
 }
 
 bool EventHandler::MBLResponce(GUILeftMouseButton* event) {
@@ -88,6 +90,7 @@ bool EventHandler::MBLResponce(GUILeftMouseButton* event) {
 }
 
 bool EventHandler::MBRResponce(GUIRightMouseButton* event) {
+    // printf("dura %p\n", my_window);
     return false;
 }
 
@@ -115,7 +118,7 @@ bool ButtonHandler::MBLResponce(GUILeftMouseButton* mouse_click) {
     // printf("chekin\n");
     if (my_window->hitTest(mouse_click->getPos())) {
         // printf("btn hittest\n");
-        printf("%p\n", mouse_click);
+        // printf("%p\n", mouse_click);
         if (!is_pressed && mouse_click->isButtonDown()) {
             is_pressed = true;
             button->setPressed();
@@ -185,7 +188,7 @@ ButtonHandler::~ButtonHandler() {
     delete click_event_responce;
 }
 
-InstrumentListElementHandler::InstrumentListElementHandler(AbstractWindow* window, Functor<>* click_functor) : EventHandler(window), click_event_responce(click_functor) {
+InstrumentListElementHandler::InstrumentListElementHandler(AbstractWindow* window, AbstractInstrument* instrument, Functor<>* click_functor) : EventHandler(window), instr(instrument), click_event_responce(click_functor) {
     
 }
 
@@ -205,7 +208,8 @@ bool InstrumentListElementHandler::MBLResponce(GUILeftMouseButton* mouse_click) 
             is_chosen = true;
             button->setPressed();
             // button->setUsual();
-            return (*click_event_responce)();
+            // return (*click_event_responce)();
+            (InstrumentPanel::getInstance())->setInstrument(instr);
         }
     } else if (is_pressed && !(mouse_click->isButtonDown())) {
         is_pressed = false;
@@ -216,9 +220,34 @@ bool InstrumentListElementHandler::MBLResponce(GUILeftMouseButton* mouse_click) 
 }
 
 bool InstrumentListElementHandler::MBRResponce(GUIRightMouseButton* mbr_event) {
-    printf("ya!\n");
-    my_window->attachWindow(InstrumentPanel::getInstance()->getPrefPanel(my_window->getPos() + Vector2{my_window->getSize().getX(), 0}, my_window));
-    return true;
+    Button* button = dynamic_cast<Button*>(my_window);
+    if (my_window->hitTest(mbr_event->getPos())) {
+        // printf("btn hittest\n");
+        if (!is_r_pressed && mbr_event->isButtonDown()) {
+            is_r_pressed = true;
+            // printf("setted pressed\n");
+            return true;
+        } else if (is_r_pressed && !(mbr_event->isButtonDown())) {
+            // printf("unpressed\n");
+            GUIListElementChanged list_event;
+            button->getParent()->onEvent(&list_event);
+            is_r_pressed = false;
+            is_chosen = true;
+            button->setPressed();
+            // button->setUsual();
+            // (InstrumentPanel::getInstance()->getParent())->attachWindow(InstrumentPanel::getInstance()->getPrefPanel(my_window->getPos() + Vector2{my_window->getSize().getX(), 0}, my_window));
+            printf("das it\n");
+            my_window->attachWindow(instr->createPrefPanel(InstrumentPanel::getInstance()->getRenderer(), my_window->getPos() + Vector2{my_window->getSize().getX(), 0}, my_window));
+            printf("das it2\n");
+            (InstrumentPanel::getInstance())->setInstrument(instr);
+            return true;
+        }
+    } else if (is_r_pressed && !(mbr_event->isButtonDown())) {
+        is_r_pressed = false;
+        // button->setUsual();
+        return true;
+    }
+    return false;
 }
 
 bool InstrumentListElementHandler::LECResponce(GUIListElementChanged* list_event) {
@@ -445,8 +474,8 @@ CanvasHandler::~CanvasHandler() {
 //     return false;
 // }
 
-SliderHandler::SliderHandler(Functor<float, float>* functor, const Vector2& axis, float min_val, float max_val) :
-    move_functor(functor), axis(axis), min_value(min_val), max_value(max_val), current_value(min_value) {
+SliderHandler::SliderHandler(Functor<float, float>* functor, const Vector2& axis, float min_val, float max_val, float init_val) :
+    move_functor(functor), axis(axis), min_value(min_val), max_value(max_val), current_value(init_val) {
 }
 
 bool SliderHandler::MBLResponce(GUILeftMouseButton* mouse_click) {
@@ -498,13 +527,13 @@ bool SliderHandler::MMResponce(GUIMouseMove* mouse_move) {
             if (value_delta == 0) {
                 return false;
             }
-            // printf("value delta:%f\n", value_delta);
+            printf("value delta:%f\n", value_delta);
             float new_value = Min(max_value, Max(min_value, current_value + value_delta));
-            // printf("new value:%f\n", new_value);
-            // printf("old value:%f\n", current_value);
+            printf("new value:%f\n", new_value);
+            printf("old value:%f\n", current_value);
             float true_delta = new_value - current_value;
-            // printf("true delta:%f\n", true_delta);
-            Vector2 true_slider_delta = axis * true_delta;
+            printf("true delta:%f\n", true_delta);
+            Vector2 true_slider_delta = axis * (true_delta / (max_value - min_value));
             my_window->move(true_slider_delta);
             (*move_functor)(current_value, new_value);
             current_value = new_value;

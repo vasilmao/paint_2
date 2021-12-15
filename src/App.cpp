@@ -109,9 +109,19 @@ void App::run() {
         while (sys_event.event_type != SystemEventTypes::NO_EVENT) {
             // printf("event got\n");
             if (sys_event.event_type == SystemEventTypes::MOUSE_CLICK) {
-                GUILeftMouseButton event(sys_event);
                 printf("uh oh mouse button society\n");
-                main_window->onEvent(&event);
+                printf("%d\n", sys_event.mb_press_info.button_type);
+                if (sys_event.mb_press_info.button_type == SDL_BUTTON_LEFT) {
+                    GUILeftMouseButton event(sys_event);
+                    printf("kek\n");
+                    main_window->onEvent(&event);
+                    printf("lol\n");
+                } else if (sys_event.mb_press_info.button_type == SDL_BUTTON_RIGHT) {
+                    GUIRightMouseButton event(sys_event);
+                    printf("kek\n");
+                    main_window->onEvent(&event);
+                    printf("lol\n");
+                }
             } else if (sys_event.event_type == SystemEventTypes::MOUSE_MOVE) {
                 GUIMouseMove event(sys_event);
                 main_window->onEvent(&event);
@@ -133,6 +143,9 @@ void App::run() {
             running = false;
         }
         main_window->clean();
+        // if ((dynamic_cast<MainWindow*>(InstrumentPanel::getInstance()->getParent()))->kek) {
+        //     exit(0);
+        // }
         if (!running) {
             break;
         }

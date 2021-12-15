@@ -13,7 +13,7 @@ void MainWindow::createTitlebar(Renderer* renderer, const Vector2& tb_pos, const
     // EventHandler* titlebar_handler = new MovingHandler(nullptr, move_f);
     EventHandler* titlebar_handler = new EventHandler(nullptr);
     TitleBar* titlebar = new TitleBar(tb_pos, tb_size, titlebar_handler, nullptr, titlebar_skin);
-    // printf("canvas titlebar: %p\n", titlebar);
+    printf("main titlebar: %p\n", titlebar);
     titlebar_handler->setWindow(titlebar);
     attachWindow(titlebar);
     createCloseButton(renderer, {tb_pos.getX() + tb_size.getX() - close_button_size.getX(), tb_pos.getY()}, close_button_size, titlebar);
@@ -40,7 +40,7 @@ void MainWindow::createCloseButton(Renderer* renderer, const Vector2& btn_pos, c
         this,
         close_button_skin
     );
-    // printf("canvas button: %p\n", close_button);
+    printf("close button: %p\n", close_button);
     close_button_handler->setWindow(close_button);
     titlebar->attachWindow(close_button);
 }
@@ -66,12 +66,13 @@ void MainWindow::createSignedButton(Renderer* renderer, const Vector2& btn_pos, 
         this,
         button_skin
     );
+    printf("signed button: %p (%s)\n", btn, text);
     button_handler->setWindow(btn);
     titlebar->attachWindow(btn);
 }
 
 MainWindow::MainWindow(Renderer* renderer, const Vector2& size) : AbstractWindow({0, 0}, size, new EventHandler(this), nullptr, nullptr) {
-    // printf("main window %p\n", this);
+    printf("main window %p\n", this);
     skin = new Skin(new Texture(renderer, "skins/wallpaper.bmp"), size);
     absolute_pos = {0, 0};
     Vector2 titlebar_size(size.getX(), close_button_size.getY());

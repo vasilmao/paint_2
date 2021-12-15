@@ -89,14 +89,16 @@ public:
 
 class InstrumentListElementHandler : public EventHandler {
 private:
+    AbstractInstrument* instr;
     bool is_pressed = false;
+    bool is_r_pressed = false;
     bool is_chosen = false;
     Functor<>* click_event_responce;
     virtual bool MBLResponce(GUILeftMouseButton* mbl_event);
     virtual bool MBRResponce(GUIRightMouseButton* mbl_event);
     virtual bool LECResponce(GUIListElementChanged* list_event);
 public:
-    InstrumentListElementHandler(AbstractWindow* window, Functor<>* click_functor);
+    InstrumentListElementHandler(AbstractWindow* window, AbstractInstrument* instrument, Functor<>* click_functor);
     // virtual bool onEvent(GUIEvent* event);
     virtual ~InstrumentListElementHandler();
 };
@@ -112,7 +114,7 @@ private:
 public:
     virtual bool MMResponce(GUIMouseMove* mm_event);
     virtual bool MBLResponce(GUILeftMouseButton* mbl_event);
-    SliderHandler(Functor<float, float>* functor, const Vector2& axis, float min_val = 0, float max_val = 1);
+    SliderHandler(Functor<float, float>* functor, const Vector2& axis, float min_val = 0, float max_val = 1, float init_val = 0);
     // virtual bool onEvent(GUIEvent* event);
     virtual ~SliderHandler();
 };
@@ -152,13 +154,16 @@ public:
     SensitiveHandler(AbstractWindow* my_window) : EventHandler(my_window) {}
     virtual bool MBLResponce(GUILeftMouseButton* mbl_event) {
         if (!my_window->hitTest(mbl_event->getPos())) {
+            printf("e\n");
             my_window->markToDelete();
+            // (dynamic_cast<MainWindow*>(InstrumentPanel::getInstance()->getParent()))->kek = true;
         }
         return false;
     }
 
     virtual bool MBRResponce(GUILeftMouseButton* mbr_event) {
         if (!my_window->hitTest(mbr_event->getPos())) {
+            printf("e\n");
             my_window->markToDelete();
         }
         return false;
