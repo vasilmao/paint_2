@@ -2,6 +2,7 @@
 #define INCLUDE_FUNCTORS
 
 #include "Window.h"
+#include "Instruments.h"
 
 template<class ...Args>
 class Functor {
@@ -130,6 +131,16 @@ public:
         viewport.y += new_y;
         // printf("new x is %f\n", viewport.x);
         skin_to_change->setViewPort(viewport);
+        return true;
+    }
+};
+
+class ChangeBrushRColorFunctor : public Functor<> {
+private:
+    Brush* brush;
+public:
+    ChangeBrushRColorFunctor(Brush* brush);
+    virtual bool operator()() {
         return true;
     }
 };

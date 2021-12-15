@@ -97,3 +97,7 @@ void AbstractWindow::move(const Vector2& dv) {
 const Vector2& AbstractWindow::getPos() const {
     return absolute_pos;
 }
+
+const Vector2& AbstractWindow::getSize() const {
+    return size;
+}

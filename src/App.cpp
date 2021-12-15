@@ -8,7 +8,7 @@ const Color bg_color = {185, 226, 235, 255};
 App::App() {
     // TODO: SPLIT INTO FUNCTIONS!!!!!!!!!!!!!!!!!!!
     // TODO: MORE SKINS
-    // TODO: more instruments with more pref panel
+    // TODO: more instruments with pref panel
     // TODO: BETTER SLIDER
     // TODO: FILTERS
     // TODO: canvas from file

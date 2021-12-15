@@ -126,6 +126,7 @@ public:
     void setInstrument(AbstractInstrument* instr);
     virtual ~InstrumentPanel();
     static InstrumentPanel* getInstance();
+    AbstractWindow* getPrefPanel(const Vector2& pos, AbstractWindow* parent);
 };
 
 class SliderBody : public AbstractWindow {

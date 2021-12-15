@@ -3,10 +3,13 @@
 
 #include "GraphicLib.h"
 
+class AbstractWindow;
+
 class AbstractInstrument {
 public:
     virtual void apply(Renderer* renderer, Texture* texture, const Vector2& pos) = 0;
     virtual ~AbstractInstrument(){};
+    virtual AbstractWindow* createPrefPanel(Renderer* renderer, const Vector2& pos, AbstractWindow* parent) = 0;
 };
 
 class Brush : public AbstractInstrument {
@@ -19,6 +22,9 @@ public:
     void setColor(Color new_color) {
         color = new_color;
     }
+    Color getColor() const {
+        return color;
+    }
     void setR(float new_r) {
         r = new_r;
     }
@@ -29,6 +35,7 @@ public:
         printf("applied!\n");
     }
     virtual ~Brush(){};
+    virtual AbstractWindow* createPrefPanel(Renderer* renderer, const Vector2& pos, AbstractWindow* parent);
 };
 
 class Eraser : public Brush {
@@ -39,6 +46,7 @@ public:
     void setR(float new_r) {
         r = new_r;
     }
+    virtual AbstractWindow* createPrefPanel(Renderer* renderer, const Vector2& pos, AbstractWindow* parent);
 };
 
 #endif

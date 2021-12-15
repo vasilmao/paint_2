@@ -185,11 +185,11 @@ ButtonHandler::~ButtonHandler() {
     delete click_event_responce;
 }
 
-ListElementHandler::ListElementHandler(AbstractWindow* window, Functor<>* click_functor) : EventHandler(window), click_event_responce(click_functor) {
+InstrumentListElementHandler::InstrumentListElementHandler(AbstractWindow* window, Functor<>* click_functor) : EventHandler(window), click_event_responce(click_functor) {
     
 }
 
-bool ListElementHandler::MBLResponce(GUILeftMouseButton* mouse_click) {
+bool InstrumentListElementHandler::MBLResponce(GUILeftMouseButton* mouse_click) {
     Button* button = dynamic_cast<Button*>(my_window);
     if (my_window->hitTest(mouse_click->getPos())) {
         // printf("btn hittest\n");
@@ -215,7 +215,11 @@ bool ListElementHandler::MBLResponce(GUILeftMouseButton* mouse_click) {
     return false;
 }
 
-bool ListElementHandler::LECResponce(GUIListElementChanged* list_event) {
+bool InstrumentListElementHandler::MBRResponce(GUIRightMouseButton* mbl_event) {
+    my_window->attachWindow(InstrumentPanel::getInstance()->getPrefPanel(my_window->getPos() + Vector2{my_window->getSize().getX(), 0}, my_window));
+}
+
+bool InstrumentListElementHandler::LECResponce(GUIListElementChanged* list_event) {
     is_pressed = false;
     is_chosen = false;
     dynamic_cast<Button*>(my_window)->setUsual();
@@ -243,7 +247,7 @@ bool ListElementHandler::LECResponce(GUIListElementChanged* list_event) {
 //     }
 // }
 
-ListElementHandler::~ListElementHandler() {
+InstrumentListElementHandler::~InstrumentListElementHandler() {
     delete click_event_responce;
 }
 

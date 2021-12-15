@@ -87,17 +87,18 @@ public:
 //     CanvasViewportHandler(AbstractWindow* window, Renderer* renderer, Functor<Renderer*, Texture*, const Vector2&>* canvas_drawer);
 // }
 
-class ListElementHandler : public EventHandler {
+class InstrumentListElementHandler : public EventHandler {
 private:
     bool is_pressed = false;
     bool is_chosen = false;
     Functor<>* click_event_responce;
     virtual bool MBLResponce(GUILeftMouseButton* mbl_event);
+    virtual bool MBRResponce(GUIRightMouseButton* mbl_event);
     virtual bool LECResponce(GUIListElementChanged* list_event);
 public:
-    ListElementHandler(AbstractWindow* window, Functor<>* click_functor);
+    InstrumentListElementHandler(AbstractWindow* window, Functor<>* click_functor);
     // virtual bool onEvent(GUIEvent* event);
-    virtual ~ListElementHandler();
+    virtual ~InstrumentListElementHandler();
 };
 
 class SliderHandler : public EventHandler {

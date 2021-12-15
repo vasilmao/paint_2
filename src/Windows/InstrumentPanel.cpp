@@ -48,7 +48,7 @@ void InstrumentPanel::create(Renderer* renderer, AbstractWindow* parent) {
 }
 
 void InstrumentPanel::addInstrument(AbstractInstrument* instr, ButtonSkin* skin) {
-    EventHandler* btn_handler = new ListElementHandler(nullptr, new InstrumentPickerFunctor(instr));
+    EventHandler* btn_handler = new InstrumentListElementHandler(nullptr, new InstrumentPickerFunctor(instr));
     int instr_cnt = panel->children->getSize();
     Vector2 btn_pos(0, 0);
     if (instr_cnt % 2 == 1) {
@@ -94,3 +94,7 @@ void InstrumentPanel::destroy() {
 InstrumentPanel::~InstrumentPanel() {
     // eh
 };
+
+AbstractWindow* InstrumentPanel::getPrefPanel(const Vector2& pos, AbstractWindow* parent) {
+    return current_instrument->createPrefPanel(my_renderer, pos, parent);
+}
