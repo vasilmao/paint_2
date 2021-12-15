@@ -143,6 +143,38 @@ void Renderer::drawPoint(const Vector2& point, Color color) {
     SDL_RenderDrawPointF(renderer, point.getX(), point.getY());
 }
 
+void Renderer::drawCircle(const Vector2& center, const float r, Color color) {
+    SDL_SetRenderDrawColor(renderer, open_color(color));
+    float r2 = r * r;
+    Vector2 center_point(center);
+    Vector2 circle_quadr_diagonal(r, r);
+    center_point -= circle_quadr_diagonal;
+    Vector2 pixel_left_up_point = center_point;
+
+    center_point += circle_quadr_diagonal;
+    center_point += circle_quadr_diagonal;
+    Vector2 pixel_right_down_point = center_point;
+    for (float px = pixel_left_up_point.getX(); px <= pixel_right_down_point.getX(); px += 1.0) {
+        float x_c = (px - center.getX());
+        float y1_c = sqrt(r * r - x_c * x_c);
+        float py1 = y1_c + center.getY();
+        SDL_RenderDrawPointF(renderer, px, py1);
+        float y2_c = -sqrt(r * r - x_c * x_c);
+        float py2 = y2_c + center.getY();
+        SDL_RenderDrawPointF(renderer, px, py2);
+    }
+
+    for (float py = pixel_left_up_point.getY(); py <= pixel_right_down_point.getY(); py += 1.0) {
+        float y_c = (py - center.getY());
+        float x1_c = sqrt(r * r - y_c * y_c);
+        float px1 = x1_c + center.getX();
+        SDL_RenderDrawPointF(renderer, px1, py);
+        float x2_c = -sqrt(r * r - y_c * y_c);
+        float px2 = x2_c + center.getX();
+        SDL_RenderDrawPointF(renderer, px2, py);
+    }
+}
+
 void Renderer::drawFilledCircle(const Vector2& center, const float r, Color color) {
     SDL_SetRenderDrawColor(renderer, open_color(color));
     float r2 = r * r;

@@ -135,15 +135,37 @@ public:
     }
 };
 
+const float change_r_preview_color_threshold = 140;
+
 class ChangeBrushRColorFunctor : public Functor<float, float> {
 private:
     Brush* brush;
+    Texture* preview;
+    Texture* r_preview;
+    Renderer* renderer;
 public:
-    ChangeBrushRColorFunctor(Brush* brush) : brush(brush) {}
+    ChangeBrushRColorFunctor(Renderer* renderer, Brush* brush, Texture* preview = nullptr, Texture* r_preview = nullptr) : brush(brush), preview(preview), r_preview(r_preview), renderer(renderer) {}
     virtual bool operator()(float last_val, float new_val) {
         Color cur_color = brush->getColor();
         cur_color.r = static_cast<unsigned char>(new_val);
         brush->setColor(cur_color);
+        if (preview != nullptr) {
+            renderer->setTarget(preview);
+            renderer->drawFilledRect({0, 0}, preview->getSize(), cur_color);
+        }
+        Color r_preview_color;
+        float cur_r = brush->getR();
+        printf("%d\n", static_cast<int>(cur_color.r) + static_cast<int>(cur_color.g) + static_cast<int>(cur_color.b));
+        if (cur_color.r + cur_color.g + cur_color.b <= change_r_preview_color_threshold) {
+            r_preview_color = {255, 255, 255, 255};
+        } else {
+            r_preview_color = {0, 0, 0, 255};
+        }
+        if (r_preview != nullptr) {
+            renderer->setTarget(r_preview);
+            renderer->drawFilledRect({0, 0}, r_preview->getSize(), {0, 0, 0, 0});
+            renderer->drawCircle(r_preview->getSize() * 0.5, cur_r, r_preview_color);
+        }
         return true;
     }
 };
@@ -151,12 +173,32 @@ public:
 class ChangeBrushGColorFunctor : public Functor<float, float> {
 private:
     Brush* brush;
+    Texture* preview;
+    Texture* r_preview;
+    Renderer* renderer;
 public:
-    ChangeBrushGColorFunctor(Brush* brush) : brush(brush) {}
+    ChangeBrushGColorFunctor(Renderer* renderer, Brush* brush, Texture* preview = nullptr, Texture* r_preview = nullptr) : brush(brush), preview(preview), r_preview(r_preview), renderer(renderer) {}
     virtual bool operator()(float last_val, float new_val) {
         Color cur_color = brush->getColor();
         cur_color.g = static_cast<unsigned char>(new_val);
         brush->setColor(cur_color);
+        if (preview != nullptr) {
+            renderer->setTarget(preview);
+            renderer->drawFilledRect({0, 0}, preview->getSize(), cur_color);
+        }
+        Color r_preview_color;
+        float cur_r = brush->getR();
+        printf("%d\n", static_cast<int>(cur_color.r) + static_cast<int>(cur_color.g) + static_cast<int>(cur_color.b));
+        if (cur_color.r + cur_color.g + cur_color.b <= change_r_preview_color_threshold) {
+            r_preview_color = {255, 255, 255, 255};
+        } else {
+            r_preview_color = {0, 0, 0, 255};
+        }
+        if (r_preview != nullptr) {
+            renderer->setTarget(r_preview);
+            renderer->drawFilledRect({0, 0}, r_preview->getSize(), {0, 0, 0, 0});
+            renderer->drawCircle(r_preview->getSize() * 0.5, cur_r, r_preview_color);
+        }
         return true;
     }
 };
@@ -164,12 +206,32 @@ public:
 class ChangeBrushBColorFunctor : public Functor<float, float> {
 private:
     Brush* brush;
+    Texture* preview;
+    Texture* r_preview;
+    Renderer* renderer;
 public:
-    ChangeBrushBColorFunctor(Brush* brush) : brush(brush) {}
+    ChangeBrushBColorFunctor(Renderer* renderer, Brush* brush, Texture* preview = nullptr, Texture* r_preview = nullptr) : brush(brush), preview(preview), r_preview(r_preview), renderer(renderer) {}
     virtual bool operator()(float last_val, float new_val) {
         Color cur_color = brush->getColor();
         cur_color.b = static_cast<unsigned char>(new_val);
         brush->setColor(cur_color);
+        if (preview != nullptr) {
+            renderer->setTarget(preview);
+            renderer->drawFilledRect({0, 0}, preview->getSize(), cur_color);
+        }
+        Color r_preview_color;
+        float cur_r = brush->getR();
+        printf("%d\n", static_cast<int>(cur_color.r) + static_cast<int>(cur_color.g) + static_cast<int>(cur_color.b));
+        if (cur_color.r + cur_color.g + cur_color.b <= change_r_preview_color_threshold) {
+            r_preview_color = {255, 255, 255, 255};
+        } else {
+            r_preview_color = {0, 0, 0, 255};
+        }
+        if (r_preview != nullptr) {
+            renderer->setTarget(r_preview);
+            renderer->drawFilledRect({0, 0}, r_preview->getSize(), {0, 0, 0, 0});
+            renderer->drawCircle(r_preview->getSize() * 0.5, cur_r, r_preview_color);
+        }
         return true;
     }
 };
@@ -177,10 +239,29 @@ public:
 class ChangeBrushRFunctor : public Functor<float, float> {
 private:
     Brush* brush;
+    Texture* preview;
+    Texture* r_preview;
+    Renderer* renderer;
 public:
-    ChangeBrushRFunctor(Brush* brush) : brush(brush) {}
+    ChangeBrushRFunctor(Renderer* renderer, Brush* brush, Texture* preview = nullptr, Texture* r_preview = nullptr) : brush(brush), preview(preview), r_preview(r_preview), renderer(renderer) {
+        printf("yaaaaaaaaaaa!\n");
+    }
     virtual bool operator()(float last_val, float new_val) {
+        printf("yeeeeeeee!\n");
         brush->setR(new_val);
+        Color cur_color = brush->getColor();
+        Color r_preview_color;
+        printf("%d\n", static_cast<int>(cur_color.r) + static_cast<int>(cur_color.g) + static_cast<int>(cur_color.b));
+        if (cur_color.r + cur_color.g + cur_color.b <= change_r_preview_color_threshold) {
+            r_preview_color = {255, 255, 255, 255};
+        } else {
+            r_preview_color = {0, 0, 0, 255};
+        }
+        if (r_preview != nullptr) {
+            renderer->setTarget(r_preview);
+            renderer->drawFilledRect({0, 0}, r_preview->getSize(), {0, 0, 0, 0});
+            renderer->drawCircle(r_preview->getSize() * 0.5, new_val, r_preview_color);
+        }
         return true;
     }
 };

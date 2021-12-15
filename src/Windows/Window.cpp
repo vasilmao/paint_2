@@ -53,13 +53,14 @@ SliderBody::SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& si
     Texture* my_texture = new Texture(renderer, size, {0, 0, 0, 0});
     renderer->setTarget(my_texture);
     Color line_color = {0, 0, 0, 100};
+    float delta = 0;
     if (size.getX() > size.getY()) {
-        float delta = size.getY() / 2;
+        delta = size.getY() / 2;
         renderer->drawLine(Vector2{delta, delta}, Vector2{size.getX() - delta, delta}, line_color);
         renderer->drawFilledCircle(Vector2{delta, delta}, delta * 2 / 3, line_color);
         renderer->drawFilledCircle(Vector2{size.getX() - delta, delta}, delta * 2 / 3, line_color);
     } else {
-        float delta = size.getX() / 2;
+        delta = size.getX() / 2;
         renderer->drawLine(Vector2{delta, delta}, Vector2{delta, size.getY() - delta}, line_color);
         renderer->drawFilledCircle(Vector2{delta, delta}, delta * 2 / 3, line_color);
         renderer->drawFilledCircle(Vector2{delta, size.getY() - delta}, delta * 2 / 3, line_color);
@@ -69,8 +70,14 @@ SliderBody::SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& si
     // 2
     Vector2 slider_axis(0, 0);
     float slider_wh = Min(size.getX(), size.getY());
-    Texture* slider_texture = new Texture(renderer, {slider_wh, slider_wh}, {255, 168, 242, 255});
-    Texture* slider_texture_pressed = new Texture(renderer, {slider_wh, slider_wh}, {176, 247, 234, 255});
+    // Texture* slider_texture = new Texture(renderer, {slider_wh, slider_wh}, {255, 168, 242, 255});
+    Texture* slider_texture = new Texture(renderer, {slider_wh, slider_wh}, {0, 0, 0, 0});
+    renderer->setTarget(slider_texture);
+    renderer->drawFilledCircle(slider_texture->getSize() * 0.5, delta * 2 / 3, {255, 168, 242, 255});
+    // Texture* slider_texture_pressed = new Texture(renderer, {slider_wh, slider_wh}, {176, 247, 234, 255});
+    Texture* slider_texture_pressed = new Texture(renderer, {slider_wh, slider_wh}, {0, 0, 0, 0});
+    renderer->setTarget(slider_texture_pressed);
+    renderer->drawFilledCircle(slider_texture_pressed->getSize() * 0.5, delta * 2 / 3, {176, 247, 234, 255});
     float slider_len = 0;
     if (size.getX() > size.getY()) {
         slider_len = size.getY();
@@ -80,7 +87,7 @@ SliderBody::SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& si
         slider_axis = {0, size.getY() - slider_len};
     }
     Vector2 slider_size(slider_len, slider_len);
-    Skin* slider_skin = new ButtonSkin(slider_texture, nullptr, slider_texture_pressed);
+    Skin* slider_skin = new CircleButtonSkin(slider_texture, nullptr, slider_texture_pressed);
     // 3
     EventHandler* slider_handler = new SliderHandler(slider_reaction, slider_axis, min_val, max_val, init_val);
     // the slider

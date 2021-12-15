@@ -112,6 +112,7 @@ public:
     ~Renderer();
     Renderer(int width, int height, Color bg_color);
     void drawPoint(const Vector2& point, Color color);
+    void drawCircle(const Vector2& center, const float r, Color color);
     void drawFilledCircle(const Vector2& center, const float r, Color color);
     void drawRect(const Vector2& p1, const Vector2& size, Color color);
     void drawFilledRect(const Vector2& p1, const Vector2& size, Color color);
