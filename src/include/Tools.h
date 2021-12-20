@@ -1,11 +1,14 @@
 #ifndef INCLUDE_TOOLS
 #define INCLUDE_TOOLS
 
+// #define _GNU_SOURCE
+
 #include <stdio.h>
 #include <assert.h>
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include <dlfcn.h>
 
 const float EPS = 1e-6;
 
@@ -51,10 +54,14 @@ struct Color {
         a = a1;
     }
     Color(uint32_t color_int) { // no explicit
-        r = (color_int % 0xFF000000) >> 24;
-        g = (color_int % 0xFF0000) >> 16;
-        b = (color_int % 0xFF00) >> 8;
-        a = (color_int % 0xFF);
+        // r = (color_int & 0xFF000000) >> 24;
+        // g = (color_int & 0xFF0000) >> 16;
+        // b = (color_int & 0xFF00) >> 8;
+        // a = (color_int &     0xFF);
+        a = (color_int & 0xFF000000) >> 24;
+        b = (color_int & 0xFF0000) >> 16;
+        g = (color_int & 0xFF00) >> 8;
+        r = (color_int & 0xFF);
     }
 };
 

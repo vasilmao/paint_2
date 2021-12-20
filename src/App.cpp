@@ -1,4 +1,5 @@
 #include "App.h"
+#include "PluginRealization.h"
 
 const int WIDTH  = 1000;
 const int HEIGHT = 750;
@@ -98,6 +99,34 @@ App::App() {
     printf("ya1\n");
     // RayCasterHolder* rc = new RayCasterHolder(renderer, {10, 10}, {430, 430}, main_window);
     // main_window->attachWindow(rc);
+
+    void* handler = dlopen("./plugin.so", RTLD_NOW);
+    printf("%p\n", handler);
+    // printf("%s\n", dlerror());
+    CreateFunction create_f = (plugin::CreateFunction)dlsym(handler, "Create");
+    printf("%p\n", create_f);
+    printf("%s\n", dlerror());
+    API* api = new API();
+    IPlugin* plugin_api = (*create_f)(api);
+
+    Tools tools = plugin_api->GetTools();
+
+    for (uint32_t i = 0; i < tools.count; ++i) {
+        ITool* cur_tool = tools.tools[i];
+        ToolInstrument* instr = new ToolInstrument(cur_tool);
+        const char* filename = cur_tool->GetIconFileName();
+        Texture* btn_texture = new Texture(renderer, filename);
+        Texture* btn_texture_pressed = new Texture(renderer, filename);
+        renderer->setTarget(btn_texture_pressed);
+        renderer->drawRect({0, 0}, btn_texture_pressed->getSize(), {255, 0, 0, 255});
+
+
+        ButtonSkin* btn_skin = new ButtonSkin(btn_texture, nullptr, btn_texture_pressed);
+        // btn_skin->resize({24, 24});
+        InstrumentPanel::getInstance()->addInstrument(instr, btn_skin);
+    }
+    
+
     printf("ya2\n");
 
     printf("constructed\n");

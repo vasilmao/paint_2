@@ -2,6 +2,7 @@
 #define INCLUDE_INSTRUMENTS
 
 #include "GraphicLib.h"
+#include "plugin.hpp"
 
 class AbstractWindow;
 
@@ -77,6 +78,19 @@ private:
 public:
     Filler (){
     }
+};
+
+class ToolInstrument : public AbstractInstrument {
+private:
+    plugin::ITool* plugin_tool;
+public:
+    ToolInstrument(plugin::ITool* tool) : plugin_tool(tool) {}
+    virtual void apply(Renderer* renderer, Texture* texture, const Vector2& pos);
+    virtual void applyStart(Renderer* renderer, Texture* texture, const Vector2& pos);
+    virtual void applyMove(Renderer* renderer, Texture* texture, const Vector2& pos1, const Vector2& pos2);
+    virtual void applyEnd(Renderer* renderer, Texture* texture, const Vector2& pos);
+    // virtual ~AbstractInstrument(){};
+    virtual AbstractWindow* createPrefPanel(Renderer* renderer, const Vector2& pos, AbstractWindow* parent);
 };
 
 

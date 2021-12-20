@@ -69,6 +69,7 @@ Texture::Texture(Renderer* renderer, const char* filename, bool themeTexture) {
         SDL_Surface* surf = SDL_LoadBMP(filename);
         if (!surf) {
             printf("img not opened\n");
+            printf("%s\n", filename);
         }
         assert(surf);
         size = {static_cast<float>(surf->w), static_cast<float>(surf->h)};
@@ -97,6 +98,7 @@ Texture::Texture(Renderer* renderer, const char* filename, bool themeTexture) {
         SDL_Surface* surf = SDL_LoadBMP(str);
         if (!surf) {
             printf("img not opened\n");
+            printf("%s\n", str);
         }
         assert(surf);
         size = {static_cast<float>(surf->w), static_cast<float>(surf->h)};

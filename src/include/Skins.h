@@ -16,6 +16,7 @@ public:
     virtual ~Skin();
     void resize(const Vector2& new_size);
     Texture* getTexture();
+    void setTexture(Texture* new_texture);
 };
 
 class ViewportSkin : public Skin {

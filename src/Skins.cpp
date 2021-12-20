@@ -31,6 +31,10 @@ Texture* Skin::getTexture() {
     return texture;
 }
 
+void Skin::setTexture(Texture* new_texture) {
+    new_texture = texture;
+}
+
 void Skin::resize(const Vector2& new_size) {
     real_size = new_size;
 }

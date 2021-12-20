@@ -1,6 +1,7 @@
 #include "Instruments.h"
 #include "Window.h"
 #include "Handlers.h"
+#include "PluginRealization.h"
 
 AbstractWindow* Brush::createPrefPanel(Renderer* renderer, const Vector2& pos, AbstractWindow* parent) {
     printf("creating panel!\n");
@@ -91,4 +92,23 @@ AbstractWindow* Eraser::createPrefPanel(Renderer* renderer, const Vector2& pos, 
     pref_panel->attachWindow(radius_slider);
     pref_panel->attachWindow(dumb_preview);
     return pref_panel;
+}
+
+void ToolInstrument::apply(Renderer* renderer, Texture* texture, const Vector2& pos) {
+    assert(0);
+}
+void ToolInstrument::applyStart(Renderer* renderer, Texture* texture, const Vector2& pos) {
+    APITexture pl_texture(texture);
+    plugin_tool->ActionBegin(&pl_texture, static_cast<int>(pos.getX()), static_cast<int>(pos.getY()));
+}
+void ToolInstrument::applyMove(Renderer* renderer, Texture* texture, const Vector2& pos1, const Vector2& pos2) {
+    APITexture pl_texture(texture);
+    plugin_tool->Action(&pl_texture, static_cast<int>(pos1.getX()), static_cast<int>(pos1.getY()), static_cast<int>((pos2-pos1).getX()), static_cast<int>((pos2-pos1).getY()));
+}
+void ToolInstrument::applyEnd(Renderer* renderer, Texture* texture, const Vector2& pos) {
+    APITexture pl_texture(texture);
+    plugin_tool->ActionEnd(&pl_texture, static_cast<int>(pos.getX()), static_cast<int>(pos.getY()));
+}
+AbstractWindow* ToolInstrument::createPrefPanel(Renderer* renderer, const Vector2& pos, AbstractWindow* parent) {
+    return dynamic_cast<APIPreferencesPanel*>(plugin_tool->GetPreferencesPanel())->getGlibWindow();
 }

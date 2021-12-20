@@ -62,7 +62,7 @@ void InstrumentPanel::addInstrument(AbstractInstrument* instr, ButtonSkin* skin)
     EventHandler* btn_handler = new InstrumentListElementHandler(nullptr, instr, new InstrumentPickerFunctor(instr));
     int instr_cnt = panel->children->getSize();
     Vector2 btn_pos(0, 0);
-    if (instr_cnt % 2 == 1) {
+    if (instr_cnt % 2 == 0) {
         // we need to resize texture
         delete panel->skin;
         Vector2 new_size(forced_icon_size * 2 + px_interval * 3, up_offset + forced_icon_size * ((instr_cnt / 2) + 1) + px_interval * ((instr_cnt / 2) + 2));

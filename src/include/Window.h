@@ -38,6 +38,14 @@ public:
     List<AbstractWindow*>* getChildren();
     AbstractWindow* getParent();
     const Vector2& getPos() const;
+    void setPos(const Vector2& new_pos) {   
+        Vector2 last_pos = absolute_pos;
+        absolute_pos = new_pos;
+
+        for (List<AbstractWindow*>::Iterator it = children->begin(); it.isValid(); ++it) {
+            it.getData()->setPos(it.getData()->getPos() + new_pos - last_pos);
+        }
+    }
     const Vector2& getSize() const;
     void attachWindow(AbstractWindow* window);
     bool hitTest(const Vector2& pos) const ;
@@ -65,6 +73,7 @@ public:
 class Button : public AbstractWindow {
 public:
     Button(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
+    void setResponce(Functor<>* functor);
     void setHover();
     void setPressed();
     void setUsual();
@@ -152,6 +161,7 @@ private:
 public:
     void setPressed();
     void setUsual();
+    float getValue();
     Slider(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
 };
 

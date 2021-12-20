@@ -31,6 +31,11 @@ void Button::setUsual() {
     dynamic_cast<ButtonSkin*>(skin)->setUsual();
 }
 
+void Button::setResponce(Functor<>* functor) {
+    ButtonHandler* btn_handler = dynamic_cast<ButtonHandler*>(handler);
+    btn_handler->setResponce(functor);
+}
+
 Canvas::Canvas(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin) :
     AbstractWindow(abs_pos, size, handler, parent, skin) {}
 
@@ -40,6 +45,10 @@ void Slider::setPressed() {
 
 void Slider::setUsual() {
     dynamic_cast<ButtonSkin*>(skin)->setUsual();
+}
+
+float Slider::getValue() {
+    return dynamic_cast<SliderHandler*>(handler)->getValue();
 }
 
 SliderBody::SliderBody(Renderer* renderer, const Vector2& pos, const Vector2& size, Functor<float, float>* slider_reaction, float min_val, float max_val, float init_val) :

@@ -77,6 +77,7 @@ public:
     Color* copyBuffer();
     uint32_t* copyIntBuffer();
     void updatePixels(uint32_t* pixels);
+    Texture* constCopy() const;
 };
 
 Texture* createSign(char* text, const Vector2& size);

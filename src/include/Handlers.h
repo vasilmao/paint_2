@@ -36,6 +36,9 @@ private:
     virtual bool MBLResponce(GUILeftMouseButton* mbl_event);
 public:
     ButtonHandler(AbstractWindow* window, Functor<>* click_functor);
+    void setResponce(Functor<>* functor) {
+        click_event_responce = functor;
+    }
     // virtual bool onEvent(GUIEvent* event);
     virtual ~ButtonHandler();
     // void setHoverResponce(ButtonHoverFunctor* hover_start, ButtonHoverFunctor* hover_end);
@@ -117,6 +120,9 @@ public:
     SliderHandler(Functor<float, float>* functor, const Vector2& axis, float min_val = 0, float max_val = 1, float init_val = 0);
     // virtual bool onEvent(GUIEvent* event);
     virtual ~SliderHandler();
+    float getValue() {
+        return current_value;
+    }
 };
 
 class RayCasterHandler : public EventHandler {
@@ -154,9 +160,11 @@ public:
     SensitiveHandler(AbstractWindow* my_window) : EventHandler(my_window) {}
     virtual bool MBLResponce(GUILeftMouseButton* mbl_event) {
         if (!my_window->hitTest(mbl_event->getPos())) {
-            printf("e\n");
+            printf("eee\n");
             my_window->markToDelete();
             // (dynamic_cast<MainWindow*>(InstrumentPanel::getInstance()->getParent()))->kek = true;
+        } else {
+            printf("ooo\n");
         }
         return false;
     }
