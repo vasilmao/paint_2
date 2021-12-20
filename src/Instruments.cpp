@@ -73,7 +73,8 @@ AbstractWindow* Eraser::createPrefPanel(Renderer* renderer, const Vector2& pos, 
         Vector2{200 + maxr * 2, maxr * 2 + 20},
         nullptr,
         parent,
-        new Skin(new Texture(renderer, Vector2{240 + maxr * 2, maxr * 2 + 20}, {255, 255, 255, 255}))
+        // new Skin(new Texture(renderer, Vector2{240 + maxr * 2, maxr * 2 + 20}, {255, 255, 255, 255}))
+        new RepeatingSkin(new Texture(renderer, "skins/no-transparent_160.bmp"), Vector2{240 + maxr * 2, maxr * 2 + 20})
     );
     pref_panel->setHandler(new SensitiveHandler(pref_panel));
     SliderBody* radius_slider = new SliderBody(renderer, pos + Vector2{0, maxr}, Vector2{200, 20},

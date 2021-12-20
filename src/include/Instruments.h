@@ -71,4 +71,14 @@ public:
     virtual AbstractWindow* createPrefPanel(Renderer* renderer, const Vector2& pos, AbstractWindow* parent);
 };
 
+class Filler : public AbstractInstrument {
+private:
+    Color color = {255, 255, 255, 255};
+public:
+    Filler (){
+    }
+};
+
+
+
 #endif

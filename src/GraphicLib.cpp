@@ -1,4 +1,28 @@
 #include "GraphicLib.h"
+#include "Window.h"
+
+void TextureManager::setDay(Renderer* renderer) {
+    for (size_t i = 0; i < textures.size(); ++i) {
+        std::string realpath = "skins/light/" + textures[i].second;
+        textures[i].first->reloadFromFile(renderer, realpath.c_str());
+    }
+    InstrumentPanel::setSkinsDir("skins/light/");
+}
+void TextureManager::setNight(Renderer* renderer) {
+    for (size_t i = 0; i < textures.size(); ++i) {
+        std::string realpath = "skins/dark/" + textures[i].second;
+        textures[i].first->reloadFromFile(renderer, realpath.c_str());
+    }
+    InstrumentPanel::setSkinsDir("skins/dark/");
+}
+void TextureManager::deleteTexture(Texture* texture) {
+    for (size_t i = 0; i < textures.size(); ++i) {
+        if (textures[i].first == texture) {
+            textures.erase(textures.begin() + i);
+            break;
+        }
+    }
+}
 
 Texture::Texture() {
     sdl_texture = NULL;
@@ -58,6 +82,34 @@ Texture::Texture(Renderer* renderer, const char* filename) {
 
 Texture::~Texture() {
     SDL_DestroyTexture(sdl_texture);
+    TextureManager::deleteTexture(this);
+}
+
+void Texture::reloadFromFile(Renderer* renderer, const char* path) {
+    SDL_DestroyTexture(sdl_texture);
+    SDL_Surface* surf = SDL_LoadBMP(path);
+    if (!surf) {
+        printf("img not opened\n");
+    }
+    assert(surf);
+    size = {static_cast<float>(surf->w), static_cast<float>(surf->h)};
+    SDL_Texture* bmp_texture = SDL_CreateTextureFromSurface(
+        renderer->getNativeRenderer(),
+        surf
+    ); 
+    sdl_texture = SDL_CreateTexture(renderer->getNativeRenderer(),
+                                    SDL_PIXELFORMAT_RGBA8888,
+                                    SDL_TEXTUREACCESS_TARGET,
+                                    size.getX(),
+                                    size.getY()
+                                    );
+    assert(sdl_texture);
+    SDL_SetRenderTarget(renderer->getNativeRenderer(), sdl_texture);
+    SDL_RenderCopy(renderer->getNativeRenderer(), bmp_texture, NULL, NULL);
+    SDL_DestroyTexture(bmp_texture);
+    SDL_FreeSurface(surf);
+    SDL_SetTextureBlendMode(sdl_texture, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderTarget(renderer->getNativeRenderer(), NULL);
 }
 
 const Vector2& Texture::getSize() const {
@@ -156,20 +208,20 @@ void Renderer::drawCircle(const Vector2& center, const float r, Color color) {
     Vector2 pixel_right_down_point = center_point;
     for (float px = pixel_left_up_point.getX(); px <= pixel_right_down_point.getX(); px += 1.0) {
         float x_c = (px - center.getX());
-        float y1_c = sqrt(r * r - x_c * x_c);
+        float y1_c = sqrt(r2 - x_c * x_c);
         float py1 = y1_c + center.getY();
         SDL_RenderDrawPointF(renderer, px, py1);
-        float y2_c = -sqrt(r * r - x_c * x_c);
+        float y2_c = -sqrt(r2 - x_c * x_c);
         float py2 = y2_c + center.getY();
         SDL_RenderDrawPointF(renderer, px, py2);
     }
 
     for (float py = pixel_left_up_point.getY(); py <= pixel_right_down_point.getY(); py += 1.0) {
         float y_c = (py - center.getY());
-        float x1_c = sqrt(r * r - y_c * y_c);
+        float x1_c = sqrt(r2 - y_c * y_c);
         float px1 = x1_c + center.getX();
         SDL_RenderDrawPointF(renderer, px1, py);
-        float x2_c = -sqrt(r * r - y_c * y_c);
+        float x2_c = -sqrt(r2 - y_c * y_c);
         float px2 = x2_c + center.getX();
         SDL_RenderDrawPointF(renderer, px2, py);
     }
@@ -401,6 +453,17 @@ SystemEvent getSystemEvent() {
             // printf("oh sdl mb motion\n");
             result_event.event_type = MOUSE_MOVE;
             result_event.mouse_move = {Vector2(event.motion.x, event.motion.y), Vector2(event.motion.x + event.motion.xrel, event.motion.y + event.motion.yrel)};
+            break;
+
+        case SDL_KEYDOWN:
+            result_event.event_type = KEY_DOWN;
+            if (event.key.keysym.scancode == SDL_SCANCODE_D) {
+                result_event.key_event.letter = 'd';
+            } else if (event.key.keysym.scancode == SDL_SCANCODE_N) {
+                result_event.key_event.letter = 'n';
+            } else {
+                result_event.key_event.letter = '\0';
+            }
             break;
         
         default:

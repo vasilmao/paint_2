@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdint.h>
+#include <string>
+#include <vector>
 
 const float EPS = 1e-6;
 

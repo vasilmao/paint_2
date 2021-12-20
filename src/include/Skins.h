@@ -36,11 +36,12 @@ public:
     const Vector2& getFullSize();
 };
 
-// class RepeatingSkin : public Skin {
-// public:
-//     RepeatingSkin(Texture* texture, const Vector2& size);
-//     virtual void draw(Renderer* renderer, const Vector2& pos);
-// };
+class RepeatingSkin : public Skin {
+public:
+    RepeatingSkin(Texture* texture);
+    RepeatingSkin(Texture* texture, const Vector2& size);
+    virtual void draw(Renderer* renderer, const Vector2& pos);
+};
 
 class ButtonSkin : public Skin {
 protected:

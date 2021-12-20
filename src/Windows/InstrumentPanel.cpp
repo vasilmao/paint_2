@@ -35,10 +35,11 @@ void InstrumentPanel::create(Renderer* renderer, AbstractWindow* main_wnd) {
     // EventHandler* panel_handler = dynamic_cast<EventHandler*>(new MovingHandler(nullptr, ))
     Vector2 real_size(forced_icon_size * 2 + px_interval * 3, up_offset);
     Texture* texture = new Texture(renderer, real_size, bg_color);
+    // Texture* texture = new Texture(renderer, "skins/Untitled.bmp");
     renderer->setTarget(texture);
-    renderer->drawRect({0, 0}, real_size - Vector2(1, 1), {0, 0, 0, 255});
+    // renderer->drawRect({0, 0}, real_size - Vector2(1, 1), {0, 0, 0, 255});
     // renderer->setTarget(NULL);
-    panel = new InstrumentPanel({0, 0}, real_size, nullptr, main_wnd, new Skin(texture, real_size));
+    panel = new InstrumentPanel({0, 0}, real_size, nullptr, main_wnd, new RepeatingSkin(texture, real_size));
     panel->absolute_pos = {10, 30};
     panel->size = real_size;
     // panel->is_created = true;
@@ -46,6 +47,17 @@ void InstrumentPanel::create(Renderer* renderer, AbstractWindow* main_wnd) {
     panel->setHandler(panel_handler);
     my_renderer = renderer;
     printf("panel %p\n", panel);
+}
+
+char* InstrumentPanel::skins_dir;
+
+void InstrumentPanel::setSkinsDir(char* path) {
+    skins_dir = path;
+}
+
+
+const char* InstrumentPanel::getSkinsDir() {
+    return skins_dir;
 }
 
 void InstrumentPanel::addInstrument(AbstractInstrument* instr, ButtonSkin* skin) {
@@ -57,10 +69,11 @@ void InstrumentPanel::addInstrument(AbstractInstrument* instr, ButtonSkin* skin)
         delete panel->skin;
         Vector2 new_size(forced_icon_size * 2 + px_interval * 3, up_offset + forced_icon_size * ((instr_cnt / 2) + 1) + px_interval * ((instr_cnt / 2) + 2));
         Texture* texture = new Texture(my_renderer, new_size, bg_color);
+        // Texture* texture = new Texture(my_renderer, "skins/Untitled.bmp");
         my_renderer->setTarget(texture);
-        my_renderer->drawRect({0, 0}, new_size - Vector2(1, 1), {0, 0, 0, 255});
+        // my_renderer->drawRect({0, 0}, new_size - Vector2(1, 1), {0, 0, 0, 255});
         my_renderer->setTarget(NULL);
-        panel->skin = new Skin(texture, new_size);
+        panel->skin = new RepeatingSkin(texture, new_size);
         // other buttons coords remain
     }
     btn_pos.setY(panel->absolute_pos.getY() + instr_cnt / 2 * (icons_size + px_interval) + px_interval + up_offset);

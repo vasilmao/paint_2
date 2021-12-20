@@ -35,7 +35,26 @@ void Skin::resize(const Vector2& new_size) {
     real_size = new_size;
 }
 
-// RepeatingSkin::RepeatingSkin(Texture* texture, const Vector2& size) : Skin(texture, size) {}
+RepeatingSkin::RepeatingSkin(Texture* texture) : Skin(texture) {}
+RepeatingSkin::RepeatingSkin(Texture* texture, const Vector2& size) : Skin(texture, size) {}
+
+void RepeatingSkin::draw(Renderer* renderer, const Vector2& pos) {
+    // renderer->setTarget()
+    const Vector2& texture_size = texture->getSize();
+    for (float x = pos.getX(); x <= pos.getX() + real_size.getX(); x += texture_size.getX()) {
+        for (float y = pos.getY(); y <= pos.getY() + real_size.getY(); y += texture_size.getY()) {
+            if (x + texture_size.getX() > pos.getX() + real_size.getX() || y + texture_size.getY() > pos.getY() + real_size.getY()) {
+                float p_x = Min(x + texture_size.getX(), pos.getX() + real_size.getX());
+                float p_y = Min(y + texture_size.getY(), pos.getY() + real_size.getY());
+                Rect2f texture_rect = {0, 0, p_x - x, p_y - y};
+                Rect2f dst_rect = {x, y, p_x - x, p_y - y};
+                renderer->copyTexture(texture, texture_rect, dst_rect);
+            } else {
+                renderer->copyTexture(texture, {x, y});
+            }
+        }
+    }
+}
 
 // void RepeatingSkin::draw(Renderer* renderer, const Vector2& pos) {
 //     const Vector2& texture_size = texture->getSize();

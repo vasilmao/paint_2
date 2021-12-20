@@ -114,6 +114,7 @@ private:
     static bool is_created;
     static InstrumentPanel* panel;
     static Renderer* my_renderer;
+    static char* skins_dir;
     // List<AbstractInstrument*> instruments;
     AbstractInstrument* current_instrument = nullptr;
     AbstractWindow* main_window;
@@ -121,6 +122,8 @@ private:
     InstrumentPanel(const Vector2& pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
 public:
     static void create(Renderer* renderer, AbstractWindow* main_window);
+    static void setSkinsDir(char* path);
+    static const char* getSkinsDir();
     static void destroy();
     void addInstrument(AbstractInstrument* instr, ButtonSkin* skin);
     AbstractInstrument* getCurrentInstrument();
@@ -168,5 +171,10 @@ public:
     RayCaster(const Vector2& abs_pos, const Vector2& size, EventHandler* handler, AbstractWindow* parent, Skin* skin);
     // virtual void soloRender(Renderer* renderer);
 };
+
+// class TextLabel : public AbstractWindow {
+// public:
+//     TextLabel(const Vector2& pos, const Vector2& size, AbstractWindow* parent, const char* text)
+// }
 
 #endif

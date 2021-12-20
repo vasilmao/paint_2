@@ -6,6 +6,9 @@ const int HEIGHT = 750;
 const Color bg_color = {185, 226, 235, 255};
 
 App::App() {
+
+    InstrumentPanel::setSkinsDir("skins/light/");
+
     // TODO: SPLIT INTO FUNCTIONS!!!!!!!!!!!!!!!!!!!
     // TODO: MORE SKINS
     // TODO: more instruments with pref panel
@@ -30,10 +33,11 @@ App::App() {
     
     InstrumentPanel::create(renderer, main_window);
     // Texture* brush_texture = new Texture(renderer, "skins/Brush.bmp");
-    Texture* kostil_texture = new Texture(renderer, "skins/Brush.bmp");
+
+    Texture* kostil_texture = new Texture(renderer, "skins/light/Brush.bmp");
     delete kostil_texture;
-    Texture* brush_texture = new Texture(renderer, "skins/Brush.bmp");
-    Texture* brush_texture_pressed = new Texture(renderer, "skins/Brush.bmp");
+    Texture* brush_texture = new Texture(renderer, "skins/light/Brush.bmp");
+    Texture* brush_texture_pressed = new Texture(renderer, "skins/light/Brush.bmp");
     // printf("brush texture... %p\n", brush_texture_pressed);
     renderer->setTarget(brush_texture_pressed);
     renderer->drawRect({0, 0}, brush_texture_pressed->getSize(), {255, 0, 0, 255});
@@ -47,8 +51,8 @@ App::App() {
     Brush* brush_instr = new Brush();
     Eraser* eraser_instr = new Eraser();
 
-    Texture* eraser_texture = new Texture(renderer, "skins/Eraser.bmp");
-    Texture* eraser_texture_pressed = new Texture(renderer, "skins/Eraser.bmp");
+    Texture* eraser_texture = new Texture(renderer, "skins/light/Eraser.bmp");
+    Texture* eraser_texture_pressed = new Texture(renderer, "skins/light/Eraser.bmp");
     renderer->setTarget(eraser_texture_pressed);
     renderer->drawRect({0, 0}, eraser_texture_pressed->getSize(), {255, 0, 0, 255});
     renderer->setTarget(nullptr);
@@ -127,6 +131,13 @@ void App::run() {
                 main_window->onEvent(&event);
             } else if (sys_event.event_type == SystemEventTypes::QUIT_EVENT) {
                 running = false;
+            } else if (sys_event.event_type == SystemEventTypes::KEY_DOWN) {
+                if (sys_event.key_event.letter == 'n') {
+                    TextureManager::setNight(renderer);
+                }
+                if (sys_event.key_event.letter == 'd') {
+                    TextureManager::setDay(renderer);
+                }
             }
             if (!running) {
                 break;

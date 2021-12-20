@@ -11,6 +11,7 @@ enum SystemEventTypes {
     OTHER_EVENTS,
     MOUSE_CLICK,
     MOUSE_MOVE,
+    KEY_DOWN,
     QUIT_EVENT,
 };
 
@@ -29,6 +30,10 @@ struct SystemMouseMove {
     Vector2 new_pos;
 };
 
+struct SystemKeyPress {
+    char letter;
+};
+
 struct SystemEvent {
     int event_type;
     union
@@ -36,6 +41,7 @@ struct SystemEvent {
         SystemMouseButton mb_press_info;
         SystemMouseMove mouse_move;
         SystemBigEvent big_event;
+        SystemKeyPress key_event;
     };
     SystemEvent(){}
     SystemEvent(const SystemEvent& other_event){
@@ -64,12 +70,24 @@ public:
     Texture(Renderer* renderer, const Vector2& size);
     Texture(Renderer* renderer, const Vector2& size, Color color);
     Texture(Renderer* renderer, const char* filename);
+    void reloadFromFile(Renderer* renderer, const char* path);
     const Vector2& getSize() const;
     SDL_Texture* getNativeTexture();
     bool hitTest(const Vector2& pos) const;
 };
 
 Texture* createSign(char* text, const Vector2& size);
+
+class TextureManager {
+    static std::vector<std::pair<Texture*, std::string> > textures;
+public:
+    static void addTexture(Texture* texture, std::string name) {
+        textures.push_back({texture, name});
+    }
+    static void setDay(Renderer* renderer);
+    static void setNight(Renderer* renderer);
+    static void deleteTexture(Texture* texture);
+};
 
 //--------------------------------------------------------------------------------------------------------------------------------
 
