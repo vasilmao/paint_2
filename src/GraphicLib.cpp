@@ -54,30 +54,60 @@ Texture::Texture(Renderer* renderer, const Vector2& size, Color color) : size(si
     SDL_SetTextureBlendMode(sdl_texture, SDL_BLENDMODE_BLEND);
 }
 
-Texture::Texture(Renderer* renderer, const char* filename) {
-    SDL_Surface* surf = SDL_LoadBMP(filename);
-    if (!surf) {
-        printf("img not opened\n");
+Texture::Texture(Renderer* renderer, const char* filename, bool themeTexture) {
+    if (!themeTexture) {
+        SDL_Surface* surf = SDL_LoadBMP(filename);
+        if (!surf) {
+            printf("img not opened\n");
+        }
+        assert(surf);
+        size = {static_cast<float>(surf->w), static_cast<float>(surf->h)};
+        SDL_Texture* bmp_texture = SDL_CreateTextureFromSurface(
+            renderer->getNativeRenderer(),
+            surf
+        ); 
+        sdl_texture = SDL_CreateTexture(renderer->getNativeRenderer(),
+                                        SDL_PIXELFORMAT_RGBA8888,
+                                        SDL_TEXTUREACCESS_TARGET,
+                                        size.getX(),
+                                        size.getY()
+                                        );
+        assert(sdl_texture);
+        SDL_SetRenderTarget(renderer->getNativeRenderer(), sdl_texture);
+        SDL_RenderCopy(renderer->getNativeRenderer(), bmp_texture, NULL, NULL);
+        SDL_DestroyTexture(bmp_texture);
+        SDL_FreeSurface(surf);
+        SDL_SetTextureBlendMode(sdl_texture, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderTarget(renderer->getNativeRenderer(), NULL);
+    } else {
+        char str[100] = {};
+        strcpy(str, InstrumentPanel::getSkinsDir());
+        strcat(str, filename);
+        TextureManager::addTexture(this, filename);
+        SDL_Surface* surf = SDL_LoadBMP(str);
+        if (!surf) {
+            printf("img not opened\n");
+        }
+        assert(surf);
+        size = {static_cast<float>(surf->w), static_cast<float>(surf->h)};
+        SDL_Texture* bmp_texture = SDL_CreateTextureFromSurface(
+            renderer->getNativeRenderer(),
+            surf
+        ); 
+        sdl_texture = SDL_CreateTexture(renderer->getNativeRenderer(),
+                                        SDL_PIXELFORMAT_RGBA8888,
+                                        SDL_TEXTUREACCESS_TARGET,
+                                        size.getX(),
+                                        size.getY()
+                                        );
+        assert(sdl_texture);
+        SDL_SetRenderTarget(renderer->getNativeRenderer(), sdl_texture);
+        SDL_RenderCopy(renderer->getNativeRenderer(), bmp_texture, NULL, NULL);
+        SDL_DestroyTexture(bmp_texture);
+        SDL_FreeSurface(surf);
+        SDL_SetTextureBlendMode(sdl_texture, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderTarget(renderer->getNativeRenderer(), NULL);
     }
-    assert(surf);
-    size = {static_cast<float>(surf->w), static_cast<float>(surf->h)};
-    SDL_Texture* bmp_texture = SDL_CreateTextureFromSurface(
-        renderer->getNativeRenderer(),
-        surf
-    ); 
-    sdl_texture = SDL_CreateTexture(renderer->getNativeRenderer(),
-                                    SDL_PIXELFORMAT_RGBA8888,
-                                    SDL_TEXTUREACCESS_TARGET,
-                                    size.getX(),
-                                    size.getY()
-                                    );
-    assert(sdl_texture);
-    SDL_SetRenderTarget(renderer->getNativeRenderer(), sdl_texture);
-    SDL_RenderCopy(renderer->getNativeRenderer(), bmp_texture, NULL, NULL);
-    SDL_DestroyTexture(bmp_texture);
-    SDL_FreeSurface(surf);
-    SDL_SetTextureBlendMode(sdl_texture, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderTarget(renderer->getNativeRenderer(), NULL);
 }
 
 Texture::~Texture() {

@@ -10,11 +10,11 @@ std::vector<std::pair<Texture*, std::string> > TextureManager::textures;
 
 void MainWindow::createTitlebar(Renderer* renderer, const Vector2& tb_pos, const Vector2& tb_size) {
     // Texture* titlebar_texture = new Texture(renderer, tb_size, titlebar_color);
-    char str[50] = {};
-    strcpy(str, InstrumentPanel::getSkinsDir());
-    strcat(str, "titlebar.bmp");
-    Texture* titlebar_texture = new Texture(renderer, str);
-    TextureManager::addTexture(titlebar_texture, "titlebar.bmp");
+    // char str[50] = {};
+    // strcpy(str, InstrumentPanel::getSkinsDir());
+    // strcat(str, "titlebar.bmp");
+    Texture* titlebar_texture = new Texture(renderer, "titlebar.bmp", true);
+    // TextureManager::addTexture(titlebar_texture, "titlebar.bmp");
     Skin* titlebar_skin = new RepeatingSkin(titlebar_texture, tb_size);
     // WindowMoverFunctor* move_f = new WindowMoverFunctor(this);
     // EventHandler* titlebar_handler = new MovingHandler(nullptr, move_f);
@@ -31,8 +31,10 @@ void MainWindow::createTitlebar(Renderer* renderer, const Vector2& tb_pos, const
 }
 
 void MainWindow::createCloseButton(Renderer* renderer, const Vector2& btn_pos, const Vector2& btn_size, AbstractWindow* titlebar) {
-    Texture* close_button_texture = new Texture(renderer, "skins/light/close.bmp");
-    Texture* close_button_texture_pressed = new Texture(renderer, "skins/light/close2.bmp");
+    Texture* close_button_texture = new Texture(renderer, "close.bmp", true);
+    Texture* close_button_texture_pressed = new Texture(renderer, "close2.bmp", true);
+    // Texture* close_button_texture = new Texture(renderer, "skins/light/close.bmp");
+    // Texture* close_button_texture_pressed = new Texture(renderer, "skins/light/close2.bmp");
     ButtonSkin* close_button_skin = new ButtonSkin(
         close_button_texture,
         nullptr,
@@ -80,11 +82,8 @@ void MainWindow::createSignedButton(Renderer* renderer, const Vector2& btn_pos, 
 
 MainWindow::MainWindow(Renderer* renderer, const Vector2& size) : AbstractWindow({0, 0}, size, new EventHandler(this), nullptr, nullptr) {
     printf("main window %p\n", this);
-    char str[50] = {};
-    strcpy(str, InstrumentPanel::getSkinsDir());
-    strcat(str, "wallpaper.bmp");
-    Texture* txt = new Texture(renderer, str);
-    TextureManager::addTexture(txt, "wallpaper.bmp");
+    Texture* txt = new Texture(renderer, "wallpaper.bmp", true);
+    // TextureManager::addTexture(txt, "wallpaper.bmp");
     skin = new Skin(txt, size);
     absolute_pos = {0, 0};
     Vector2 titlebar_size(size.getX(), close_button_size.getY());

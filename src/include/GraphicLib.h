@@ -69,7 +69,7 @@ public:
     ~Texture();
     Texture(Renderer* renderer, const Vector2& size);
     Texture(Renderer* renderer, const Vector2& size, Color color);
-    Texture(Renderer* renderer, const char* filename);
+    Texture(Renderer* renderer, const char* filename, bool themeTexture = false);
     void reloadFromFile(Renderer* renderer, const char* path);
     const Vector2& getSize() const;
     SDL_Texture* getNativeTexture();

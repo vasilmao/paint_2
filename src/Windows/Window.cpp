@@ -141,7 +141,12 @@ AbstractWindow(abs_pos - Vector2(1, 1), sz + Vector2(2, 2), nullptr, parent, nul
 }
 
 void RayCasterHolder::createTitlebar(Renderer* renderer, const Vector2& tb_pos, const Vector2& tb_size) {
-    Texture* titlebar_texture = new Texture(renderer, tb_size, titlebar_color);
+    // char str[50] = {};
+    // strcpy(str, InstrumentPanel::getSkinsDir());
+    // strcat(str, "titlebar.bmp");
+    Texture* titlebar_texture = new Texture(renderer, "titlebar.bmp", true);
+    // TextureManager::addTexture(titlebar_texture, "titlebar.bmp");
+    // Texture* titlebar_texture = new Texture(renderer, tb_size, titlebar_color);
     renderer->setTarget(titlebar_texture);
     // Vector2 text_size(tb_size.getY() * (sizeof("Canvas") - 1) / 3, tb_size.getY() / 1.5);
     // renderer->drawText({0, 0}, text_size, "Canvas", {255, 255, 255, 255});
@@ -159,8 +164,18 @@ void RayCasterHolder::createTitlebar(Renderer* renderer, const Vector2& tb_pos, 
 }
 
 void RayCasterHolder::createCloseButton(Renderer* renderer, const Vector2& btn_pos, const Vector2& btn_size, AbstractWindow* titlebar) {
-    Texture* close_button_texture = new Texture(renderer, "skins/close.bmp");
-    Texture* close_button_texture_pressed = new Texture(renderer, "skins/close2.bmp");
+    // char str[50] = {};
+    // strcpy(str, InstrumentPanel::getSkinsDir());
+    // strcat(str, "close.bmp");
+    Texture* close_button_texture = new Texture(renderer, "close.bmp", true);
+    // TextureManager::addTexture(close_button_texture, "close.bmp");
+    // memset(str, 0, 50);
+    // strcpy(str, InstrumentPanel::getSkinsDir());
+    // strcat(str, "close2.bmp");
+    Texture* close_button_texture_pressed = new Texture(renderer, "close2.bmp", true);
+    // TextureManager::addTexture(close_button_texture_pressed, "close2.bmp");
+    // Texture* close_button_texture = new Texture(renderer, "skins/close.bmp");
+    // Texture* close_button_texture_pressed = new Texture(renderer, "skins/close2.bmp");
     ButtonSkin* close_button_skin = new ButtonSkin(
         close_button_texture,
         nullptr,

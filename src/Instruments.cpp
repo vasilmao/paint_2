@@ -68,13 +68,14 @@ AbstractWindow* Eraser::createPrefPanel(Renderer* renderer, const Vector2& pos, 
     Color r_preview_color = {0, 0, 0, 255};
     renderer->setTarget(r_preview_texture);
     renderer->drawCircle(r_preview_texture->getSize() * 0.5, r, r_preview_color);
+    Texture* transp_texture = new Texture(renderer, "no-transparent_160.bmp", true);
     AbstractWindow* pref_panel = new AbstractWindow(
         pos,
         Vector2{200 + maxr * 2, maxr * 2 + 20},
         nullptr,
         parent,
         // new Skin(new Texture(renderer, Vector2{240 + maxr * 2, maxr * 2 + 20}, {255, 255, 255, 255}))
-        new RepeatingSkin(new Texture(renderer, "skins/no-transparent_160.bmp"), Vector2{240 + maxr * 2, maxr * 2 + 20})
+        new RepeatingSkin(transp_texture, Vector2{240 + maxr * 2, maxr * 2 + 20})
     );
     pref_panel->setHandler(new SensitiveHandler(pref_panel));
     SliderBody* radius_slider = new SliderBody(renderer, pos + Vector2{0, maxr}, Vector2{200, 20},
