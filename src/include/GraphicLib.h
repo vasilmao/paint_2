@@ -74,6 +74,9 @@ public:
     const Vector2& getSize() const;
     SDL_Texture* getNativeTexture();
     bool hitTest(const Vector2& pos) const;
+    Color* copyBuffer();
+    uint32_t* copyIntBuffer();
+    void updatePixels(uint32_t* pixels);
 };
 
 Texture* createSign(char* text, const Vector2& size);
@@ -128,7 +131,7 @@ private:
 
 public:
 
-    Renderer(){}
+    // Renderer(){}
 
     ~Renderer();
     Renderer(int width, int height, Color bg_color);

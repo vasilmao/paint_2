@@ -34,10 +34,28 @@ struct Rect2f {
 };
 
 struct Color {
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    unsigned char a;
+    unsigned char r = 0;
+    unsigned char g = 0;
+    unsigned char b = 0;
+    unsigned char a = 0;
+    Color() {
+        r = 0;
+        g = 0;
+        b = 0;
+        a = 0;
+    }
+    constexpr Color(unsigned char r1, unsigned char g1, unsigned char b1, unsigned char a1) {
+        r = r1;
+        g = g1;
+        b = b1;
+        a = a1;
+    }
+    Color(uint32_t color_int) { // no explicit
+        r = (color_int % 0xFF000000) >> 24;
+        g = (color_int % 0xFF0000) >> 16;
+        b = (color_int % 0xFF00) >> 8;
+        a = (color_int % 0xFF);
+    }
 };
 
 struct Colorf {

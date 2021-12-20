@@ -152,6 +152,21 @@ void Texture::reloadFromFile(Renderer* renderer, const char* path) {
     SDL_SetRenderTarget(renderer->getNativeRenderer(), NULL);
 }
 
+uint32_t* Texture::copyIntBuffer() {
+    uint32_t* buffer = new uint32_t[static_cast<size_t>(size.getX() * size.getY())];
+    assert(buffer);
+
+    Renderer* renderer = InstrumentPanel::getInstance()->getRenderer(); // BRUH, TODO: FIX
+    renderer->setTarget(this);
+    assert(!SDL_RenderReadPixels(renderer->getNativeRenderer(), NULL, SDL_PIXELFORMAT_RGBA8888, buffer, size.getX() * sizeof(Color)));
+
+    return buffer;
+}
+
+void Texture::updatePixels(uint32_t* pixels) {
+    assert(!SDL_UpdateTexture(sdl_texture, NULL, pixels, size.getX() * sizeof(Color)));
+}
+
 const Vector2& Texture::getSize() const {
     return size;
 }
@@ -497,13 +512,18 @@ SystemEvent getSystemEvent() {
 
         case SDL_KEYDOWN:
             result_event.event_type = KEY_DOWN;
-            if (event.key.keysym.scancode == SDL_SCANCODE_D) {
-                result_event.key_event.letter = 'd';
-            } else if (event.key.keysym.scancode == SDL_SCANCODE_N) {
-                result_event.key_event.letter = 'n';
+            if (SDL_SCANCODE_A <= event.key.keysym.scancode && event.key.keysym.scancode <= SDL_SCANCODE_Z) {
+                result_event.key_event.letter = event.key.keysym.scancode - SDL_SCANCODE_A + 'a';
             } else {
                 result_event.key_event.letter = '\0';
             }
+            // if (event.key.keysym.scancode == SDL_SCANCODE_D) {
+            //     result_event.key_event.letter = 'd';
+            // } else if (event.key.keysym.scancode == SDL_SCANCODE_N) {
+            //     result_event.key_event.letter = 'n';
+            // } else {
+            //     result_event.key_event.letter = '\0';
+            // }
             break;
         
         default:

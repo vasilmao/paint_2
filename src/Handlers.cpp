@@ -405,10 +405,15 @@ bool CanvasHandler::MBLResponce(GUILeftMouseButton* mouse_click) {
         if (!is_pressed && (mouse_click->isButtonDown())) {
             is_pressed = true;
             Vector2 mouseclick_pos = mouse_click->getPos();
-            (*canvas_drawer)(renderer, my_window->getSkin()->getTexture(), mouseclick_pos - my_window->getPos());
+            AbstractInstrument* instrument = InstrumentPanel::getInstance()->getCurrentInstrument();
+            instrument->applyStart(renderer, my_window->getSkin()->getTexture(), mouseclick_pos - my_window->getPos());
+            // (*canvas_drawer)(renderer, my_window->getSkin()->getTexture(), mouseclick_pos - my_window->getPos());
             return true;
         } else if (is_pressed && !(mouse_click->isButtonDown())) {
             is_pressed = false;
+            Vector2 mouseclick_pos = mouse_click->getPos();
+            AbstractInstrument* instrument = InstrumentPanel::getInstance()->getCurrentInstrument();
+            instrument->applyEnd(renderer, my_window->getSkin()->getTexture(), mouseclick_pos - my_window->getPos());
         }
     }
     return false;
@@ -419,8 +424,12 @@ bool CanvasHandler::MMResponce(GUIMouseMove* mouse_move) {
         bool first_result = my_window->hitTest(mouse_move->getPrevPos());
         bool second_result = my_window->hitTest(mouse_move->getNewPos());
         if (first_result && second_result) {
-            Vector2 mouse_pos = mouse_move->getNewPos();
-            (*canvas_drawer)(renderer, my_window->getSkin()->getTexture(), mouse_pos - my_window->getPos());
+            // Vector2 mouse_pos = mouse_move->getNewPos();
+            Vector2 mouse_pos1 = mouse_move->getPrevPos();
+            Vector2 mouse_pos2 = mouse_move->getNewPos();
+            AbstractInstrument* instrument = InstrumentPanel::getInstance()->getCurrentInstrument();
+            instrument->applyMove(renderer, my_window->getSkin()->getTexture(), mouse_pos1 - my_window->getPos(), mouse_pos2 - my_window->getPos());
+            // (*canvas_drawer)(renderer, my_window->getSkin()->getTexture(), mouse_pos - my_window->getPos());
             return true;
         } else {
             is_pressed = false;
