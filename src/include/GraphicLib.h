@@ -80,6 +80,7 @@ Texture* createSign(char* text, const Vector2& size);
 
 class TextureManager {
     static std::vector<std::pair<Texture*, std::string> > textures;
+    static const char* skins_dir;
 public:
     static void addTexture(Texture* texture, std::string name) {
         textures.push_back({texture, name});
@@ -87,6 +88,8 @@ public:
     static void setDay(Renderer* renderer);
     static void setNight(Renderer* renderer);
     static void deleteTexture(Texture* texture);
+    static const char* getSkinsDir();
+    static void setSkinsDir(const char* new_path);
 };
 
 //--------------------------------------------------------------------------------------------------------------------------------

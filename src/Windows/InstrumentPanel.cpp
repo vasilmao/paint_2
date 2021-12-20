@@ -49,16 +49,14 @@ void InstrumentPanel::create(Renderer* renderer, AbstractWindow* main_wnd) {
     printf("panel %p\n", panel);
 }
 
-char* InstrumentPanel::skins_dir;
+// char* InstrumentPanel::skins_dir;
 
-void InstrumentPanel::setSkinsDir(char* path) {
-    skins_dir = path;
-}
+// void InstrumentPanel::setSkinsDir(char* path) {
+//     skins_dir = path;
+// }
 
 
-const char* InstrumentPanel::getSkinsDir() {
-    return skins_dir;
-}
+
 
 void InstrumentPanel::addInstrument(AbstractInstrument* instr, ButtonSkin* skin) {
     EventHandler* btn_handler = new InstrumentListElementHandler(nullptr, instr, new InstrumentPickerFunctor(instr));

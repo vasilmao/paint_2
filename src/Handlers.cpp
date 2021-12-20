@@ -86,7 +86,8 @@ bool EventHandler::onEvent(GUIEvent* event) {
 }
 
 bool EventHandler::MBLResponce(GUILeftMouseButton* event) {
-    return my_window->hitTest(event->getPos());
+    return false;
+    // return my_window->hitTest(event->getPos());
 }
 
 bool EventHandler::MBRResponce(GUIRightMouseButton* event) {

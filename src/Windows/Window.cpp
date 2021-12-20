@@ -147,11 +147,11 @@ void RayCasterHolder::createTitlebar(Renderer* renderer, const Vector2& tb_pos, 
     Texture* titlebar_texture = new Texture(renderer, "titlebar.bmp", true);
     // TextureManager::addTexture(titlebar_texture, "titlebar.bmp");
     // Texture* titlebar_texture = new Texture(renderer, tb_size, titlebar_color);
-    renderer->setTarget(titlebar_texture);
+    // renderer->setTarget(titlebar_texture);
     // Vector2 text_size(tb_size.getY() * (sizeof("Canvas") - 1) / 3, tb_size.getY() / 1.5);
     // renderer->drawText({0, 0}, text_size, "Canvas", {255, 255, 255, 255});
     // renderer->drawText({tb_size.getX() / 2, 0}, "Canvas", {255, 255, 255, 255});
-    renderer->drawTextCentered({0, 0}, tb_size, "Sphere", {0, 0, 0, 255});
+    // renderer->drawTextCentered({0, 0}, tb_size, "Sphere", {0, 0, 0, 255});
     renderer->setTarget(NULL);
     Skin* titlebar_skin = new Skin(titlebar_texture, tb_size);
     WindowMoverFunctor* move_f = new WindowMoverFunctor(this);
@@ -159,6 +159,7 @@ void RayCasterHolder::createTitlebar(Renderer* renderer, const Vector2& tb_pos, 
     TitleBar* titlebar = new TitleBar(tb_pos, tb_size, titlebar_handler, nullptr, titlebar_skin);
     // printf("canvas titlebar: %p\n", titlebar);
     titlebar_handler->setWindow(titlebar);
+    titlebar->attachWindow(new TextLabel(renderer, tb_pos, tb_size, titlebar, "Sphere"));
     attachWindow(titlebar);
     createCloseButton(renderer, {tb_pos.getX() + tb_size.getX() - close_button_size.getX(), tb_pos.getY()}, close_button_size, titlebar);
 }
@@ -203,3 +204,12 @@ AbstractWindow(abs_pos, size, handler, parent, skin) {}
 //     renderer->setTarget(NULL);
 //     skin->draw(renderer, absolute_pos);
 // }
+
+TextLabel::TextLabel(Renderer* renderer, const Vector2& pos, const Vector2& size, AbstractWindow* parent, const char* text) :
+AbstractWindow(pos, size, new EventHandler(this), parent, nullptr) {
+    Texture* texture = new Texture(renderer, size, {0, 0, 0, 0});
+    renderer->setTarget(texture);
+    renderer->drawTextCentered(pos, size, text, {0, 0, 0, 255});
+    renderer->setTarget(nullptr);
+    skin = new Skin(texture);
+}

@@ -1,19 +1,29 @@
 #include "GraphicLib.h"
 #include "Window.h"
 
+const char* TextureManager::skins_dir;
+
+const char* TextureManager::getSkinsDir() {
+    return skins_dir;
+}
+
+void TextureManager::setSkinsDir(const char* new_path) {
+    skins_dir = new_path;
+}
+
 void TextureManager::setDay(Renderer* renderer) {
     for (size_t i = 0; i < textures.size(); ++i) {
         std::string realpath = "skins/light/" + textures[i].second;
         textures[i].first->reloadFromFile(renderer, realpath.c_str());
     }
-    InstrumentPanel::setSkinsDir("skins/light/");
+    skins_dir = "skins/light/";
 }
 void TextureManager::setNight(Renderer* renderer) {
     for (size_t i = 0; i < textures.size(); ++i) {
         std::string realpath = "skins/dark/" + textures[i].second;
         textures[i].first->reloadFromFile(renderer, realpath.c_str());
     }
-    InstrumentPanel::setSkinsDir("skins/dark/");
+    skins_dir = "skins/dark/";
 }
 void TextureManager::deleteTexture(Texture* texture) {
     for (size_t i = 0; i < textures.size(); ++i) {
@@ -81,7 +91,7 @@ Texture::Texture(Renderer* renderer, const char* filename, bool themeTexture) {
         SDL_SetRenderTarget(renderer->getNativeRenderer(), NULL);
     } else {
         char str[100] = {};
-        strcpy(str, InstrumentPanel::getSkinsDir());
+        strcpy(str, TextureManager::getSkinsDir());
         strcat(str, filename);
         TextureManager::addTexture(this, filename);
         SDL_Surface* surf = SDL_LoadBMP(str);

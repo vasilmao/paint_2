@@ -21,30 +21,32 @@ CanvasWindow::CanvasWindow(Renderer* renderer, const Vector2& pos, const Vector2
 
 void CanvasWindow::createTitlebar(Renderer* renderer, const Vector2& tb_pos, const Vector2& tb_size) {
     // Texture* titlebar_texture = new Texture(renderer, tb_size, titlebar_color);
-    char str[50] = {};
-    strcpy(str, InstrumentPanel::getSkinsDir());
-    strcat(str, "titlebar.bmp");
-    Texture* titlebar_texture = new Texture(renderer, str);
-    TextureManager::addTexture(titlebar_texture, "titlebar.bmp");
-    renderer->setTarget(titlebar_texture);
+    // char str[50] = {};
+    // strcpy(str, InstrumentPanel::getSkinsDir());
+    // strcat(str, "titlebar.bmp");
+    Texture* titlebar_texture = new Texture(renderer, "titlebar.bmp", true);
+    // TextureManager::addTexture(titlebar_texture, "titlebar.bmp");
+    // renderer->setTarget(titlebar_texture);
     // Vector2 text_size(tb_size.getY() * (sizeof("Canvas") - 1) / 3, tb_size.getY() / 1.5);
     // renderer->drawText({0, 0}, text_size, "Canvas", {255, 255, 255, 255});
     // renderer->drawText({tb_size.getX() / 2, 0}, "Canvas", {255, 255, 255, 255});
-    renderer->drawTextCentered({0, 0}, tb_size, "Canvas", {0, 0, 0, 255});
-    renderer->setTarget(NULL);
+
+    // renderer->drawTextCentered({0, 0}, tb_size, "Canvas", {0, 0, 0, 255});
+    // renderer->setTarget(NULL);
     Skin* titlebar_skin = new RepeatingSkin(titlebar_texture, tb_size);
     WindowMoverFunctor* move_f = new WindowMoverFunctor(this);
     EventHandler* titlebar_handler = new MovingHandler(nullptr, move_f);
     TitleBar* titlebar = new TitleBar(tb_pos, tb_size, titlebar_handler, nullptr, titlebar_skin);
     // printf("canvas titlebar: %p\n", titlebar);
     titlebar_handler->setWindow(titlebar);
+    titlebar->attachWindow(new TextLabel(renderer, tb_pos, tb_size, titlebar, "Canvas"));
     attachWindow(titlebar);
     createCloseButton(renderer, {tb_pos.getX() + tb_size.getX() - close_button_size.getX(), tb_pos.getY()}, close_button_size, titlebar);
 }
 
 void CanvasWindow::createCloseButton(Renderer* renderer, const Vector2& btn_pos, const Vector2& btn_size, AbstractWindow* titlebar) {
-    Texture* close_button_texture = new Texture(renderer, "skins/light/close.bmp");
-    Texture* close_button_texture_pressed = new Texture(renderer, "skins/light/close2.bmp");
+    Texture* close_button_texture = new Texture(renderer, "close.bmp", true);
+    Texture* close_button_texture_pressed = new Texture(renderer, "close2.bmp", true);
     ButtonSkin* close_button_skin = new ButtonSkin(
         close_button_texture,
         nullptr,

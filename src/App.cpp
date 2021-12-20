@@ -7,7 +7,7 @@ const Color bg_color = {185, 226, 235, 255};
 
 App::App() {
 
-    InstrumentPanel::setSkinsDir("skins/light/");
+    TextureManager::setSkinsDir("skins/light/");
 
     // TODO: SPLIT INTO FUNCTIONS!!!!!!!!!!!!!!!!!!!
     // TODO: MORE SKINS
